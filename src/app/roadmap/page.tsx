@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import RoadmapSection from "@/components/sections/RoadmapSection";
 
 export const metadata: Metadata = {
-  title: "ロードマップ | LunaPos の未来",
+  title: "開発ロードマップ",
   description:
-    "LunaPosのロードマップ。POS機能からLuna Career、Luna Fund、Luna Worldへ。ナイト業界のインフラを目指す開発計画。",
+    "LunaPosの開発ロードマップ。POS機能の開発を軸に、Luna Career、Luna Fund、Luna Worldへ段階的に拡張。",
 };
 
 export default function RoadmapPage() {

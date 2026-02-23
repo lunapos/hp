@@ -33,7 +33,7 @@ interface Phase {
 const phases: Phase[] = [
   {
     phase: "フェーズ 1",
-    label: "現在",
+    label: "開発中",
     icon: Tablet,
     title: "ナイト業界特化POS",
     description:
@@ -48,7 +48,7 @@ const phases: Phase[] = [
   },
   {
     phase: "フェーズ 2",
-    label: "次のステップ",
+    label: "設計中",
     icon: BadgeCheck,
     brandName: "Luna Career",
     title: "POSデータで変える、ナイトワーク求人",
@@ -59,7 +59,7 @@ const phases: Phase[] = [
   },
   {
     phase: "フェーズ 3",
-    label: "開発予定",
+    label: "計画中",
     icon: Landmark,
     brandName: "Luna Fund",
     title: "資金調達サポート",
@@ -70,7 +70,7 @@ const phases: Phase[] = [
   },
   {
     phase: "フェーズ 4",
-    label: "ビジョン",
+    label: "構想中",
     icon: Globe,
     brandName: "Luna World",
     title: "海外展開 — 世界標準のナイトクラブPOSへ",
@@ -225,8 +225,8 @@ export default function RoadmapSection() {
     <Section>
       <SectionHeading
         subtitle="ROADMAP"
-        title="LunaPos の未来"
-        description="POSシステムに留まらない。ナイト業界のインフラへ。"
+        title="開発ロードマップ"
+        description="段階的に開発を進めています。各フェーズの進捗をご覧ください。"
       />
 
       <div className="relative">
