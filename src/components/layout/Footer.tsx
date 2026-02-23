@@ -16,7 +16,7 @@ export default function Footer() {
             <p className="text-gray-400 text-sm leading-relaxed">
               ナイト業界に特化したPOSシステム。
               <br />
-              売上管理・顧客管理をスマートに。
+              日々の売上をスマートに管理。
             </p>
           </div>
 

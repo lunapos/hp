@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { Resend } from "resend";
 import { createClient } from "@/lib/supabase/server";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 interface ContactBody {
   companyName: string;
@@ -8,7 +11,7 @@ interface ContactBody {
   email: string;
   phone?: string;
   inquiryType: string;
-  message: string;
+  message?: string;
 }
 
 export async function POST(request: NextRequest) {
@@ -16,7 +19,7 @@ export async function POST(request: NextRequest) {
     const body: ContactBody = await request.json();
 
     // Validate required fields
-    if (!body.companyName || !body.name || !body.email || !body.message) {
+    if (!body.companyName || !body.name || !body.email) {
       return NextResponse.json(
         { error: "必須項目を入力してください" },
         { status: 400 }
@@ -32,16 +35,31 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Log the contact form submission
-    // TODO: Replace with Resend, Slack webhook, or Supabase integration
-    console.log("=== お問い合わせ受信 ===");
-    console.log(`会社名/店舗名: ${body.companyName}`);
-    console.log(`名前: ${body.name}`);
-    console.log(`メール: ${body.email}`);
-    console.log(`電話: ${body.phone || "未入力"}`);
-    console.log(`種別: ${body.inquiryType}`);
-    console.log(`内容: ${body.message}`);
-    console.log("========================");
+    // Send email via Resend
+    const { error: emailError } = await resend.emails.send({
+      from: "LunaPos <noreply@lunapos.jp>",
+      to: ["contact@lunapos.jp"],
+      replyTo: body.email,
+      subject: `【お問い合わせ】${body.inquiryType} - ${body.companyName}`,
+      text: [
+        `お問い合わせ種別: ${body.inquiryType}`,
+        `会社名/店舗名: ${body.companyName}`,
+        `お名前: ${body.name}`,
+        `メール: ${body.email}`,
+        `電話: ${body.phone || "未入力"}`,
+        "",
+        "--- お問い合わせ内容 ---",
+        body.message || "（未入力）",
+      ].join("\n"),
+    });
+
+    if (emailError) {
+      console.error("Resend error:", emailError);
+      return NextResponse.json(
+        { error: "メール送信に失敗しました" },
+        { status: 500 }
+      );
+    }
 
     // Track referral conversion if ref_code cookie exists
     const cookieStore = await cookies();

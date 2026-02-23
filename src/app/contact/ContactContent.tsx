@@ -88,7 +88,7 @@ export default function ContactContent() {
               <p className="text-luna-text-secondary">
                 お問い合わせありがとうございます。
                 <br />
-                通常2営業日以内にご返信いたします。
+                担当者より折り返しご連絡いたします。
               </p>
               <div className="mt-6">
                 <Button href="/">トップページに戻る</Button>
@@ -206,13 +206,12 @@ export default function ContactContent() {
 
                 <div>
                   <label className="block text-sm text-luna-text-secondary tracking-wider mb-2">
-                    お問い合わせ内容 <span className="text-red-400">*</span>
+                    お問い合わせ内容
                   </label>
                   <textarea
                     name="message"
                     value={form.message}
                     onChange={handleChange}
-                    required
                     rows={5}
                     className="w-full bg-luna-bg border border-luna-border rounded-xl px-4 py-3 text-white focus:border-luna-gold focus:ring-1 focus:ring-luna-gold outline-none transition-all resize-none"
                     placeholder="お問い合わせ内容をご記入ください"
