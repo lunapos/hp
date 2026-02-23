@@ -3,8 +3,6 @@ import { cookies } from "next/headers";
 import { Resend } from "resend";
 import { createClient } from "@/lib/supabase/server";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 interface ContactBody {
   companyName: string;
   name: string;
@@ -36,6 +34,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Send email via Resend
+    const resend = new Resend(process.env.RESEND_API_KEY);
     const { error: emailError } = await resend.emails.send({
       from: "LunaPos <noreply@lunapos.jp>",
       to: ["contact@lunapos.jp"],
