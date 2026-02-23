@@ -1,0 +1,19 @@
+import HeroSection from "@/components/sections/HeroSection";
+import ProblemSection from "@/components/sections/ProblemSection";
+import FeatureHighlights from "@/components/sections/FeatureHighlights";
+import PricingSection from "@/components/sections/PricingSection";
+import TestimonialSection from "@/components/sections/TestimonialSection";
+import FaqSection from "@/components/sections/FaqSection";
+
+export default function HomePage() {
+  return (
+    <>
+      <HeroSection />
+      <ProblemSection />
+      <FeatureHighlights />
+      <PricingSection />
+      <TestimonialSection />
+      <FaqSection />
+    </>
+  );
+}
