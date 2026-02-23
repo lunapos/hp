@@ -67,20 +67,20 @@ export async function POST(request: NextRequest) {
     }
 
     // Track referral conversion if ref_code cookie exists
-    const cookieStore = await cookies();
-    const refCode = cookieStore.get("ref_code")?.value;
+    try {
+      const cookieStore = await cookies();
+      const refCode = cookieStore.get("ref_code")?.value;
 
-    if (refCode) {
-      try {
+      if (refCode) {
         const supabase = await createClient();
         await supabase.rpc("track_conversion", {
           p_referral_code: refCode,
           p_store_name: body.companyName,
           p_store_email: body.email,
         });
-      } catch {
-        // Conversion tracking failure should not block the contact form
       }
+    } catch {
+      // Conversion tracking failure should not block the contact form
     }
 
     return NextResponse.json({ success: true });
