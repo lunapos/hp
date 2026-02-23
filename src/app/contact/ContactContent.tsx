@@ -4,7 +4,6 @@ import { useState } from "react";
 import Section from "@/components/layout/Section";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
-import { BRAND } from "@/lib/constants";
 import { Mail, CheckCircle } from "lucide-react";
 
 interface FormState {
@@ -242,7 +241,7 @@ export default function ContactContent() {
                 <Mail className="w-5 h-5 text-luna-gold" />
                 <h3 className="text-white font-medium">メール</h3>
               </div>
-              <p className="text-luna-text-secondary text-sm">{BRAND.email}</p>
+              <p className="text-luna-text-secondary text-sm">contact@lunapos.jp</p>
             </Card>
 
 

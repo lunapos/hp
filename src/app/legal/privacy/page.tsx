@@ -46,7 +46,7 @@ const sections = [
   },
   {
     title: "10. お問い合わせ",
-    body: "本ポリシーに関するお問い合わせは、当サービスのお問い合わせフォームよりご連絡ください。\n\nLunaPos\nメール: info@lunapos.jp",
+    body: "本ポリシーに関するお問い合わせは、当サービスのお問い合わせフォームよりご連絡ください。\n\nLunaPos\nメール: privacy@lunapos.jp",
   },
 ];
 
