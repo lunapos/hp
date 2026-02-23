@@ -2,6 +2,15 @@ import { NextResponse, type NextRequest } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
 
 export async function middleware(request: NextRequest) {
+  // Skip if Supabase is not configured
+  if (
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_URL === "https://your-project.supabase.co"
+  ) {
+    return NextResponse.next();
+  }
+
   // 1. Refresh Supabase auth session
   const { supabaseResponse, user } = await updateSession(request);
 
