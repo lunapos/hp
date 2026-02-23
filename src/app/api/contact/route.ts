@@ -33,37 +33,39 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Send email via Resend (fallback to console.log if API key not set)
-    if (process.env.RESEND_API_KEY && !process.env.RESEND_API_KEY.startsWith("re_xxx")) {
-      const resend = new Resend(process.env.RESEND_API_KEY);
-      const { error: emailError } = await resend.emails.send({
-        from: "LunaPos <noreply@lunapos.jp>",
-        to: ["contact@lunapos.jp"],
-        replyTo: body.email,
-        subject: `【お問い合わせ】${body.inquiryType} - ${body.companyName}`,
-        text: [
-          `お問い合わせ種別: ${body.inquiryType}`,
-          `会社名/店舗名: ${body.companyName}`,
-          `お名前: ${body.name}`,
-          `メール: ${body.email}`,
-          `電話: ${body.phone || "未入力"}`,
-          "",
-          "--- お問い合わせ内容 ---",
-          body.message || "（未入力）",
-        ].join("\n"),
-      });
+    // Send email via Resend
+    if (!process.env.RESEND_API_KEY) {
+      console.error("RESEND_API_KEY is not set");
+      return NextResponse.json(
+        { error: "メール設定が完了していません" },
+        { status: 500 }
+      );
+    }
 
-      if (emailError) {
-        console.error("Resend error:", emailError);
-        return NextResponse.json(
-          { error: "メール送信に失敗しました" },
-          { status: 500 }
-        );
-      }
-    } else {
-      console.log("=== お問い合わせ受信 (Resend未設定) ===");
-      console.log(`種別: ${body.inquiryType} / ${body.companyName} / ${body.name} / ${body.email}`);
-      console.log(`内容: ${body.message || "未入力"}`);
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    const { error: emailError } = await resend.emails.send({
+      from: "LunaPos <noreply@lunapos.jp>",
+      to: ["contact@lunapos.jp"],
+      replyTo: body.email,
+      subject: `【お問い合わせ】${body.inquiryType} - ${body.companyName}`,
+      text: [
+        `お問い合わせ種別: ${body.inquiryType}`,
+        `会社名/店舗名: ${body.companyName}`,
+        `お名前: ${body.name}`,
+        `メール: ${body.email}`,
+        `電話: ${body.phone || "未入力"}`,
+        "",
+        "--- お問い合わせ内容 ---",
+        body.message || "（未入力）",
+      ].join("\n"),
+    });
+
+    if (emailError) {
+      console.error("Resend error:", emailError);
+      return NextResponse.json(
+        { error: "メール送信に失敗しました" },
+        { status: 500 }
+      );
     }
 
     // Track referral conversion if ref_code cookie exists
