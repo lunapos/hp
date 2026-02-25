@@ -67,8 +67,16 @@ export default function Header() {
         </div>
       </div>
 
+      {isMenuOpen && (
+        <div
+          className="md:hidden fixed inset-0 top-16 bg-black/50 z-40"
+          onClick={() => setIsMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
       <div
-        className={`md:hidden absolute top-full right-0 w-64 bg-luna-bg/95 backdrop-blur-md border-l border-b border-luna-border transform transition-transform duration-300 ease-in-out ${
+        className={`md:hidden fixed top-16 right-0 bottom-0 w-64 z-50 bg-luna-bg/95 backdrop-blur-md border-l border-luna-border transform transition-transform duration-300 ease-in-out ${
           isMenuOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -96,14 +104,6 @@ export default function Header() {
           </Link>
         </nav>
       </div>
-
-      {isMenuOpen && (
-        <div
-          className="md:hidden fixed inset-0 bg-black/50 z-[-1]"
-          onClick={() => setIsMenuOpen(false)}
-          aria-hidden="true"
-        />
-      )}
     </header>
   );
 }
