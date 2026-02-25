@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllTags, getArticlesByTag } from "@/lib/media";
-import { Calendar, Tag, ArrowLeft } from "lucide-react";
+import { Calendar, Tag } from "lucide-react";
+import { TagSelect } from "@/components/ui/TagSelect";
+import { Pagination } from "@/components/ui/Pagination";
+
+const ARTICLES_PER_PAGE = 6;
 
 export async function generateStaticParams() {
   return getAllTags().map((tag) => ({ tag }));
@@ -22,13 +26,22 @@ export async function generateMetadata({
 
 export default async function TagPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ tag: string }>;
+  searchParams: Promise<{ page?: string }>;
 }) {
   const { tag } = await params;
+  const { page: pageParam } = await searchParams;
   const decoded = decodeURIComponent(tag);
+  const currentPage = Math.max(1, parseInt(pageParam || "1", 10));
   const articles = getArticlesByTag(decoded);
   const allTags = getAllTags();
+  const totalPages = Math.ceil(articles.length / ARTICLES_PER_PAGE);
+  const paginatedArticles = articles.slice(
+    (currentPage - 1) * ARTICLES_PER_PAGE,
+    currentPage * ARTICLES_PER_PAGE
+  );
 
   return (
     <>
@@ -41,48 +54,22 @@ export default async function TagPage({
             #{decoded}
           </h1>
           <div className="w-16 h-1 bg-luna-gold mx-auto rounded-full mb-4" />
-          <Link
-            href="/media"
-            className="inline-flex items-center gap-1 text-sm text-luna-text-secondary hover:text-luna-gold transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            すべての記事に戻る
-          </Link>
         </div>
       </section>
 
       <section className="py-12 px-4">
         <div className="max-w-4xl mx-auto">
-          {/* タグフィルター */}
-          <div className="flex items-center gap-2 flex-wrap mb-8">
-            <Link
-              href="/media"
-              className="text-xs px-3 py-1.5 rounded-full border border-luna-border text-luna-text-secondary hover:border-luna-gold hover:text-luna-gold transition-colors"
-            >
-              すべて
-            </Link>
-            {allTags.map((t) => (
-              <Link
-                key={t}
-                href={`/media/tag/${encodeURIComponent(t)}`}
-                className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
-                  t === decoded
-                    ? "border-luna-gold bg-luna-gold/15 text-luna-gold"
-                    : "border-luna-border text-luna-text-secondary hover:border-luna-gold hover:text-luna-gold"
-                }`}
-              >
-                #{t}
-              </Link>
-            ))}
+          <div className="mb-8">
+            <TagSelect tags={allTags} current={decoded} />
           </div>
 
-          {articles.length === 0 ? (
+          {paginatedArticles.length === 0 ? (
             <p className="text-center text-luna-text-secondary">
               該当する記事がありません。
             </p>
           ) : (
             <div className="space-y-6">
-              {articles.map((article) => (
+              {paginatedArticles.map((article) => (
                 <Link
                   key={article.slug}
                   href={`/media/${article.slug}`}
@@ -124,6 +111,12 @@ export default async function TagPage({
               ))}
             </div>
           )}
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            basePath={`/media/tag/${encodeURIComponent(decoded)}`}
+          />
         </div>
       </section>
     </>

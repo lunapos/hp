@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllArticles, getAllTags } from "@/lib/media";
 import { Calendar, Tag } from "lucide-react";
+import { TagSelect } from "@/components/ui/TagSelect";
+import { Pagination } from "@/components/ui/Pagination";
+
+const ARTICLES_PER_PAGE = 6;
 
 export const metadata: Metadata = {
   title: "メディア",
@@ -9,9 +13,20 @@ export const metadata: Metadata = {
     "ナイト業界の経営に役立つ情報をお届けします。POS導入ガイド、売上管理のコツ、業界トレンドなど。",
 };
 
-export default function MediaPage() {
+export default async function MediaPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const { page: pageParam } = await searchParams;
+  const currentPage = Math.max(1, parseInt(pageParam || "1", 10));
   const articles = getAllArticles();
   const allTags = getAllTags();
+  const totalPages = Math.ceil(articles.length / ARTICLES_PER_PAGE);
+  const paginatedArticles = articles.slice(
+    (currentPage - 1) * ARTICLES_PER_PAGE,
+    currentPage * ARTICLES_PER_PAGE
+  );
 
   return (
     <>
@@ -32,28 +47,19 @@ export default function MediaPage() {
 
       <section className="py-12 px-4">
         <div className="max-w-4xl mx-auto">
-          {/* タグフィルター */}
           {allTags.length > 0 && (
-            <div className="flex items-center gap-2 flex-wrap mb-8">
-              {allTags.map((tag) => (
-                <Link
-                  key={tag}
-                  href={`/media/tag/${encodeURIComponent(tag)}`}
-                  className="text-xs px-3 py-1.5 rounded-full border border-luna-border text-luna-text-secondary hover:border-luna-gold hover:text-luna-gold transition-colors"
-                >
-                  #{tag}
-                </Link>
-              ))}
+            <div className="mb-8">
+              <TagSelect tags={allTags} />
             </div>
           )}
 
-          {articles.length === 0 ? (
+          {paginatedArticles.length === 0 ? (
             <p className="text-center text-luna-text-secondary">
               記事の準備中です。
             </p>
           ) : (
             <div className="space-y-6">
-              {articles.map((article) => (
+              {paginatedArticles.map((article) => (
                 <Link
                   key={article.slug}
                   href={`/media/${article.slug}`}
@@ -91,6 +97,12 @@ export default function MediaPage() {
               ))}
             </div>
           )}
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            basePath="/media"
+          />
         </div>
       </section>
     </>
