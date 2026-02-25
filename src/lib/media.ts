@@ -71,3 +71,18 @@ export function getAllSlugs(): string[] {
     .filter((f) => f.endsWith(".mdx"))
     .map((f) => f.replace(/\.mdx$/, ""));
 }
+
+export function getAllTags(): string[] {
+  const articles = getAllArticles();
+  const tagSet = new Set<string>();
+  for (const article of articles) {
+    for (const tag of article.tags) {
+      tagSet.add(tag);
+    }
+  }
+  return Array.from(tagSet);
+}
+
+export function getArticlesByTag(tag: string): ArticleMeta[] {
+  return getAllArticles().filter((article) => article.tags.includes(tag));
+}

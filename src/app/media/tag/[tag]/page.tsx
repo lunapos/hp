@@ -1,16 +1,33 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getAllArticles, getAllTags } from "@/lib/media";
-import { Calendar, Tag } from "lucide-react";
+import { getAllTags, getArticlesByTag } from "@/lib/media";
+import { Calendar, Tag, ArrowLeft } from "lucide-react";
 
-export const metadata: Metadata = {
-  title: "メディア",
-  description:
-    "ナイト業界の経営に役立つ情報をお届けします。POS導入ガイド、売上管理のコツ、業界トレンドなど。",
-};
+export async function generateStaticParams() {
+  return getAllTags().map((tag) => ({ tag }));
+}
 
-export default function MediaPage() {
-  const articles = getAllArticles();
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ tag: string }>;
+}): Promise<Metadata> {
+  const { tag } = await params;
+  const decoded = decodeURIComponent(tag);
+  return {
+    title: `#${decoded} の記事`,
+    description: `「${decoded}」タグが付いたメディア記事の一覧です。`,
+  };
+}
+
+export default async function TagPage({
+  params,
+}: {
+  params: Promise<{ tag: string }>;
+}) {
+  const { tag } = await params;
+  const decoded = decodeURIComponent(tag);
+  const articles = getArticlesByTag(decoded);
   const allTags = getAllTags();
 
   return (
@@ -21,35 +38,47 @@ export default function MediaPage() {
             MEDIA
           </p>
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            メディア
+            #{decoded}
           </h1>
           <div className="w-16 h-1 bg-luna-gold mx-auto rounded-full mb-4" />
-          <p className="text-luna-text-secondary max-w-2xl mx-auto">
-            ナイト業界の経営に役立つ情報をお届けします
-          </p>
+          <Link
+            href="/media"
+            className="inline-flex items-center gap-1 text-sm text-luna-text-secondary hover:text-luna-gold transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            すべての記事に戻る
+          </Link>
         </div>
       </section>
 
       <section className="py-12 px-4">
         <div className="max-w-4xl mx-auto">
           {/* タグフィルター */}
-          {allTags.length > 0 && (
-            <div className="flex items-center gap-2 flex-wrap mb-8">
-              {allTags.map((tag) => (
-                <Link
-                  key={tag}
-                  href={`/media/tag/${encodeURIComponent(tag)}`}
-                  className="text-xs px-3 py-1.5 rounded-full border border-luna-border text-luna-text-secondary hover:border-luna-gold hover:text-luna-gold transition-colors"
-                >
-                  #{tag}
-                </Link>
-              ))}
-            </div>
-          )}
+          <div className="flex items-center gap-2 flex-wrap mb-8">
+            <Link
+              href="/media"
+              className="text-xs px-3 py-1.5 rounded-full border border-luna-border text-luna-text-secondary hover:border-luna-gold hover:text-luna-gold transition-colors"
+            >
+              すべて
+            </Link>
+            {allTags.map((t) => (
+              <Link
+                key={t}
+                href={`/media/tag/${encodeURIComponent(t)}`}
+                className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
+                  t === decoded
+                    ? "border-luna-gold bg-luna-gold/15 text-luna-gold"
+                    : "border-luna-border text-luna-text-secondary hover:border-luna-gold hover:text-luna-gold"
+                }`}
+              >
+                #{t}
+              </Link>
+            ))}
+          </div>
 
           {articles.length === 0 ? (
             <p className="text-center text-luna-text-secondary">
-              記事の準備中です。
+              該当する記事がありません。
             </p>
           ) : (
             <div className="space-y-6">
@@ -77,12 +106,16 @@ export default function MediaPage() {
                   {article.tags.length > 0 && (
                     <div className="flex items-center gap-2 flex-wrap">
                       <Tag className="w-3 h-3 text-luna-text-secondary" />
-                      {article.tags.map((tag) => (
+                      {article.tags.map((t) => (
                         <span
-                          key={tag}
-                          className="text-xs text-luna-text-secondary"
+                          key={t}
+                          className={`text-xs ${
+                            t === decoded
+                              ? "text-luna-gold"
+                              : "text-luna-text-secondary"
+                          }`}
                         >
-                          #{tag}
+                          #{t}
                         </span>
                       ))}
                     </div>
