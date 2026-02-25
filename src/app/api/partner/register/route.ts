@@ -20,9 +20,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (body.password.length < 1) {
+    if (body.password.length < 6) {
       return NextResponse.json(
-        { error: "パスワードを入力してください" },
+        { error: "パスワードは6文字以上で入力してください" },
         { status: 400 }
       );
     }
@@ -58,7 +58,14 @@ export async function POST(request: NextRequest) {
     }
 
     // 2. Generate referral code
-    const { data: refCode } = await supabase.rpc("generate_referral_code");
+    let refCode: string | null = null;
+    const { data: rpcCode, error: rpcError } = await supabase.rpc("generate_referral_code");
+    if (rpcError || !rpcCode) {
+      // Fallback: generate code in JS if RPC doesn't exist
+      refCode = `LP${Date.now().toString(36).toUpperCase()}${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+    } else {
+      refCode = rpcCode;
+    }
 
     // 3. Create partner record
     const { error: partnerError } = await supabase.from("partners").insert({
@@ -71,8 +78,9 @@ export async function POST(request: NextRequest) {
     });
 
     if (partnerError) {
+      console.error("Partner insert error:", partnerError);
       return NextResponse.json(
-        { error: "パートナー登録に失敗しました" },
+        { error: `パートナー登録に失敗しました: ${partnerError.message}` },
         { status: 500 }
       );
     }

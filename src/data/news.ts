@@ -23,6 +23,23 @@ export interface NewsItem {
 export const newsItems: NewsItem[] = [
   // --- 2026-02-25 ---
   {
+    slug: "hp-v0-11-1-partner-register-fix",
+    date: "2026-02-25",
+    title: "v0.11.1 パートナー登録バリデーション修正",
+    summary:
+      "パスワード最小文字数を6文字に変更。リファラルコード生成のフォールバック追加とエラーメッセージ詳細化。",
+    category: "開発アップデート",
+    project: "HP",
+    content: [
+      "パートナー登録のバリデーションとエラーハンドリングを改善しました。",
+      "",
+      "・パスワードの最小文字数を6文字に変更（Supabase Auth要件に合わせて）",
+      "・HTML minLength属性もフォーム側で6に設定",
+      "・リファラルコード生成RPCが無い場合のJSフォールバック追加",
+      "・パートナー登録失敗時のエラーメッセージに詳細を含めるよう改善",
+    ].join("\n"),
+  },
+  {
     slug: "hp-v0-11-0-partner-dashboard",
     date: "2026-02-25",
     title: "v0.11.0 パートナーダッシュボード全面強化",
