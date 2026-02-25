@@ -67,6 +67,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // 送信元フォームを判定
+    const sourceLabel =
+      origin === "https://lp.lunapos.jp"
+        ? "LP（lp.lunapos.jp）"
+        : "HP（lunapos.jp）";
+
     const resend = new Resend(process.env.RESEND_API_KEY);
     const { error: emailError } = await resend.emails.send({
       from: "LunaPos <noreply@lunapos.jp>",
@@ -74,6 +80,7 @@ export async function POST(request: NextRequest) {
       replyTo: body.email,
       subject: `【お問い合わせ】${body.inquiryType} - ${body.companyName}`,
       text: [
+        `送信元: ${sourceLabel}`,
         `お問い合わせ種別: ${body.inquiryType}`,
         `会社名/店舗名: ${body.companyName}`,
         `お名前: ${body.name}`,
