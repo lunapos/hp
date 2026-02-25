@@ -118,13 +118,6 @@ export default function Header() {
               {item.label}
             </Link>
           ))}
-          <Link
-            href="/contact"
-            onClick={() => setIsMenuOpen(false)}
-            className="mt-2 text-luna-gold font-medium"
-          >
-            お問い合わせ
-          </Link>
         </nav>
       </div>
     </>
