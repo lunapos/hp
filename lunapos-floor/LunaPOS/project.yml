@@ -1,0 +1,26 @@
+name: LunaPOS
+options:
+  bundleIdPrefix: com.luna
+  deploymentTarget:
+    iOS: "17.0"
+  xcodeVersion: "16.0"
+  minimumXcodeGenVersion: "2.38.0"
+
+settings:
+  base:
+    INFOPLIST_KEY_UILaunchScreen_Generation: true
+    INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
+    INFOPLIST_KEY_UIRequiresFullScreen: true
+    TARGETED_DEVICE_FAMILY: "2"
+    SWIFT_VERSION: "6.0"
+
+targets:
+  LunaPOS:
+    type: application
+    platform: iOS
+    sources:
+      - LunaPOS
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.luna.pos
+        INFOPLIST_KEY_CFBundleDisplayName: Luna POS

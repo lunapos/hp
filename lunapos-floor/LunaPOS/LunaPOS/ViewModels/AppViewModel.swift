@@ -1,0 +1,382 @@
+import Foundation
+import SwiftUI
+
+@Observable
+final class AppViewModel {
+    private static let storageKey = "luna_app_state"
+
+    var rooms: [Room]
+    var tables: [FloorTable]
+    var casts: [Cast]
+    var customers: [Customer]
+    var menuItems: [MenuItem]
+    var visits: [Visit]
+    var payments: [Payment]
+    var setPlans: [SetPlan]
+    var registerStartAmount: Int
+    var cashWithdrawals: [CashWithdrawal]
+
+    init() {
+        let state = Self.loadState()
+        rooms = state.rooms
+        tables = state.tables
+        casts = state.casts
+        customers = state.customers
+        menuItems = state.menuItems
+        visits = state.visits
+        payments = state.payments
+        setPlans = state.setPlans
+        registerStartAmount = state.registerStartAmount
+        cashWithdrawals = state.cashWithdrawals
+    }
+
+    // MARK: - Persistence
+
+    private static func loadState() -> AppState {
+        guard let data = UserDefaults.standard.data(forKey: storageKey),
+              let state = try? JSONDecoder().decode(AppState.self, from: data)
+        else {
+            return MockData.defaultState
+        }
+        return state
+    }
+
+    func save() {
+        let state = AppState(
+            rooms: rooms, tables: tables, casts: casts,
+            customers: customers, menuItems: menuItems,
+            visits: visits, payments: payments, setPlans: setPlans,
+            registerStartAmount: registerStartAmount, cashWithdrawals: cashWithdrawals
+        )
+        if let data = try? JSONEncoder().encode(state) {
+            UserDefaults.standard.set(data, forKey: Self.storageKey)
+        }
+    }
+
+    // MARK: - Table
+
+    func openTable(tableId: String, customerName: String?, guestCount: Int, nominations: [CastNomination], douhanCastId: String?) {
+        let visit = Visit(
+            tableId: tableId,
+            customerName: customerName,
+            guestCount: guestCount,
+            nominations: nominations,
+            douhanCastId: douhanCastId,
+            setMinutes: 60
+        )
+        visits.append(visit)
+        if let idx = tables.firstIndex(where: { $0.id == tableId }) {
+            tables[idx].status = .occupied
+            tables[idx].visitId = visit.id
+        }
+        save()
+    }
+
+    func closeTable(tableId: String) {
+        if let idx = tables.firstIndex(where: { $0.id == tableId }) {
+            tables[idx].status = .empty
+            tables[idx].visitId = nil
+        }
+        save()
+    }
+
+    func moveVisit(fromTableId: String, toTableId: String) {
+        guard let fromIdx = tables.firstIndex(where: { $0.id == fromTableId }),
+              let visitId = tables[fromIdx].visitId,
+              let toIdx = tables.firstIndex(where: { $0.id == toTableId })
+        else { return }
+
+        tables[fromIdx].status = .empty
+        tables[fromIdx].visitId = nil
+        tables[toIdx].status = .occupied
+        tables[toIdx].visitId = visitId
+
+        if let vIdx = visits.firstIndex(where: { $0.id == visitId }) {
+            visits[vIdx].tableId = toTableId
+        }
+        save()
+    }
+
+    func updateTableStatus(tableId: String, status: TableStatus) {
+        if let idx = tables.firstIndex(where: { $0.id == tableId }) {
+            tables[idx].status = status
+        }
+        save()
+    }
+
+    // MARK: - Visit
+
+    func visit(for tableId: String) -> Visit? {
+        guard let table = tables.first(where: { $0.id == tableId }),
+              let visitId = table.visitId
+        else { return nil }
+        return visits.first(where: { $0.id == visitId })
+    }
+
+    func updateGuestCount(visitId: String, count: Int) {
+        if let idx = visits.firstIndex(where: { $0.id == visitId }) {
+            visits[idx].guestCount = max(1, count)
+        }
+        save()
+    }
+
+    func updateVisitNominations(visitId: String, nominations: [CastNomination], douhanCastId: String?) {
+        if let idx = visits.firstIndex(where: { $0.id == visitId }) {
+            visits[idx].nominations = nominations
+            visits[idx].douhanCastId = douhanCastId
+        }
+        save()
+    }
+
+    func updateNominationQty(visitId: String, castId: String, qty: Int) {
+        if let vIdx = visits.firstIndex(where: { $0.id == visitId }) {
+            if let nIdx = visits[vIdx].nominations.firstIndex(where: { $0.castId == castId }) {
+                visits[vIdx].nominations[nIdx].qty = max(1, qty)
+            }
+        }
+        save()
+    }
+
+    func updateDouhanQty(visitId: String, qty: Int) {
+        if let idx = visits.firstIndex(where: { $0.id == visitId }) {
+            visits[idx].douhanQty = max(1, qty)
+        }
+        save()
+    }
+
+    // MARK: - Order
+
+    func addOrderItem(visitId: String, item: OrderItem) {
+        if let idx = visits.firstIndex(where: { $0.id == visitId }) {
+            visits[idx].orderItems.append(item)
+        }
+        save()
+    }
+
+    func removeOrderItem(visitId: String, itemId: String) {
+        if let idx = visits.firstIndex(where: { $0.id == visitId }) {
+            visits[idx].orderItems.removeAll(where: { $0.id == itemId })
+        }
+        save()
+    }
+
+    func updateOrderItemPrice(visitId: String, itemId: String, price: Int) {
+        if let vIdx = visits.firstIndex(where: { $0.id == visitId }),
+           let iIdx = visits[vIdx].orderItems.firstIndex(where: { $0.id == itemId }) {
+            visits[vIdx].orderItems[iIdx].price = price
+        }
+        save()
+    }
+
+    // MARK: - Price Overrides
+
+    func updateSetPrice(visitId: String, price: Int) {
+        if let idx = visits.firstIndex(where: { $0.id == visitId }) {
+            visits[idx].setPriceOverride = price
+        }
+        save()
+    }
+
+    func updateNominationFee(visitId: String, castId: String, fee: Int) {
+        if let idx = visits.firstIndex(where: { $0.id == visitId }) {
+            visits[idx].nominationFeeOverrides[castId] = fee
+        }
+        save()
+    }
+
+    func updateDouhanFee(visitId: String, fee: Int) {
+        if let idx = visits.firstIndex(where: { $0.id == visitId }) {
+            visits[idx].douhanFeeOverride = fee
+        }
+        save()
+    }
+
+    // MARK: - Extension
+
+    func addExtension(visitId: String, minutes: Int, price: Int) {
+        if let idx = visits.firstIndex(where: { $0.id == visitId }) {
+            visits[idx].extensionMinutes += minutes
+            let extItem = OrderItem(
+                menuItemId: "ext_\(Date().timeIntervalSince1970)",
+                menuItemName: "延長\(minutes)分",
+                price: price,
+                quantity: 1
+            )
+            visits[idx].orderItems.append(extItem)
+        }
+        save()
+    }
+
+    // MARK: - Checkout
+
+    func checkout(payment: Payment) {
+        if let vIdx = visits.firstIndex(where: { $0.id == payment.visitId }) {
+            visits[vIdx].isCheckedOut = true
+            visits[vIdx].checkOutTime = payment.paidAt
+        }
+        if let tIdx = tables.firstIndex(where: { $0.id == payment.tableId }) {
+            tables[tIdx].status = .empty
+            tables[tIdx].visitId = nil
+        }
+        // Update customer
+        if let visit = visits.first(where: { $0.id == payment.visitId }),
+           let customerId = visit.customerId,
+           let cIdx = customers.firstIndex(where: { $0.id == customerId }) {
+            customers[cIdx].visitCount += 1
+            customers[cIdx].totalSpend += payment.total
+            if customers[cIdx].visitCount >= 10 {
+                customers[cIdx].rank = .vip
+            } else if customers[cIdx].visitCount >= 3 {
+                customers[cIdx].rank = .repeat
+            }
+        }
+        payments.append(payment)
+        save()
+    }
+
+    // MARK: - Cast
+
+    func clockIn(castId: String) {
+        if let idx = casts.firstIndex(where: { $0.id == castId }) {
+            casts[idx].isWorking = true
+            casts[idx].clockInTime = Date()
+            casts[idx].clockOutTime = nil
+        }
+        save()
+    }
+
+    func clockOut(castId: String) {
+        if let idx = casts.firstIndex(where: { $0.id == castId }) {
+            casts[idx].isWorking = false
+            casts[idx].clockOutTime = Date()
+        }
+        save()
+    }
+
+    func addCast(stageName: String, realName: String, photo: String?, scheduledClockIn: String?, scheduledClockOut: String?, dropOffLocation: String?) {
+        let cast = Cast(
+            id: UUID().uuidString,
+            stageName: stageName,
+            realName: realName,
+            isWorking: false,
+            scheduledClockIn: scheduledClockIn,
+            scheduledClockOut: scheduledClockOut,
+            dropOffLocation: dropOffLocation,
+            photo: photo
+        )
+        casts.append(cast)
+        save()
+    }
+
+    func updateCast(id: String, stageName: String, realName: String, photo: String?, scheduledClockIn: String?, scheduledClockOut: String?, dropOffLocation: String?) {
+        if let idx = casts.firstIndex(where: { $0.id == id }) {
+            casts[idx].stageName = stageName
+            casts[idx].realName = realName
+            casts[idx].photo = photo
+            casts[idx].scheduledClockIn = scheduledClockIn
+            casts[idx].scheduledClockOut = scheduledClockOut
+            casts[idx].dropOffLocation = dropOffLocation
+        }
+        save()
+    }
+
+    // MARK: - Menu
+
+    func addMenuItem(name: String, price: Int, category: MenuCategory) {
+        let item = MenuItem(id: UUID().uuidString, name: name, price: price, category: category, isActive: true)
+        menuItems.append(item)
+        save()
+    }
+
+    func toggleMenuItem(id: String) {
+        if let idx = menuItems.firstIndex(where: { $0.id == id }) {
+            menuItems[idx].isActive.toggle()
+        }
+        save()
+    }
+
+    // MARK: - Room
+
+    func addRoom(name: String) {
+        rooms.append(Room(id: UUID().uuidString, name: name))
+        save()
+    }
+
+    func updateRoom(id: String, name: String) {
+        if let idx = rooms.firstIndex(where: { $0.id == id }) {
+            rooms[idx].name = name
+        }
+        save()
+    }
+
+    func deleteRoom(id: String) {
+        guard rooms.count > 1 else { return }
+        let fallbackId = rooms.first(where: { $0.id != id })!.id
+        rooms.removeAll(where: { $0.id == id })
+        for i in tables.indices where tables[i].roomId == id {
+            tables[i].roomId = fallbackId
+        }
+        save()
+    }
+
+    func moveTableRoom(tableId: String, roomId: String) {
+        if let idx = tables.firstIndex(where: { $0.id == tableId }) {
+            tables[idx].roomId = roomId
+        }
+        save()
+    }
+
+    func updateTablePosition(tableId: String, x: Int, y: Int) {
+        if let idx = tables.firstIndex(where: { $0.id == tableId }) {
+            tables[idx].position = TablePosition(x: x, y: y)
+        }
+        save()
+    }
+
+    // MARK: - Register
+
+    func setRegisterStart(amount: Int) {
+        registerStartAmount = amount
+        save()
+    }
+
+    func addCashWithdrawal(amount: Int, note: String?) {
+        cashWithdrawals.append(CashWithdrawal(amount: amount, note: note))
+        save()
+    }
+
+    // MARK: - Computed
+
+    var totalSales: Int {
+        payments.reduce(0) { $0 + $1.total }
+    }
+
+    var todayPayments: [Payment] {
+        let todayStart = Calendar.current.startOfDay(for: Date())
+        return payments.filter { $0.paidAt >= todayStart }
+    }
+
+    var todayVisits: [Visit] {
+        let todayStart = Calendar.current.startOfDay(for: Date())
+        return visits.filter { $0.checkInTime >= todayStart }
+    }
+
+    var workingCasts: [Cast] {
+        casts.filter(\.isWorking)
+    }
+
+    func castNominations(castId: String) -> Int {
+        let todayStart = Calendar.current.startOfDay(for: Date())
+        return visits.filter { v in
+            v.checkInTime >= todayStart &&
+            v.nominations.contains(where: { $0.castId == castId && $0.nominationType != .none })
+        }.count
+    }
+
+    func castSales(castId: String) -> Int {
+        return todayPayments.filter { p in
+            guard let visit = visits.first(where: { $0.id == p.visitId }) else { return false }
+            return visit.nominations.contains(where: { $0.castId == castId })
+        }.reduce(0) { $0 + $1.total }
+    }
+}

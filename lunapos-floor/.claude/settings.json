@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm create:*)",
+      "Bash(npx tailwindcss:*)",
+      "Bash(printf:*)",
+      "Bash(/Users/ryuichiueda/works/luna-admin/vite.config.ts:*)",
+      "Bash(__NEW_LINE_e85af4ca3bed36b0__ cat)",
+      "Bash(/Users/ryuichiueda/works/luna-cast/vite.config.ts:*)",
+      "Bash(/Users/ryuichiueda/works/luna-admin/src/App.tsx:*)",
+      "Bash(__NEW_LINE_4dd18b71da9bdb1b__ cat)",
+      "Bash(/Users/ryuichiueda/works/luna-cast/src/App.tsx:*)",
+      "Bash(brew install:*)",
+      "Bash(xcodegen generate:*)",
+      "Bash(xcodebuild:*)",
+      "Bash(xcrun simctl list:*)",
+      "Bash(swift build:*)"
+    ],
+    "additionalDirectories": [
+      "/Users/ryuichiueda/works/luna-admin/src",
+      "/Users/ryuichiueda/works",
+      "/Users/ryuichiueda/works/luna-pos/LunaPOS/LunaPOS/{Models,Data,ViewModels,Views,Views"
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "additionalDirectories": [
+      "/Users/ryuichiueda/works/luna/luna-admin-2"
+    ],
+    "allow": [
+      "Bash(npx next build:*)"
+    ]
+  }
+}
