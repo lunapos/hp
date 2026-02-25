@@ -15,7 +15,7 @@ export default function FloatingLineButton() {
       <div className="flex flex-col">
         <span className="text-sm font-bold leading-tight">LINE友達追加</span>
         <span className="text-[10px] opacity-80 leading-tight">
-          導入相談・トライアルもこちら
+          導入相談・お問い合わせもこちら
         </span>
       </div>
     </a>

@@ -15,7 +15,7 @@ export default function CtaSection() {
             まずはお気軽にご相談ください
           </h2>
           <p className="text-luna-text-secondary mb-8 max-w-lg mx-auto">
-            1ヶ月間の無料トライアルをご用意しています。
+            累計500会計まで無料でお使いいただけます。
             <br />
             導入のご相談はLINEまたはフォームで受付中です。
           </p>

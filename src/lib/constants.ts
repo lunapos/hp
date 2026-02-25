@@ -195,17 +195,33 @@ export const ALL_FEATURES: Feature[] = [
   },
 ];
 
-export const PRICING_PLAN = {
-  price: "\u00a530,000",
-  note: "\u203b\u6b63\u5f0f\u30ea\u30ea\u30fc\u30b9\u6642\u306b\u5909\u66f4\u3068\u306a\u308b\u5834\u5408\u304c\u3042\u308a\u307e\u3059",
+export const PRICING_FREE = {
+  name: "Free",
+  price: "¥0",
+  description: "累計500会計まで無料。全機能をお使いいただけます。",
   features: [
-    "\u6307\u540d\u7ba1\u7406\u30fb\u4f1a\u8a08\u7ba1\u7406",
-    "\u30b7\u30d5\u30c8\u7ba1\u7406",
-    "\u58f2\u4e0a\u30ec\u30dd\u30fc\u30c8",
-    "\u9867\u5ba2\u7ba1\u7406",
+    "指名管理・会計管理",
+    "シフト管理",
+    "売上レポート",
+    "顧客管理",
+    "キャストアプリ",
+    "管理画面",
   ],
-  aiNote: "\u58f2\u4e0a\u4e88\u6e2c\u30fb\u30b7\u30d5\u30c8\u6700\u9069\u5316\u30fb\u9867\u5ba2\u5206\u6790\u306a\u3069\u3001AI\u3092\u6d3b\u7528\u3057\u305f\u6a5f\u80fd\u3092\u9806\u6b21\u30ea\u30ea\u30fc\u30b9\u4e88\u5b9a\u3067\u3059\u3002AI\u6a5f\u80fd\u306e\u3054\u5229\u7528\u306b\u306f\u8ffd\u52a0\u6599\u91d1\u304c\u767a\u751f\u3059\u308b\u5834\u5408\u304c\u3042\u308a\u307e\u3059\u3002",
 };
+
+export const PRICING_PRO = {
+  name: "Pro",
+  price: "¥30,000",
+  description: "累計500会計を超えたら月額制に移行。機能はFreeと同じです。",
+  features: [
+    "Freeの全機能",
+    "会計数無制限",
+  ],
+  aiNote: "売上予測・シフト最適化・顧客分析など、AIを活用した機能を順次リリース予定です。AI機能のご利用には追加料金が発生する場合があります。",
+};
+
+// 後方互換（他コンポーネントで参照されている場合）
+export const PRICING_PLAN = PRICING_PRO;
 
 export const TESTIMONIALS: Testimonial[] = [];
 
@@ -231,9 +247,9 @@ export const FAQS: FAQ[] = [
       "はい、解約はいつでも可能です。最低利用期間の縛りはございません。公式LINEからご連絡いただければ、すぐにお手続きいたします。",
   },
   {
-    question: "無料トライアルはありますか？",
+    question: "無料で使えますか？",
     answer:
-      "はい、1ヶ月間の無料トライアルをご利用いただけます。クレジットカードの登録不要で、全機能をお試しいただけます。",
+      "はい、累計500会計まで完全無料でご利用いただけます。クレジットカードの登録も不要で、全機能をお使いいただけます。501会計目からは月額¥30,000（税込）のProプランに移行となります。",
   },
   {
     question: "店舗独自の給与体系に対応できますか？",
