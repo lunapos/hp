@@ -31,6 +31,26 @@ export interface NewsItem {
 export const newsItems: NewsItem[] = [
   // --- HP ---
   {
+    slug: "hp-v0-9-0-news-tabs-badges",
+    date: "2026-02-25",
+    title: "v0.9.0 ニュースタブUI & プロジェクト別バッジ",
+    summary:
+      "ニュースページにタブ切り替えUI、開発アップデートにプロジェクト別バッジ（HP/Floor/Cast/Admin）を追加。スマホ横スクロール修正。",
+    category: "開発アップデート",
+    project: "HP",
+    content: [
+      "ニュースページとモバイル表示を改善しました。",
+      "",
+      "主な変更点：",
+      "・ニュースページにタブUI（お知らせ / 開発アップデート切り替え）",
+      "・メニューバーに「ニュース」リンクを追加",
+      "・開発アップデートにプロジェクト別バッジ表示（HP/Floor/Cast/Admin）",
+      "・Floor/Cast/Adminの開発アップデートを追加",
+      "・スマホ版の横スクロール防止（overflow-x: hidden）",
+      "・スマホメニューの背景タップで閉じるよう修正",
+    ].join("\n"),
+  },
+  {
     slug: "hp-v0-8-0-light-mode",
     date: "2026-02-25",
     title: "v0.8.0 ライトモード & UI刷新",
