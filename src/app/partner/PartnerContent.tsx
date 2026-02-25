@@ -232,7 +232,7 @@ export default function PartnerContent() {
                 <div>
                   <h2 className="text-xl font-bold text-white">パートナー登録</h2>
                   <p className="text-luna-text-secondary text-xs">
-                    登録後すぐに専用リンクが発行されます
+                    実装完了後に専用リンクをお送りします
                   </p>
                 </div>
               </div>
@@ -288,7 +288,7 @@ export default function PartnerContent() {
                     required
                     minLength={1}
                     className="w-full bg-luna-bg border border-luna-border rounded-xl px-4 py-3 text-white focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none transition-all"
-                    placeholder="8文字以上"
+                    placeholder="パスワードを入力"
                   />
                 </div>
                 <div>

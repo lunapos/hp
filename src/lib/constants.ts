@@ -195,10 +195,9 @@ export const ALL_FEATURES: Feature[] = [
   },
 ];
 
-export const PRICING_FREE = {
-  name: "Free",
-  price: "¥0",
-  description: "累計500会計まで無料。全機能をお使いいただけます。",
+export const PRICING_PLAN = {
+  price: "¥30,000",
+  description: "迷わせない、ワンプラン。最初の500会計は無料です。",
   features: [
     "指名管理・会計管理",
     "シフト管理",
@@ -207,21 +206,9 @@ export const PRICING_FREE = {
     "キャストアプリ",
     "管理画面",
   ],
-};
-
-export const PRICING_PRO = {
-  name: "Pro",
-  price: "¥30,000",
-  description: "累計500会計を超えたら月額制に移行。機能はFreeと同じです。",
-  features: [
-    "Freeの全機能",
-    "会計数無制限",
-  ],
+  freeNote: "最初の500会計（累計）は無料。全機能がそのまま使えます。",
   aiNote: "売上予測・シフト最適化・顧客分析など、AIを活用した機能を順次リリース予定です。AI機能のご利用には追加料金が発生する場合があります。",
 };
-
-// 後方互換（他コンポーネントで参照されている場合）
-export const PRICING_PLAN = PRICING_PRO;
 
 export const TESTIMONIALS: Testimonial[] = [];
 
@@ -249,7 +236,7 @@ export const FAQS: FAQ[] = [
   {
     question: "無料で使えますか？",
     answer:
-      "はい、累計500会計まで完全無料でご利用いただけます。クレジットカードの登録も不要で、全機能をお使いいただけます。501会計目からは月額¥30,000（税込）のProプランに移行となります。",
+      "はい、累計500会計まで完全無料でご利用いただけます。クレジットカードの登録も不要で、全機能をお使いいただけます。501会計目から月額¥30,000（税込）となります。",
   },
   {
     question: "店舗独自の給与体系に対応できますか？",
