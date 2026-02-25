@@ -77,3 +77,10 @@ export function getNewsBySlug(slug: string): NewsItem | undefined {
 export function getLatestNews(count: number): NewsItem[] {
   return newsItems.slice(0, count);
 }
+
+export function getNewsByCategory(
+  category: NewsItem["category"],
+  count: number
+): NewsItem[] {
+  return newsItems.filter((item) => item.category === category).slice(0, count);
+}
