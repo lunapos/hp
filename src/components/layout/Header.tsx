@@ -12,71 +12,75 @@ export default function Header() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 bg-luna-bg/90 backdrop-blur-md border-b border-luna-border z-50">
-      <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-        <Link
-          href="/"
-          className="flex items-center gap-2 text-xl font-bold"
-        >
-          <Image src="/icon.png" alt="LunaPos" width={24} height={24} />
-          <span className="text-luna-gold tracking-wider">LunaPos</span>
-        </Link>
-
-        <nav className="hidden md:flex items-center gap-6">
-          {NAV_ITEMS.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`text-sm transition-colors duration-200 ${
-                pathname === item.href
-                  ? "text-luna-gold"
-                  : "text-luna-text-secondary hover:text-luna-text-primary"
-              }`}
-            >
-              {item.label}
-            </Link>
-          ))}
-          <ThemeToggle />
-        </nav>
-
-        <div className="md:hidden flex items-center gap-2">
-          <ThemeToggle />
-          <button
-            type="button"
-            className="flex flex-col items-center justify-center gap-1.5 w-10 h-10"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label={isMenuOpen ? "メニューを閉じる" : "メニューを開く"}
-            aria-expanded={isMenuOpen}
+    <>
+      <header className="sticky top-0 bg-luna-bg/90 backdrop-blur-md border-b border-luna-border z-50">
+        <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+          <Link
+            href="/"
+            className="flex items-center gap-2 text-xl font-bold"
           >
-            <span
-              className={`block w-6 h-0.5 bg-luna-text-secondary transition-transform duration-300 ${
-                isMenuOpen ? "rotate-45 translate-y-2" : ""
-              }`}
-            />
-            <span
-              className={`block w-6 h-0.5 bg-luna-text-secondary transition-opacity duration-300 ${
-                isMenuOpen ? "opacity-0" : ""
-              }`}
-            />
-            <span
-              className={`block w-6 h-0.5 bg-luna-text-secondary transition-transform duration-300 ${
-                isMenuOpen ? "-rotate-45 -translate-y-2" : ""
-              }`}
-            />
-          </button>
-        </div>
-      </div>
+            <Image src="/icon.png" alt="LunaPos" width={24} height={24} />
+            <span className="text-luna-gold tracking-wider">LunaPos</span>
+          </Link>
 
+          <nav className="hidden md:flex items-center gap-6">
+            {NAV_ITEMS.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`text-sm transition-colors duration-200 ${
+                  pathname === item.href
+                    ? "text-luna-gold"
+                    : "text-luna-text-secondary hover:text-luna-text-primary"
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
+            <ThemeToggle />
+          </nav>
+
+          <div className="md:hidden flex items-center gap-2">
+            <ThemeToggle />
+            <button
+              type="button"
+              className="flex flex-col items-center justify-center gap-1.5 w-10 h-10"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label={isMenuOpen ? "メニューを閉じる" : "メニューを開く"}
+              aria-expanded={isMenuOpen}
+            >
+              <span
+                className={`block w-6 h-0.5 bg-luna-text-secondary transition-transform duration-300 ${
+                  isMenuOpen ? "rotate-45 translate-y-2" : ""
+                }`}
+              />
+              <span
+                className={`block w-6 h-0.5 bg-luna-text-secondary transition-opacity duration-300 ${
+                  isMenuOpen ? "opacity-0" : ""
+                }`}
+              />
+              <span
+                className={`block w-6 h-0.5 bg-luna-text-secondary transition-transform duration-300 ${
+                  isMenuOpen ? "-rotate-45 -translate-y-2" : ""
+                }`}
+              />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Mobile overlay - outside header to avoid stacking context issues */}
       {isMenuOpen && (
         <div
-          className="md:hidden fixed inset-0 top-16 bg-black/50 z-40"
+          className="md:hidden fixed inset-0 bg-black/50 z-[60]"
           onClick={() => setIsMenuOpen(false)}
           aria-hidden="true"
         />
       )}
 
+      {/* Mobile slide-in panel */}
       <div
-        className={`md:hidden fixed top-16 right-0 bottom-0 w-64 z-50 bg-luna-bg/95 backdrop-blur-md border-l border-luna-border transform transition-transform duration-300 ease-in-out ${
+        className={`md:hidden fixed top-0 right-0 bottom-0 w-64 z-[70] pt-16 bg-luna-bg/95 backdrop-blur-md border-l border-luna-border transform transition-transform duration-300 ease-in-out ${
           isMenuOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -104,6 +108,6 @@ export default function Header() {
           </Link>
         </nav>
       </div>
-    </header>
+    </>
   );
 }
