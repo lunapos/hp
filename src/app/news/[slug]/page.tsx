@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 import Section from "@/components/layout/Section";
+import ProjectBadge from "@/components/ui/ProjectBadge";
 import { newsItems, getNewsBySlug } from "@/data/news";
 
 interface Props {
@@ -62,6 +63,7 @@ export default async function NewsDetailPage({ params }: Props) {
             >
               {item.category}
             </span>
+            {item.project && <ProjectBadge project={item.project} />}
           </div>
 
           <h1 className="text-2xl md:text-3xl font-bold text-luna-text-primary mb-8">

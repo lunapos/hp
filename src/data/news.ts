@@ -1,20 +1,43 @@
+export type Project = "HP" | "LP" | "Floor" | "Cast" | "Admin";
+
+export const PROJECT_LABELS: Record<Project, { label: string; color: string }> =
+  {
+    HP: { label: "HP", color: "bg-blue-500/20 text-blue-400 border-blue-500/30" },
+    LP: { label: "LP", color: "bg-purple-500/20 text-purple-400 border-purple-500/30" },
+    Floor: {
+      label: "Floor",
+      color: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+    },
+    Cast: {
+      label: "Cast",
+      color: "bg-pink-500/20 text-pink-400 border-pink-500/30",
+    },
+    Admin: {
+      label: "Admin",
+      color: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+    },
+  };
+
 export interface NewsItem {
   slug: string;
   date: string;
   title: string;
   summary: string;
   category: "お知らせ" | "開発アップデート" | "メンテナンス" | "キャンペーン";
+  project?: Project;
   content?: string;
 }
 
 export const newsItems: NewsItem[] = [
+  // --- HP ---
   {
-    slug: "v0-8-0-light-mode",
+    slug: "hp-v0-8-0-light-mode",
     date: "2026-02-25",
     title: "v0.8.0 ライトモード & UI刷新",
     summary:
       "ダーク/ライトモード切り替え、お知らせ・開発アップデートセクション、ファビコン刷新、スライド式テーマトグルを追加。",
     category: "開発アップデート",
+    project: "HP",
     content: [
       "HPサイトにライトモードを追加しました。ヘッダーのスライド式トグルでダーク/ライトを切り替えられます。",
       "",
@@ -27,12 +50,13 @@ export const newsItems: NewsItem[] = [
     ].join("\n"),
   },
   {
-    slug: "v0-7-0-media",
+    slug: "hp-v0-7-0-media",
     date: "2026-02-25",
     title: "v0.7.0 メディア機能",
     summary:
       "メディア記事ページを追加。タグ別分類、ページネーション、サイトマップ自動生成に対応。",
     category: "開発アップデート",
+    project: "HP",
     content: [
       "HPサイトにメディア（記事）セクションを追加しました。",
       "",
@@ -45,12 +69,13 @@ export const newsItems: NewsItem[] = [
     ].join("\n"),
   },
   {
-    slug: "v0-6-0-form-analytics",
+    slug: "hp-v0-6-0-form-analytics",
     date: "2026-02-25",
     title: "v0.6.0 フォーム統合 & アナリティクス",
     summary:
       "LP・HP間のお問い合わせフォームを統合。GA4イベント計測、送信元フォーム表示を追加。",
     category: "開発アップデート",
+    project: "HP",
     content: [
       "お問い合わせフォームのLP/HP間統合と、アナリティクス強化を行いました。",
       "",
@@ -63,12 +88,13 @@ export const newsItems: NewsItem[] = [
     ].join("\n"),
   },
   {
-    slug: "v0-5-0-pricing-features",
+    slug: "hp-v0-5-0-pricing-features",
     date: "2026-02-25",
     title: "v0.5.0 料金プラン & 機能ページ刷新",
     summary:
       "フリーミアムモデル（500会計無料）に移行。機能紹介ページを10項目に統一。",
     category: "開発アップデート",
+    project: "HP",
     content: [
       "料金体系と機能紹介ページを大幅にリニューアルしました。",
       "",
@@ -80,12 +106,13 @@ export const newsItems: NewsItem[] = [
     ].join("\n"),
   },
   {
-    slug: "v0-4-0-ga-roadmap",
+    slug: "hp-v0-4-0-ga-roadmap",
     date: "2026-02-24",
     title: "v0.4.0 GA連携・ロードマップ・404ページ",
     summary:
       "Google Analytics連携、開発ロードマップの進捗ベース表示、404ページを追加。",
     category: "開発アップデート",
+    project: "HP",
     content: [
       "サイトの計測基盤と各種ページを整備しました。",
       "",
@@ -97,12 +124,13 @@ export const newsItems: NewsItem[] = [
     ].join("\n"),
   },
   {
-    slug: "v0-3-0-media",
+    slug: "hp-v0-3-0-media",
     date: "2026-02-24",
     title: "v0.3.0 オウンドメディア基盤",
     summary:
       "メディア（記事）ページの基盤を実装。記事の公開・閲覧ができるようになりました。",
     category: "開発アップデート",
+    project: "HP",
     content: [
       "HPサイトにオウンドメディア機能の基盤を追加しました。",
       "",
@@ -113,12 +141,13 @@ export const newsItems: NewsItem[] = [
     ].join("\n"),
   },
   {
-    slug: "v0-2-0-contact-email",
+    slug: "hp-v0-2-0-contact-email",
     date: "2026-02-23",
     title: "v0.2.0 お問い合わせフォーム & メール送信",
     summary:
       "Resendによるメール送信を導入。お問い合わせフォームからの自動メール通知が可能に。",
     category: "開発アップデート",
+    project: "HP",
     content: [
       "お問い合わせフォームとメール送信基盤を整備しました。",
       "",
@@ -130,12 +159,13 @@ export const newsItems: NewsItem[] = [
     ].join("\n"),
   },
   {
-    slug: "v0-1-0-initial",
+    slug: "hp-v0-1-0-initial",
     date: "2026-02-23",
     title: "v0.1.0 HP初期実装",
     summary:
       "LunaPos公式サイトの初期実装。トップページ、機能紹介、料金、ロードマップ、投資・パートナー、会社概要を公開。",
     category: "開発アップデート",
+    project: "HP",
     content: [
       "LunaPos公式サイト（lunapos.jp）の初期バージョンを実装しました。",
       "",
@@ -150,6 +180,158 @@ export const newsItems: NewsItem[] = [
       "・プライバシーポリシー・利用規約・特商法ページ",
     ].join("\n"),
   },
+  // --- Floor ---
+  {
+    slug: "floor-v0-3-0-checkout-reports",
+    date: "2026-02-24",
+    title: "v0.3.0 会計・レポート機能",
+    summary:
+      "会計ページ、売上レポート、レジ締め機能を実装。複数決済手段・割引・サービス料の自動計算に対応。",
+    category: "開発アップデート",
+    project: "Floor",
+    content: [
+      "Floor アプリに会計・レポート機能を追加しました。",
+      "",
+      "主な変更点：",
+      "・会計ページ（明細一覧、割引適用、決済手段選択）",
+      "・複数決済対応（現金・カード・電子マネー・ツケ）",
+      "・サービス料（40%）・消費税（10%）自動計算",
+      "・売上レポート（日次売上・決済方法別内訳・キャスト別ランキング）",
+      "・人気メニューTOP5表示",
+      "・レジ締め（出金記録付き現金照合）",
+      "・取引履歴一覧",
+    ].join("\n"),
+  },
+  {
+    slug: "floor-v0-2-0-table-order",
+    date: "2026-02-23",
+    title: "v0.2.0 テーブル管理・オーダー入力",
+    summary:
+      "テーブル詳細画面、カテゴリ別メニューオーダー、指名・同伴管理、セット延長機能を実装。",
+    category: "開発アップデート",
+    project: "Floor",
+    content: [
+      "Floor アプリにテーブル管理とオーダー入力機能を追加しました。",
+      "",
+      "主な変更点：",
+      "・テーブル詳細画面（ゲスト数管理、時間表示）",
+      "・カテゴリ別メニューオーダー（ドリンク・ボトル・フード・レディースドリンク・その他・経費）",
+      "・カスタムアイテム追加機能",
+      "・指名管理（本指名・場内指名の料金設定）",
+      "・同伴（ドウハン）機能",
+      "・セット時間延長機能",
+      "・伝票集約・単価調整",
+    ].join("\n"),
+  },
+  {
+    slug: "floor-v0-1-0-floor-map",
+    date: "2026-02-22",
+    title: "v0.1.0 フロアマップ & キャスト管理",
+    summary:
+      "フロアマップ表示、マルチルーム対応、キャスト一覧・出退勤打刻機能を実装。",
+    category: "開発アップデート",
+    project: "Floor",
+    content: [
+      "Floor アプリの初期バージョンを実装しました。",
+      "",
+      "主な変更点：",
+      "・リアルタイムフロアマップ（テーブル状態の視覚表示）",
+      "・ドラッグによるフロアマップのパン操作",
+      "・マルチルーム対応（タブ切り替え）",
+      "・テーブルステータス管理（空席・使用中・会計待ち）",
+      "・リアルタイム売上カウンター",
+      "・キャスト一覧（写真プロフィール・出退勤状態）",
+      "・出退勤打刻機能",
+      "・本日の統計（指名数・売上）表示",
+      "・管理画面（メニュー管理・テーブル配置エディタ・ルーム設定）",
+    ].join("\n"),
+  },
+  // --- Cast ---
+  {
+    slug: "cast-v0-2-0-shift-portfolio",
+    date: "2026-02-24",
+    title: "v0.2.0 シフト提出・ポートフォリオ",
+    summary:
+      "シフト希望提出、月別カレンダー表示、パフォーマンス証明書・ポートフォリオ機能を実装。",
+    category: "開発アップデート",
+    project: "Cast",
+    content: [
+      "Cast アプリにシフト提出機能とポートフォリオ機能を追加しました。",
+      "",
+      "主な変更点：",
+      "・シフト希望提出（月別カレンダー、出勤可/不可トグル）",
+      "・日別の出勤時間帯入力（開始・終了時刻）",
+      "・備考入力（早上がり希望等）",
+      "・月次シフトサマリー統計",
+      "・パフォーマンス証明書の自動生成（在籍期間・月平均売上・指名数・リピート率等）",
+      "・ポートフォリオ公開のオプトイン/オプトアウト同意",
+      "・データプライバシー管理（データ削除リクエスト、30日保持期間）",
+    ].join("\n"),
+  },
+  {
+    slug: "cast-v0-1-0-dashboard",
+    date: "2026-02-22",
+    title: "v0.1.0 キャストダッシュボード",
+    summary:
+      "キャストログイン、本日の実績表示、売上ランキング、月別シフトカレンダーを実装。",
+    category: "開発アップデート",
+    project: "Cast",
+    content: [
+      "Cast アプリの初期バージョンを実装しました。",
+      "",
+      "主な変更点：",
+      "・キャストログイン画面（ID/パスワード認証、セッション永続化）",
+      "・ダッシュボード（本日の勤務状態・出勤時刻表示）",
+      "・本日の実績（本指名数・場内指名数・同伴数）",
+      "・テーブル別売上明細（指名種別バッジ付き）",
+      "・日次売上ランキング（TOP3にメダル表示）",
+      "・月別シフトカレンダー（確定シフト表示・稼働時間・給与見込み）",
+      "・月/年ナビゲーション・「今日」ボタン",
+    ].join("\n"),
+  },
+  // --- Admin ---
+  {
+    slug: "admin-v0-2-0-cast-menu-settings",
+    date: "2026-02-24",
+    title: "v0.2.0 キャスト管理・メニュー管理・店舗設定",
+    summary:
+      "キャスト登録・編集、カテゴリ別メニュー管理、ルーム・テーブル設定を実装。",
+    category: "開発アップデート",
+    project: "Admin",
+    content: [
+      "Admin アプリにスタッフ・メニュー管理と店舗設定機能を追加しました。",
+      "",
+      "主な変更点：",
+      "・キャスト管理（新規登録・プロフィール編集・写真管理）",
+      "・キャスト状態表示（出勤中/退勤）",
+      "・本日のパフォーマンス統計（指名数・売上）",
+      "・カテゴリ別メニュー管理（追加・有効/無効切り替え）",
+      "・カテゴリ別アイテム数表示・折りたたみ表示",
+      "・店舗設定（ルーム管理・テーブル割り当て・座標設定）",
+    ].join("\n"),
+  },
+  {
+    slug: "admin-v0-1-0-reports-shift",
+    date: "2026-02-22",
+    title: "v0.1.0 売上レポート・シフト管理",
+    summary:
+      "日次売上レポート、決済方法別内訳、キャストランキング、週次シフト表示を実装。",
+    category: "開発アップデート",
+    project: "Admin",
+    content: [
+      "Admin アプリの初期バージョンを実装しました。",
+      "",
+      "主な変更点：",
+      "・日次売上レポート（売上合計・組数・客単価・平均滞在時間）",
+      "・決済方法別内訳（構成比表示）",
+      "・キャストパフォーマンスランキング（指名数・売上）",
+      "・人気メニューTOP5（売上金額順）",
+      "・取引履歴一覧（決済方法表示）",
+      "・週次シフト表示（日別キャスト数・色分け強度表示・出勤時間帯）",
+      "・週ナビゲーション・「今日」ボタン",
+    ].join("\n"),
+  },
+  // --- お知らせ ---
   {
     slug: "hp-beta-launch",
     date: "2026-02-23",

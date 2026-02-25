@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, Megaphone, Code } from "lucide-react";
 import Section from "@/components/layout/Section";
 import SectionHeading from "@/components/ui/SectionHeading";
+import ProjectBadge from "@/components/ui/ProjectBadge";
 import { getNewsByCategory } from "@/data/news";
 import type { NewsItem } from "@/data/news";
 
@@ -11,9 +12,12 @@ function NewsCard({ item }: { item: NewsItem }) {
       href={`/news/${item.slug}`}
       className="block bg-luna-surface border border-luna-border rounded-lg p-4 hover:border-luna-gold transition-all duration-300 group"
     >
-      <time className="text-luna-text-muted text-xs tabular-nums">
-        {item.date}
-      </time>
+      <div className="flex items-center gap-2">
+        <time className="text-luna-text-muted text-xs tabular-nums">
+          {item.date}
+        </time>
+        {item.project && <ProjectBadge project={item.project} />}
+      </div>
       <h3 className="text-luna-text-primary text-sm font-medium mt-1 group-hover:text-luna-gold transition-colors duration-200 line-clamp-2">
         {item.title}
       </h3>

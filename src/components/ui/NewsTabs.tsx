@@ -3,18 +3,75 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import type { NewsItem } from "@/data/news";
 import ProjectBadge from "@/components/ui/ProjectBadge";
+import type { NewsItem } from "@/data/news";
 
 const PER_PAGE = 6;
 
-export default function PaginatedNewsList({ items }: { items: NewsItem[] }) {
+const TABS = [
+  { key: "announcements", label: "お知らせ" },
+  { key: "updates", label: "開発アップデート" },
+] as const;
+
+type TabKey = (typeof TABS)[number]["key"];
+
+function filterByTab(items: NewsItem[], tab: TabKey): NewsItem[] {
+  if (tab === "announcements") {
+    return items.filter(
+      (i) =>
+        i.category === "お知らせ" ||
+        i.category === "キャンペーン" ||
+        i.category === "メンテナンス"
+    );
+  }
+  return items.filter((i) => i.category === "開発アップデート");
+}
+
+export default function NewsTabs({
+  items,
+  defaultTab,
+}: {
+  items: NewsItem[];
+  defaultTab?: TabKey;
+}) {
+  const [activeTab, setActiveTab] = useState<TabKey>(
+    defaultTab ?? "updates"
+  );
   const [page, setPage] = useState(1);
-  const totalPages = Math.ceil(items.length / PER_PAGE);
-  const paged = items.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+
+  const filtered = filterByTab(items, activeTab);
+  const totalPages = Math.ceil(filtered.length / PER_PAGE);
+  const paged = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+
+  const switchTab = (tab: TabKey) => {
+    setActiveTab(tab);
+    setPage(1);
+  };
 
   return (
     <>
+      {/* タブ */}
+      <div className="flex gap-1 mb-8 border-b border-luna-border">
+        {TABS.map((tab) => (
+          <button
+            key={tab.key}
+            type="button"
+            onClick={() => switchTab(tab.key)}
+            className={`px-5 py-3 text-sm font-medium transition-colors duration-200 border-b-2 -mb-px ${
+              activeTab === tab.key
+                ? "border-luna-gold text-luna-gold"
+                : "border-transparent text-luna-text-secondary hover:text-luna-text-primary"
+            }`}
+          >
+            {tab.label}
+            <span className="ml-2 text-xs text-luna-text-muted">
+              ({filterByTab(items, tab.key).length})
+            </span>
+          </button>
+        ))}
+      </div>
+
+      {/* 一覧 */}
       <div className="space-y-4">
         {paged.map((item) => (
           <Link
@@ -40,6 +97,7 @@ export default function PaginatedNewsList({ items }: { items: NewsItem[] }) {
         ))}
       </div>
 
+      {/* ページネーション */}
       {totalPages > 1 && (
         <div className="flex items-center justify-center gap-2 mt-8">
           <button
