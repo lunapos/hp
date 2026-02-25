@@ -52,12 +52,29 @@ export default async function DashboardPage() {
     .order("created_at", { ascending: false })
     .limit(20);
 
+  // Fetch click breakdown by page
+  const { data: clickBreakdownRaw } = await supabase
+    .from("referral_clicks")
+    .select("page_url")
+    .eq("partner_id", partner.id);
+
+  const clickMap = new Map<string, number>();
+  for (const row of clickBreakdownRaw || []) {
+    const url = row.page_url || "/";
+    clickMap.set(url, (clickMap.get(url) || 0) + 1);
+  }
+  const clickBreakdown = Array.from(clickMap.entries())
+    .map(([page_url, click_count]) => ({ page_url, click_count }))
+    .sort((a, b) => b.click_count - a.click_count)
+    .slice(0, 10);
+
   return (
     <DashboardContent
       partner={partner}
       stats={stats}
       conversions={conversions || []}
       commissions={commissions || []}
+      clickBreakdown={clickBreakdown}
     />
   );
 }

@@ -23,6 +23,30 @@ export interface NewsItem {
 export const newsItems: NewsItem[] = [
   // --- 2026-02-25 ---
   {
+    slug: "hp-v0-11-0-partner-dashboard",
+    date: "2026-02-25",
+    title: "v0.11.0 パートナーダッシュボード全面強化",
+    summary:
+      "ダッシュボードをタブ化し、CSS棒グラフ・期間フィルタ・クリック分析・報酬CSV出力・プロフィール編集・通知バッジを追加。サイトマップにニュース詳細ページも追加。",
+    category: "開発アップデート",
+    project: "HP",
+    content: [
+      "パートナーダッシュボードを全面的に強化しました。",
+      "",
+      "主な変更点：",
+      "・ダッシュボードを4タブ構成に変更（概要/成約/報酬/設定）",
+      "・統計カードを6つに拡張（CVR・確定成約を追加）",
+      "・期間フィルタ（7日/30日/90日/全期間）で統計切り替え",
+      "・CSS棒グラフでクリック・成約のトレンド表示",
+      "・ページ別クリック内訳の横棒グラフ",
+      "・報酬サマリー（合計/今月/未払い）＆ CSV出力",
+      "・プロフィール編集機能（名前/電話/パートナー種別）",
+      "・前回ログイン以降の新規通知バッジ",
+      "・sitemapにニュース詳細ページを追加",
+      "・開発アップデートの日付順ソートを修正",
+    ].join("\n"),
+  },
+  {
     slug: "hp-v0-10-0-ux-improvements",
     date: "2026-02-25",
     title: "v0.10.0 UX改善 & モバイル対応強化",
@@ -98,44 +122,6 @@ export const newsItems: NewsItem[] = [
       "・料金プランをワンプランに簡素化",
       "・お問い合わせAPIをHPに統合しVercel Functions廃止",
       "・CORS対応でクロスドメイン送信を実現",
-    ].join("\n"),
-  },
-  {
-    slug: "lp-v0-2-0-contact-email",
-    date: "2026-02-23",
-    title: "v0.2.0 LP お問い合わせフォーム & メール送信",
-    summary:
-      "お問い合わせフォームのメール送信機能を実装。Resend API連携、404ページを追加。",
-    category: "開発アップデート",
-    project: "LP",
-    content: [
-      "LPにお問い合わせフォームのメール送信機能を追加しました。",
-      "",
-      "主な変更点：",
-      "・Resend APIによるメール送信導入",
-      "・メールアドレス設定",
-      "・Vercel Serverless Functions設定",
-      "・404ページ追加",
-      "・API routeのSPAリライト除外",
-    ].join("\n"),
-  },
-  {
-    slug: "lp-v0-1-0-initial",
-    date: "2026-02-23",
-    title: "v0.1.0 LP初期実装",
-    summary:
-      "LunaPos LPサイト（lp.lunapos.jp）の初期実装。ヒーロー、機能紹介、料金、お問い合わせ、GA4連携。",
-    category: "開発アップデート",
-    project: "LP",
-    content: [
-      "LunaPos LPサイト（lp.lunapos.jp）の初期バージョンを実装しました。",
-      "",
-      "主な変更点：",
-      "・ヒーローセクション・機能紹介・料金プラン・お問い合わせフォーム",
-      "・Google Analytics（G-59GQFP47H4）連携",
-      "・Vercel SPAリライト設定",
-      "・モバイルメニューの外タップで閉じる機能",
-      "・顧客管理表記を売上分析に修正",
     ].join("\n"),
   },
   {
@@ -378,6 +364,44 @@ export const newsItems: NewsItem[] = [
     ].join("\n"),
   },
   // --- 2026-02-23 ---
+  {
+    slug: "lp-v0-2-0-contact-email",
+    date: "2026-02-23",
+    title: "v0.2.0 LP お問い合わせフォーム & メール送信",
+    summary:
+      "お問い合わせフォームのメール送信機能を実装。Resend API連携、404ページを追加。",
+    category: "開発アップデート",
+    project: "LP",
+    content: [
+      "LPにお問い合わせフォームのメール送信機能を追加しました。",
+      "",
+      "主な変更点：",
+      "・Resend APIによるメール送信導入",
+      "・メールアドレス設定",
+      "・Vercel Serverless Functions設定",
+      "・404ページ追加",
+      "・API routeのSPAリライト除外",
+    ].join("\n"),
+  },
+  {
+    slug: "lp-v0-1-0-initial",
+    date: "2026-02-23",
+    title: "v0.1.0 LP初期実装",
+    summary:
+      "LunaPos LPサイト（lp.lunapos.jp）の初期実装。ヒーロー、機能紹介、料金、お問い合わせ、GA4連携。",
+    category: "開発アップデート",
+    project: "LP",
+    content: [
+      "LunaPos LPサイト（lp.lunapos.jp）の初期バージョンを実装しました。",
+      "",
+      "主な変更点：",
+      "・ヒーローセクション・機能紹介・料金プラン・お問い合わせフォーム",
+      "・Google Analytics（G-59GQFP47H4）連携",
+      "・Vercel SPAリライト設定",
+      "・モバイルメニューの外タップで閉じる機能",
+      "・顧客管理表記を売上分析に修正",
+    ].join("\n"),
+  },
   {
     slug: "hp-v0-2-0-contact-email",
     date: "2026-02-23",

@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getAllArticles } from "@/lib/media";
+import { newsItems } from "@/data/news";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://lunapos.jp";
@@ -36,6 +37,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
+      url: `${baseUrl}/news`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
       url: `${baseUrl}/media`,
       lastModified: new Date(),
       changeFrequency: "weekly",
@@ -51,5 +58,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...mediaPages];
+  const newsPages: MetadataRoute.Sitemap = newsItems.map((item) => ({
+    url: `${baseUrl}/news/${item.slug}`,
+    lastModified: new Date(item.date),
+    changeFrequency: "monthly",
+    priority: 0.6,
+  }));
+
+  return [...staticPages, ...mediaPages, ...newsPages];
 }

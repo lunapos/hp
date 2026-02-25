@@ -43,6 +43,17 @@ export interface Commission {
   paid_at: string | null;
 }
 
+export interface ClickBreakdown {
+  page_url: string;
+  click_count: number;
+}
+
+export interface DailyStats {
+  date: string;
+  clicks: number;
+  conversions: number;
+}
+
 export interface PartnerStats {
   partner_id: string;
   user_id: string;

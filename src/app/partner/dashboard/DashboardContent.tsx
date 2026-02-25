@@ -1,32 +1,61 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Card from "@/components/ui/Card";
+import TrendChart from "@/components/partner/TrendChart";
+import ClickBreakdown from "@/components/partner/ClickBreakdown";
+import DateRangeFilter, {
+  type Period,
+} from "@/components/partner/DateRangeFilter";
+import CommissionSummary from "@/components/partner/CommissionSummary";
+import ProfileForm from "@/components/partner/ProfileForm";
 import {
   Link2,
   MousePointerClick,
   Store,
+  CheckCircle,
+  TrendingUp,
   BadgeJapaneseYen,
   Wallet,
   Copy,
   Check,
   LogOut,
+  LayoutDashboard,
+  Settings,
+  Bell,
+  X,
 } from "lucide-react";
-import type { Partner, PartnerStats, Conversion, Commission } from "@/types/partner";
+import type {
+  Partner,
+  PartnerStats,
+  Conversion,
+  Commission,
+  ClickBreakdown as ClickBreakdownType,
+  DailyStats,
+} from "@/types/partner";
+
+type TabKey = "overview" | "conversions" | "commissions" | "settings";
 
 interface DashboardContentProps {
   partner: Partner;
   stats: PartnerStats | null;
   conversions: Conversion[];
   commissions: Commission[];
+  clickBreakdown: ClickBreakdownType[];
 }
 
 const statusLabels: Record<string, { label: string; className: string }> = {
   pending: { label: "審査中", className: "bg-yellow-400/20 text-yellow-300" },
-  confirmed: { label: "確定", className: "bg-emerald-400/20 text-emerald-300" },
+  confirmed: {
+    label: "確定",
+    className: "bg-emerald-400/20 text-emerald-300",
+  },
   rejected: { label: "却下", className: "bg-red-400/20 text-red-300" },
-  approved: { label: "承認済", className: "bg-emerald-400/20 text-emerald-300" },
+  approved: {
+    label: "承認済",
+    className: "bg-emerald-400/20 text-emerald-300",
+  },
   paid: { label: "支払済", className: "bg-blue-400/20 text-blue-300" },
 };
 
@@ -56,17 +85,74 @@ function formatYen(amount: number) {
   return `\u00a5${amount.toLocaleString("ja-JP")}`;
 }
 
+const TABS: { key: TabKey; label: string; icon: typeof LayoutDashboard }[] = [
+  { key: "overview", label: "概要", icon: LayoutDashboard },
+  { key: "conversions", label: "成約", icon: Store },
+  { key: "commissions", label: "報酬", icon: Wallet },
+  { key: "settings", label: "設定", icon: Settings },
+];
+
 export default function DashboardContent({
   partner,
   stats,
   conversions,
   commissions,
+  clickBreakdown,
 }: DashboardContentProps) {
   const router = useRouter();
   const [copied, setCopied] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+  const [activeTab, setActiveTab] = useState<TabKey>("overview");
+  const [period, setPeriod] = useState<Period>("30d");
+  const [dailyData, setDailyData] = useState<DailyStats[]>([]);
+  const [loadingStats, setLoadingStats] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+  const [newItemCount, setNewItemCount] = useState(0);
 
   const referralUrl = `https://lunapos.jp?ref=${partner.referral_code}`;
+
+  // Notification: check for new items since last visit
+  useEffect(() => {
+    const lastVisit = localStorage.getItem("luna-partner-last-visit");
+    if (lastVisit) {
+      const lastDate = new Date(lastVisit);
+      const newConversions = conversions.filter(
+        (c) => new Date(c.created_at) > lastDate
+      ).length;
+      const newCommissions = commissions.filter(
+        (c) => new Date(c.created_at) > lastDate
+      ).length;
+      const total = newConversions + newCommissions;
+      if (total > 0) {
+        setNewItemCount(total);
+        setShowNotification(true);
+      }
+    }
+    localStorage.setItem(
+      "luna-partner-last-visit",
+      new Date().toISOString()
+    );
+  }, [conversions, commissions]);
+
+  // Fetch daily stats when period changes
+  const fetchStats = useCallback(async () => {
+    setLoadingStats(true);
+    try {
+      const res = await fetch(`/api/partner/stats?period=${period}`);
+      if (res.ok) {
+        const data = await res.json();
+        setDailyData(data.daily || []);
+      }
+    } catch {
+      // Silently fail
+    } finally {
+      setLoadingStats(false);
+    }
+  }, [period]);
+
+  useEffect(() => {
+    fetchStats();
+  }, [fetchStats]);
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(referralUrl);
@@ -80,6 +166,14 @@ export default function DashboardContent({
     router.push("/partner/login");
   };
 
+  const conversionRate =
+    (stats?.total_clicks ?? 0) > 0
+      ? (
+          ((stats?.total_conversions ?? 0) / (stats?.total_clicks ?? 1)) *
+          100
+        ).toFixed(1)
+      : "0.0";
+
   const statCards = [
     {
       icon: MousePointerClick,
@@ -92,9 +186,21 @@ export default function DashboardContent({
       value: stats?.total_conversions ?? 0,
     },
     {
+      icon: CheckCircle,
+      label: "確定成約",
+      value: stats?.confirmed_conversions ?? 0,
+    },
+    {
+      icon: TrendingUp,
+      label: "CVR",
+      value: `${conversionRate}%`,
+    },
+    {
       icon: BadgeJapaneseYen,
       label: "未払い報酬",
-      value: formatYen((stats?.pending_commission ?? 0) + (stats?.approved_commission ?? 0)),
+      value: formatYen(
+        (stats?.pending_commission ?? 0) + (stats?.approved_commission ?? 0)
+      ),
     },
     {
       icon: Wallet,
@@ -103,11 +209,37 @@ export default function DashboardContent({
     },
   ];
 
+  // Prepare chart data
+  const chartData = dailyData.map((d) => ({
+    label: d.date.slice(5), // MM-DD
+    value: d.clicks,
+  }));
+  const convChartData = dailyData.map((d) => ({
+    label: d.date.slice(5),
+    value: d.conversions,
+  }));
+
   return (
     <div className="py-8 px-4">
       <div className="max-w-6xl mx-auto">
+        {/* Notification Bar */}
+        {showNotification && (
+          <div className="flex items-center justify-between bg-emerald-400/10 border border-emerald-400/30 rounded-xl px-4 py-3 mb-6">
+            <div className="flex items-center gap-2 text-sm text-emerald-400">
+              <Bell className="w-4 h-4" />
+              前回ログイン以降: 新しい通知が {newItemCount}件 あります
+            </div>
+            <button
+              onClick={() => setShowNotification(false)}
+              className="text-emerald-400 hover:text-emerald-300"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-6">
           <div>
             <p className="text-emerald-400 text-sm tracking-[0.3em] font-medium mb-1">
               PARTNER DASHBOARD
@@ -127,10 +259,12 @@ export default function DashboardContent({
         </div>
 
         {/* Referral Link */}
-        <Card className="border-emerald-400/20 mb-8">
+        <Card className="border-emerald-400/20 mb-6">
           <div className="flex items-center gap-3 mb-3">
             <Link2 className="w-5 h-5 text-emerald-400" />
-            <h2 className="text-luna-text-primary font-bold">あなたの紹介リンク</h2>
+            <h2 className="text-luna-text-primary font-bold">
+              あなたの紹介リンク
+            </h2>
           </div>
           <div className="flex items-center gap-3">
             <div className="flex-1 bg-luna-bg border border-luna-border rounded-xl px-4 py-3 text-emerald-400 text-sm font-mono truncate">
@@ -158,123 +292,187 @@ export default function DashboardContent({
           </p>
         </Card>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          {statCards.map((stat, i) => {
-            const Icon = stat.icon;
+        {/* Tabs */}
+        <div className="flex items-center gap-1 border-b border-luna-border mb-6 overflow-x-auto">
+          {TABS.map((tab) => {
+            const Icon = tab.icon;
             return (
-              <Card key={i}>
-                <div className="flex items-center gap-2 mb-2">
-                  <Icon className="w-4 h-4 text-emerald-400" />
-                  <span className="text-luna-text-secondary text-xs">
-                    {stat.label}
-                  </span>
-                </div>
-                <p className="text-2xl font-bold text-luna-text-primary">{stat.value}</p>
-              </Card>
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                className={`flex items-center gap-1.5 px-4 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
+                  activeTab === tab.key
+                    ? "border-emerald-400 text-emerald-400"
+                    : "border-transparent text-luna-text-secondary hover:text-luna-text-primary"
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                {tab.label}
+              </button>
             );
           })}
         </div>
 
-        {/* Conversions Table */}
-        <div className="mb-8">
-          <h2 className="text-luna-text-primary font-bold mb-4">成約一覧</h2>
-          <Card>
-            {conversions.length === 0 ? (
-              <p className="text-luna-text-secondary text-sm text-center py-8">
-                まだ成約はありません。紹介リンクを共有して店舗を紹介しましょう。
-              </p>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-luna-border">
-                      <th className="text-left text-luna-text-secondary font-medium py-3 px-2">
-                        日付
-                      </th>
-                      <th className="text-left text-luna-text-secondary font-medium py-3 px-2">
-                        店舗名
-                      </th>
-                      <th className="text-left text-luna-text-secondary font-medium py-3 px-2">
-                        ステータス
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {conversions.map((c) => (
-                      <tr
-                        key={c.id}
-                        className="border-b border-luna-border/50 last:border-0"
-                      >
-                        <td className="py-3 px-2 text-luna-text-secondary">
-                          {formatDate(c.created_at)}
-                        </td>
-                        <td className="py-3 px-2 text-luna-text-primary">{c.store_name}</td>
-                        <td className="py-3 px-2">
-                          <StatusBadge status={c.status} />
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </Card>
-        </div>
+        {/* Tab Content */}
+        {activeTab === "overview" && (
+          <>
+            {/* Period Filter */}
+            <div className="mb-4">
+              <DateRangeFilter value={period} onChange={setPeriod} />
+            </div>
 
-        {/* Commissions Table */}
-        <div>
-          <h2 className="text-luna-text-primary font-bold mb-4">報酬履歴</h2>
-          <Card>
-            {commissions.length === 0 ? (
-              <p className="text-luna-text-secondary text-sm text-center py-8">
-                まだ報酬の記録はありません。
-              </p>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-luna-border">
-                      <th className="text-left text-luna-text-secondary font-medium py-3 px-2">
-                        日付
-                      </th>
-                      <th className="text-left text-luna-text-secondary font-medium py-3 px-2">
-                        金額
-                      </th>
-                      <th className="text-left text-luna-text-secondary font-medium py-3 px-2">
-                        ステータス
-                      </th>
-                      <th className="text-left text-luna-text-secondary font-medium py-3 px-2">
-                        備考
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {commissions.map((cm) => (
-                      <tr
-                        key={cm.id}
-                        className="border-b border-luna-border/50 last:border-0"
-                      >
-                        <td className="py-3 px-2 text-luna-text-secondary">
-                          {formatDate(cm.created_at)}
-                        </td>
-                        <td className="py-3 px-2 text-luna-text-primary font-medium">
-                          {formatYen(cm.amount)}
-                        </td>
-                        <td className="py-3 px-2">
-                          <StatusBadge status={cm.status} />
-                        </td>
-                        <td className="py-3 px-2 text-luna-text-secondary">
-                          {cm.note || "-"}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+            {/* Stats Grid */}
+            <div
+              className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-6 transition-opacity ${loadingStats ? "opacity-50" : ""}`}
+            >
+              {statCards.map((stat, i) => {
+                const Icon = stat.icon;
+                return (
+                  <Card key={i}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Icon className="w-4 h-4 text-emerald-400" />
+                      <span className="text-luna-text-secondary text-xs">
+                        {stat.label}
+                      </span>
+                    </div>
+                    <p className="text-xl font-bold text-luna-text-primary">
+                      {stat.value}
+                    </p>
+                  </Card>
+                );
+              })}
+            </div>
+
+            {/* Trend Charts */}
+            {chartData.length > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <Card>
+                  <TrendChart data={chartData} title="クリック推移" />
+                </Card>
+                <Card>
+                  <TrendChart
+                    data={convChartData}
+                    title="成約推移"
+                    color="bg-blue-400"
+                  />
+                </Card>
               </div>
             )}
-          </Card>
-        </div>
+
+            {/* Click Breakdown */}
+            <Card className="mb-6">
+              <ClickBreakdown data={clickBreakdown} />
+            </Card>
+          </>
+        )}
+
+        {activeTab === "conversions" && (
+          <div>
+            <h2 className="text-luna-text-primary font-bold mb-4">成約一覧</h2>
+            <Card>
+              {conversions.length === 0 ? (
+                <p className="text-luna-text-secondary text-sm text-center py-8">
+                  まだ成約はありません。紹介リンクを共有して店舗を紹介しましょう。
+                </p>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-luna-border">
+                        <th className="text-left text-luna-text-secondary font-medium py-3 px-2">
+                          日付
+                        </th>
+                        <th className="text-left text-luna-text-secondary font-medium py-3 px-2">
+                          店舗名
+                        </th>
+                        <th className="text-left text-luna-text-secondary font-medium py-3 px-2">
+                          ステータス
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {conversions.map((c) => (
+                        <tr
+                          key={c.id}
+                          className="border-b border-luna-border/50 last:border-0"
+                        >
+                          <td className="py-3 px-2 text-luna-text-secondary">
+                            {formatDate(c.created_at)}
+                          </td>
+                          <td className="py-3 px-2 text-luna-text-primary">
+                            {c.store_name}
+                          </td>
+                          <td className="py-3 px-2">
+                            <StatusBadge status={c.status} />
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </Card>
+          </div>
+        )}
+
+        {activeTab === "commissions" && (
+          <div>
+            <CommissionSummary commissions={commissions} />
+
+            <h2 className="text-luna-text-primary font-bold mb-4">報酬履歴</h2>
+            <Card>
+              {commissions.length === 0 ? (
+                <p className="text-luna-text-secondary text-sm text-center py-8">
+                  まだ報酬の記録はありません。
+                </p>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-luna-border">
+                        <th className="text-left text-luna-text-secondary font-medium py-3 px-2">
+                          日付
+                        </th>
+                        <th className="text-left text-luna-text-secondary font-medium py-3 px-2">
+                          金額
+                        </th>
+                        <th className="text-left text-luna-text-secondary font-medium py-3 px-2">
+                          ステータス
+                        </th>
+                        <th className="text-left text-luna-text-secondary font-medium py-3 px-2">
+                          備考
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {commissions.map((cm) => (
+                        <tr
+                          key={cm.id}
+                          className="border-b border-luna-border/50 last:border-0"
+                        >
+                          <td className="py-3 px-2 text-luna-text-secondary">
+                            {formatDate(cm.created_at)}
+                          </td>
+                          <td className="py-3 px-2 text-luna-text-primary font-medium">
+                            {formatYen(cm.amount)}
+                          </td>
+                          <td className="py-3 px-2">
+                            <StatusBadge status={cm.status} />
+                          </td>
+                          <td className="py-3 px-2 text-luna-text-secondary">
+                            {cm.note || "-"}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </Card>
+          </div>
+        )}
+
+        {activeTab === "settings" && <ProfileForm partner={partner} />}
       </div>
     </div>
   );
