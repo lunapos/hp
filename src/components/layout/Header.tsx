@@ -21,7 +21,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="sticky top-0 bg-luna-bg/90 backdrop-blur-md border-b border-luna-border z-50">
+      <header className="fixed top-0 left-0 right-0 bg-luna-bg/90 backdrop-blur-md border-b border-luna-border z-50">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link
             href="/"

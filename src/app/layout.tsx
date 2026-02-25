@@ -54,7 +54,7 @@ export default function RootLayout({
       </head>
       <body className={`${notoSansJP.className} antialiased`}>
         <Header />
-        <main>{children}</main>
+        <main className="pt-16">{children}</main>
         <Footer />
         <FloatingLineButton />
       </body>
