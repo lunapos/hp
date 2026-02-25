@@ -70,7 +70,7 @@ export default function InvestorSection() {
             事業への出資にご興味のある方は、お気軽にお問い合わせください。
           </p>
           <Link
-            href="/contact"
+            href="/contact?type=投資・出資について"
             className="inline-flex items-center gap-2 bg-luna-gold text-luna-bg px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-luna-gold-light transition-colors"
           >
             お問い合わせ

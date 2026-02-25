@@ -92,9 +92,9 @@ export default function PartnerContent() {
       return;
     }
 
-    if (form.password.length < 8) {
+    if (form.password.length < 1) {
       setStatus("error");
-      setErrorMessage("パスワードは8文字以上で入力してください");
+      setErrorMessage("パスワードを入力してください");
       return;
     }
 
@@ -286,7 +286,7 @@ export default function PartnerContent() {
                     value={form.password}
                     onChange={handleChange}
                     required
-                    minLength={8}
+                    minLength={1}
                     className="w-full bg-luna-bg border border-luna-border rounded-xl px-4 py-3 text-white focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none transition-all"
                     placeholder="8文字以上"
                   />
@@ -301,7 +301,7 @@ export default function PartnerContent() {
                     value={form.confirmPassword}
                     onChange={handleChange}
                     required
-                    minLength={8}
+                    minLength={1}
                     className="w-full bg-luna-bg border border-luna-border rounded-xl px-4 py-3 text-white focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none transition-all"
                     placeholder="もう一度入力"
                   />

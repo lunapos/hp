@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Section from "@/components/layout/Section";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
@@ -27,7 +28,12 @@ const initialForm: FormState = {
 const inquiryTypes = ["導入相談", "投資・出資について", "パートナー募集について", "その他"];
 
 export default function ContactContent() {
-  const [form, setForm] = useState<FormState>(initialForm);
+  const searchParams = useSearchParams();
+  const defaultType = searchParams.get("type");
+  const [form, setForm] = useState<FormState>({
+    ...initialForm,
+    inquiryType: inquiryTypes.includes(defaultType || "") ? defaultType! : initialForm.inquiryType,
+  });
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
 

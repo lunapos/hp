@@ -20,9 +20,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (body.password.length < 8) {
+    if (body.password.length < 1) {
       return NextResponse.json(
-        { error: "パスワードは8文字以上で入力してください" },
+        { error: "パスワードを入力してください" },
         { status: 400 }
       );
     }
