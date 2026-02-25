@@ -38,15 +38,15 @@ export default function FeaturesContent() {
                 isEven ? "md:flex-row" : "md:flex-row-reverse"
               } items-center gap-8`}
             >
-              {/* Icon / Visual */}
-              <div className="flex-1 flex justify-center">
+              {/* Icon / Visual — desktop only */}
+              <div className="hidden md:flex flex-1 justify-center">
                 <div className="w-48 h-48 rounded-2xl bg-luna-surface border border-luna-border flex items-center justify-center">
                   <Icon className="w-20 h-20 text-luna-gold/60" />
                 </div>
               </div>
 
               {/* Text */}
-              <div className="flex-1">
+              <div className="flex-1 w-full">
                 <Card>
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-10 h-10 rounded-lg bg-luna-gold/10 flex items-center justify-center">

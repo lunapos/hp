@@ -25,6 +25,7 @@ export default function Header() {
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link
             href="/"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="flex items-center gap-2 text-xl font-bold"
           >
             <Image src="/icon.png" alt="LunaPos" width={24} height={24} />
@@ -88,11 +89,11 @@ export default function Header() {
 
       {/* Mobile slide-in panel */}
       <div
-        className={`md:hidden fixed top-0 right-0 bottom-0 w-64 z-[70] pt-16 bg-luna-bg/95 backdrop-blur-md border-l border-luna-border transform transition-transform duration-300 ease-in-out ${
+        className={`md:hidden fixed top-0 right-0 bottom-0 w-64 z-[70] pt-4 bg-luna-bg/95 backdrop-blur-md border-l border-luna-border transform transition-transform duration-300 ease-in-out ${
           isMenuOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="flex justify-end px-4 pt-2">
+        <div className="flex justify-end px-4">
           <button
             type="button"
             onClick={() => setIsMenuOpen(false)}
