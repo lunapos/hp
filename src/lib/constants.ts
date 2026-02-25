@@ -5,11 +5,6 @@ import {
   BarChart3,
   WifiOff,
   Crown,
-  Receipt,
-  UserCheck,
-  LayoutGrid,
-  ShoppingBag,
-  Printer,
   Tablet,
   ShieldCheck,
   FileText,
@@ -106,108 +101,40 @@ export const FEATURE_HIGHLIGHTS: Feature[] = [
 
 export const ALL_FEATURES: Feature[] = [
   {
-    icon: LayoutGrid,
-    title: "\u30d5\u30ed\u30a2\u7ba1\u7406",
+    icon: Heart,
+    title: "指名・同伴管理・会計",
     description:
-      "\u30de\u30eb\u30c1\u30eb\u30fc\u30e0\u5bfe\u5fdc\u306e\u30c6\u30fc\u30d6\u30eb\u7ba1\u7406\u3002\u30ea\u30a2\u30eb\u30bf\u30a4\u30e0\u306e\u7a7a\u5e2d\u72b6\u6cc1\u3001\u6ede\u5728\u6642\u9593\u306e\u81ea\u52d5\u8ffd\u8de1\u3002",
+      "本指名・場内指名・同伴をテーブルごとに管理し、セット料金・指名料・サービス料・税の自動計算でワンタップ精算。複雑な料金体系も正確に。",
     details: [
-      "\u30eb\u30fc\u30e0\u5225\u30c6\u30fc\u30d6\u30eb\u7ba1\u7406",
-      "\u6ede\u5728\u6642\u9593\u306e\u81ea\u52d5\u30ab\u30a6\u30f3\u30c8",
-      "\u7a7a\u5e2d\u72b6\u6cc1\u306e\u4e00\u76ee\u78ba\u8a8d",
-      "\u30b9\u30c6\u30fc\u30bf\u30b9\u5225\u8272\u5206\u3051\u8868\u793a",
+      "本指名・場内指名・指名なしの切替",
+      "同伴キャストの紐付け・同伴料自動計算",
+      "セット料金・サービス料・税の自動計算",
+      "現金・カード・電子マネー対応",
+      "レシート・領収書印刷",
     ],
   },
   {
-    icon: ShoppingBag,
-    title: "\u30aa\u30fc\u30c0\u30fc\u7ba1\u7406",
+    icon: Clock,
+    title: "シフト・出退勤管理",
     description:
-      "2\u30da\u30a4\u30f3\u30ec\u30a4\u30a2\u30a6\u30c8\u3067\u30ab\u30c6\u30b4\u30ea\u5225\u30e1\u30cb\u30e5\u30fc\u304b\u3089\u7d20\u65e9\u304f\u30aa\u30fc\u30c0\u30fc\u3002\u30ab\u30b9\u30bf\u30e0\u30a2\u30a4\u30c6\u30e0\u306b\u3082\u5bfe\u5fdc\u3002",
+      "写真付きキャスト一覧からワンタップ出退勤。シフト予定の管理や勤怠履歴も自動で記録します。",
     details: [
-      "\u30ab\u30c6\u30b4\u30ea\u5225\u30e1\u30cb\u30e5\u30fc\u8868\u793a",
-      "\u30ab\u30b9\u30bf\u30e0\u30a2\u30a4\u30c6\u30e0\u8ffd\u52a0",
-      "\u6570\u91cf\u5909\u66f4\u30fb\u53d6\u6d88",
-      "\u5efa\u3066\u66ff\u3048\uff08\u7d4c\u8cbb\uff09\u5bfe\u5fdc",
-    ],
-  },
-  {
-    icon: Receipt,
-    title: "\u4f1a\u8a08\u30fb\u7cbe\u7b97",
-    description:
-      "\u30bb\u30c3\u30c8\u6599\u91d1\u30fb\u6307\u540d\u6599\u30fb\u30b5\u30fc\u30d3\u30b9\u6599\u30fb\u7a0e\u306e\u81ea\u52d5\u8a08\u7b97\u3002\u8907\u96d1\u306a\u6599\u91d1\u4f53\u7cfb\u3082\u30ef\u30f3\u30bf\u30c3\u30d7\u3067\u78ba\u5b9a\u3002",
-    details: [
-      "\u8907\u96d1\u306a\u6599\u91d1\u4f53\u7cfb\u306e\u81ea\u52d5\u8a08\u7b97",
-      "\u73fe\u91d1\u30fb\u30ab\u30fc\u30c9\u30fb\u96fb\u5b50\u30de\u30cd\u30fc\u5bfe\u5fdc",
-      "\u30ec\u30b7\u30fc\u30c8\u5370\u5237",
-      "\u5272\u5f15\u30fb\u4fa1\u683c\u4e0a\u66f8\u304d\u5bfe\u5fdc",
-    ],
-  },
-  {
-    icon: UserCheck,
-    title: "\u30ad\u30e3\u30b9\u30c8\u51fa\u9000\u52e4",
-    description:
-      "\u5199\u771f\u4ed8\u304d\u30ad\u30e3\u30b9\u30c8\u4e00\u89a7\u3067\u30ef\u30f3\u30bf\u30c3\u30d7\u51fa\u9000\u52e4\u3002\u30b7\u30d5\u30c8\u4e88\u5b9a\u3084\u672c\u65e5\u306e\u58f2\u4e0a\u3082\u4e00\u76ee\u3067\u78ba\u8a8d\u3002",
-    details: [
-      "\u30d5\u30a9\u30c8\u30b0\u30ea\u30c3\u30c9\u8868\u793a",
-      "\u51fa\u52e4\u30fb\u9000\u52e4\u306e\u30ef\u30f3\u30bf\u30c3\u30d7\u7ba1\u7406",
-      "\u52e4\u6020\u5c65\u6b74",
-      "HP\u3078\u306e\u81ea\u52d5\u53cd\u6620",
+      "フォトグリッドでワンタップ出退勤",
+      "シフト予定の登録・管理",
+      "勤怠履歴の自動記録",
+      "HPへの在籍状況の自動反映",
     ],
   },
   {
     icon: BarChart3,
-    title: "\u65e5\u5831\u30fb\u58f2\u4e0a\u30ec\u30dd\u30fc\u30c8",
+    title: "売上レポート・日報",
     description:
-      "\u65e5\u6b21\u58f2\u4e0a\u3001\u30ad\u30e3\u30b9\u30c8\u5225\u6210\u7e3e\u3001\u30e1\u30cb\u30e5\u30fc\u5225\u30e9\u30f3\u30ad\u30f3\u30b0\u3092\u81ea\u52d5\u96c6\u8a08\u3002",
+      "日次売上、キャスト別成績、メニュー別ランキングを自動集計。閉店後の日報作成が不要になります。",
     details: [
-      "\u58f2\u4e0a\u30b5\u30de\u30ea\u30fc",
-      "\u652f\u6255\u65b9\u6cd5\u5225\u96c6\u8a08",
-      "\u30ad\u30e3\u30b9\u30c8\u58f2\u4e0a\u30e9\u30f3\u30ad\u30f3\u30b0",
-      "\u30ec\u30b8\u7cbe\u7b97\u6a5f\u80fd",
-    ],
-  },
-  {
-    icon: WifiOff,
-    title: "\u30aa\u30d5\u30e9\u30a4\u30f3\u5bfe\u5fdc",
-    description:
-      "SwiftData\u306b\u3088\u308b\u30ed\u30fc\u30ab\u30eb\u30d5\u30a1\u30fc\u30b9\u30c8\u8a2d\u8a08\u3002\u30a4\u30f3\u30bf\u30fc\u30cd\u30c3\u30c8\u4e0d\u8981\u3067\u52d5\u4f5c\u3002",
-    details: [
-      "\u30cd\u30c3\u30c8\u969c\u5bb3\u6642\u3082\u901a\u5e38\u7a3c\u50cd",
-      "\u30c7\u30fc\u30bf\u81ea\u52d5\u540c\u671f",
-      "\u5b89\u5fc3\u306e\u5197\u9577\u6027",
-    ],
-  },
-  {
-    icon: Printer,
-    title: "\u30d7\u30ea\u30f3\u30bf\u30fc\u9023\u643a",
-    description:
-      "Bluetooth\u30fb\u30cd\u30c3\u30c8\u30ef\u30fc\u30af\u5bfe\u5fdc\u306e\u30ec\u30b7\u30fc\u30c8\u5370\u5237\u3002Epson\u30fbStar\u4e3b\u8981\u30e1\u30fc\u30ab\u30fc\u306b\u5bfe\u5fdc\u3002",
-    details: [
-      "Bluetooth\u63a5\u7d9a",
-      "\u30cd\u30c3\u30c8\u30ef\u30fc\u30af\u30d7\u30ea\u30f3\u30bf\u30fc",
-      "\u30ec\u30b7\u30fc\u30c8\u30ab\u30b9\u30bf\u30de\u30a4\u30ba",
-    ],
-  },
-  {
-    icon: Tablet,
-    title: "iPad \u30cd\u30a4\u30c6\u30a3\u30d6",
-    description:
-      "Swift/SwiftUI\u3067\u958b\u767a\u3055\u308c\u305fiPad\u5c02\u7528\u30a2\u30d7\u30ea\u3002Web\u30a2\u30d7\u30ea\u3068\u306f\u4e00\u7dda\u3092\u753b\u3059\u64cd\u4f5c\u6027\u3002",
-    details: [
-      "\u30cd\u30a4\u30c6\u30a3\u30d6\u306e\u64cd\u4f5c\u611f",
-      "\u9ad8\u901f\u8d77\u52d5\u30fb\u9ad8\u30d1\u30d5\u30a9\u30fc\u30de\u30f3\u30b9",
-      "iPad\u753b\u9762\u30b5\u30a4\u30ba\u306b\u6700\u9069\u5316",
-    ],
-  },
-  {
-    icon: Heart,
-    title: "指名・同伴管理",
-    description:
-      "本指名・場内指名・同伴をテーブルごとに管理。指名料・同伴料の自動計算で、複雑な料金も正確に。",
-    details: [
-      "本指名・場内指名・指名なしの切替",
-      "同伴キャストの紐付け",
-      "指名料・同伴料の自動計算",
-      "キャスト別の指名数集計",
+      "売上サマリーの自動生成",
+      "支払方法別集計",
+      "キャスト売上ランキング",
+      "レジ精算機能",
     ],
   },
   {
@@ -235,6 +162,30 @@ export const ALL_FEATURES: Feature[] = [
     ],
   },
   {
+    icon: Calculator,
+    title: "給与計算",
+    description:
+      "バック率・時給・指名バックなど店舗独自の給与体系に対応。月末の明細作成を自動化します。",
+    details: [
+      "店舗独自のバック率設定",
+      "指名・同伴・ドリンクバック対応",
+      "時給＋歩合の混合計算",
+      "給与明細の自動生成",
+    ],
+  },
+  {
+    icon: Users,
+    title: "顧客管理",
+    description:
+      "来店履歴・好み・担当キャストなど顧客情報を一元管理。リピーター獲得や接客品質の向上に。",
+    details: [
+      "来店履歴・利用金額の自動記録",
+      "顧客メモ・好みの登録",
+      "担当キャストの紐付け",
+      "顧客別の売上分析",
+    ],
+  },
+  {
     icon: Monitor,
     title: "Web管理画面",
     description:
@@ -247,15 +198,26 @@ export const ALL_FEATURES: Feature[] = [
     ],
   },
   {
-    icon: Calculator,
-    title: "給与計算",
+    icon: Tablet,
+    title: "キャストアプリ",
     description:
-      "バック率・時給・指名バックなど店舗独自の給与体系に対応。月末の明細作成を自動化します。",
+      "キャスト専用のiPhoneアプリ。自分のシフト・売上・指名数をいつでも確認でき、シフト提出もアプリから。",
     details: [
-      "店舗独自のバック率設定",
-      "指名・同伴・ドリンクバック対応",
-      "時給＋歩合の混合計算",
-      "給与明細の自動生成",
+      "個人売上・指名数の確認",
+      "シフト提出・変更",
+      "出退勤打刻",
+      "給与明細の閲覧",
+    ],
+  },
+  {
+    icon: WifiOff,
+    title: "オフライン対応",
+    description:
+      "SwiftDataによるローカルファースト設計。インターネット不要で全機能が動作し、営業中のダウンタイムゼロを実現。",
+    details: [
+      "ネット障害時も通常稼働",
+      "データ自動同期",
+      "安心の冗長性",
     ],
   },
 ];
