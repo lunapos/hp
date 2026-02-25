@@ -32,9 +32,18 @@ export default function NewsSection() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
         {/* お知らせ */}
         <div>
-          <div className="flex items-center gap-2 mb-4">
-            <Megaphone className="w-5 h-5 text-blue-400" />
-            <h3 className="text-luna-text-primary font-semibold">お知らせ</h3>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <Megaphone className="w-5 h-5 text-blue-400" />
+              <h3 className="text-luna-text-primary font-semibold">お知らせ</h3>
+            </div>
+            <Link
+              href="/news/announcements"
+              className="inline-flex items-center gap-1 text-luna-gold hover:text-luna-gold-light transition-colors duration-200 text-xs font-medium"
+            >
+              一覧
+              <ArrowRight className="w-3 h-3" />
+            </Link>
           </div>
           <div className="space-y-3">
             {announcements.map((item) => (
@@ -45,11 +54,20 @@ export default function NewsSection() {
 
         {/* 開発アップデート */}
         <div>
-          <div className="flex items-center gap-2 mb-4">
-            <Code className="w-5 h-5 text-emerald-400" />
-            <h3 className="text-luna-text-primary font-semibold">
-              開発アップデート
-            </h3>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <Code className="w-5 h-5 text-emerald-400" />
+              <h3 className="text-luna-text-primary font-semibold">
+                開発アップデート
+              </h3>
+            </div>
+            <Link
+              href="/news/updates"
+              className="inline-flex items-center gap-1 text-luna-gold hover:text-luna-gold-light transition-colors duration-200 text-xs font-medium"
+            >
+              一覧
+              <ArrowRight className="w-3 h-3" />
+            </Link>
           </div>
           <div className="space-y-3">
             {updates.map((item) => (
@@ -57,16 +75,6 @@ export default function NewsSection() {
             ))}
           </div>
         </div>
-      </div>
-
-      <div className="text-center">
-        <Link
-          href="/news"
-          className="inline-flex items-center gap-2 text-luna-gold hover:text-luna-gold-light transition-colors duration-200 text-sm font-medium"
-        >
-          すべてのお知らせを見る
-          <ArrowRight className="w-4 h-4" />
-        </Link>
       </div>
     </Section>
   );
