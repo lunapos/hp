@@ -33,7 +33,7 @@ const statusLabels: Record<string, { label: string; className: string }> = {
 function StatusBadge({ status }: { status: string }) {
   const config = statusLabels[status] || {
     label: status,
-    className: "bg-gray-400/20 text-gray-300",
+    className: "bg-luna-text-secondary/20 text-luna-text-secondary",
   };
   return (
     <span
@@ -112,14 +112,14 @@ export default function DashboardContent({
             <p className="text-emerald-400 text-sm tracking-[0.3em] font-medium mb-1">
               PARTNER DASHBOARD
             </p>
-            <h1 className="text-2xl md:text-3xl font-bold text-white">
+            <h1 className="text-2xl md:text-3xl font-bold text-luna-text-primary">
               {partner.name} さん
             </h1>
           </div>
           <button
             onClick={handleLogout}
             disabled={loggingOut}
-            className="flex items-center gap-2 text-luna-text-secondary text-sm hover:text-white transition-colors"
+            className="flex items-center gap-2 text-luna-text-secondary text-sm hover:text-luna-text-primary transition-colors"
           >
             <LogOut className="w-4 h-4" />
             ログアウト
@@ -130,7 +130,7 @@ export default function DashboardContent({
         <Card className="border-emerald-400/20 mb-8">
           <div className="flex items-center gap-3 mb-3">
             <Link2 className="w-5 h-5 text-emerald-400" />
-            <h2 className="text-white font-bold">あなたの紹介リンク</h2>
+            <h2 className="text-luna-text-primary font-bold">あなたの紹介リンク</h2>
           </div>
           <div className="flex items-center gap-3">
             <div className="flex-1 bg-luna-bg border border-luna-border rounded-xl px-4 py-3 text-emerald-400 text-sm font-mono truncate">
@@ -170,7 +170,7 @@ export default function DashboardContent({
                     {stat.label}
                   </span>
                 </div>
-                <p className="text-2xl font-bold text-white">{stat.value}</p>
+                <p className="text-2xl font-bold text-luna-text-primary">{stat.value}</p>
               </Card>
             );
           })}
@@ -178,7 +178,7 @@ export default function DashboardContent({
 
         {/* Conversions Table */}
         <div className="mb-8">
-          <h2 className="text-white font-bold mb-4">成約一覧</h2>
+          <h2 className="text-luna-text-primary font-bold mb-4">成約一覧</h2>
           <Card>
             {conversions.length === 0 ? (
               <p className="text-luna-text-secondary text-sm text-center py-8">
@@ -209,7 +209,7 @@ export default function DashboardContent({
                         <td className="py-3 px-2 text-luna-text-secondary">
                           {formatDate(c.created_at)}
                         </td>
-                        <td className="py-3 px-2 text-white">{c.store_name}</td>
+                        <td className="py-3 px-2 text-luna-text-primary">{c.store_name}</td>
                         <td className="py-3 px-2">
                           <StatusBadge status={c.status} />
                         </td>
@@ -224,7 +224,7 @@ export default function DashboardContent({
 
         {/* Commissions Table */}
         <div>
-          <h2 className="text-white font-bold mb-4">報酬履歴</h2>
+          <h2 className="text-luna-text-primary font-bold mb-4">報酬履歴</h2>
           <Card>
             {commissions.length === 0 ? (
               <p className="text-luna-text-secondary text-sm text-center py-8">
@@ -258,7 +258,7 @@ export default function DashboardContent({
                         <td className="py-3 px-2 text-luna-text-secondary">
                           {formatDate(cm.created_at)}
                         </td>
-                        <td className="py-3 px-2 text-white font-medium">
+                        <td className="py-3 px-2 text-luna-text-primary font-medium">
                           {formatYen(cm.amount)}
                         </td>
                         <td className="py-3 px-2">

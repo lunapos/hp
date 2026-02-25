@@ -24,7 +24,7 @@ export default function FeatureHighlights() {
               <div className="w-12 h-12 rounded-xl bg-luna-gold/10 flex items-center justify-center mb-4">
                 <Icon className="w-6 h-6 text-luna-gold" />
               </div>
-              <h3 className="text-lg font-bold text-white mb-2">
+              <h3 className="text-lg font-bold text-luna-text-primary mb-2">
                 {feature.title}
               </h3>
               <p className="text-luna-text-secondary text-sm leading-relaxed mb-4">

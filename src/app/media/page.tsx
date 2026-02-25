@@ -35,7 +35,7 @@ export default async function MediaPage({
           <p className="text-luna-gold text-sm tracking-[0.3em] font-medium mb-2">
             MEDIA
           </p>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-luna-text-primary mb-4">
             メディア
           </h1>
           <div className="w-16 h-1 bg-luna-gold mx-auto rounded-full mb-4" />
@@ -63,7 +63,7 @@ export default async function MediaPage({
                 <Link
                   key={article.slug}
                   href={`/media/${article.slug}`}
-                  className="block bg-luna-surface border border-luna-border rounded-xl p-6 transition-all duration-300 hover:border-luna-gold hover:shadow-[0_0_30px_rgba(212,184,112,0.15)] hover:-translate-y-1"
+                  className="block bg-luna-surface border border-luna-border rounded-xl p-6 transition-all duration-300 hover:border-luna-gold hover:shadow-[0_0_30px_rgba(var(--luna-accent-rgb),0.15)] hover:-translate-y-1"
                 >
                   <div className="flex items-center gap-3 mb-3">
                     <span className="text-xs bg-luna-gold/15 text-luna-gold px-3 py-1 rounded-full">
@@ -74,7 +74,7 @@ export default async function MediaPage({
                       {article.date}
                     </span>
                   </div>
-                  <h2 className="text-xl font-bold text-white mb-2">
+                  <h2 className="text-xl font-bold text-luna-text-primary mb-2">
                     {article.title}
                   </h2>
                   <p className="text-sm text-luna-text-secondary leading-relaxed mb-3">

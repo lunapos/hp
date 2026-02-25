@@ -24,7 +24,7 @@ export default function Accordion({ items }: AccordionProps) {
               setOpenIndex(openIndex === index ? null : index)
             }
           >
-            <span className="font-medium text-white pr-4">
+            <span className="font-medium text-luna-text-primary pr-4">
               {item.question}
             </span>
             <ChevronDown

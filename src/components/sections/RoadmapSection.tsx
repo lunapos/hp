@@ -98,9 +98,9 @@ function PhaseCard({
     <div
       className={`bg-luna-surface border rounded-xl p-6 transition-all duration-300 ${
         item.active
-          ? "border-luna-gold shadow-[0_0_30px_rgba(212,184,112,0.15)]"
+          ? "border-luna-gold shadow-[0_0_30px_rgba(var(--luna-accent-rgb),0.15)]"
           : "border-luna-border"
-      } ${hasLink ? "cursor-pointer hover:border-luna-gold/50 hover:shadow-[0_0_20px_rgba(212,184,112,0.1)]" : ""} ${hasDetails && !hasLink ? "cursor-pointer hover:border-luna-gold/50" : ""}`}
+      } ${hasLink ? "cursor-pointer hover:border-luna-gold/50 hover:shadow-[0_0_20px_rgba(var(--luna-accent-rgb),0.1)]" : ""} ${hasDetails && !hasLink ? "cursor-pointer hover:border-luna-gold/50" : ""}`}
       onClick={hasDetails && !hasLink ? () => setIsOpen(!isOpen) : undefined}
     >
       <div
@@ -136,7 +136,7 @@ function PhaseCard({
           {item.brandName}
         </p>
       )}
-      <h3 className="text-lg font-bold text-white mb-2">
+      <h3 className="text-lg font-bold text-luna-text-primary mb-2">
         {item.title}
       </h3>
       <p className="text-luna-text-secondary text-sm leading-relaxed">
@@ -161,7 +161,7 @@ function PhaseCard({
                   ●
                 </span>
                 <div>
-                  <p className="text-white text-sm font-medium">
+                  <p className="text-luna-text-primary text-sm font-medium">
                     {detail.title}
                   </p>
                   <p className="text-luna-text-secondary text-xs">
@@ -202,7 +202,7 @@ function PhaseCard({
         <div
           className={`w-12 h-12 rounded-full flex items-center justify-center z-10 ${
             item.active
-              ? "bg-luna-gold shadow-[0_0_20px_rgba(212,184,112,0.4)]"
+              ? "bg-luna-gold shadow-[0_0_20px_rgba(var(--luna-accent-rgb),0.4)]"
               : "bg-luna-surface border border-luna-border"
           }`}
         >

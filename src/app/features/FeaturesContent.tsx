@@ -15,7 +15,7 @@ export default function FeaturesContent() {
           <p className="text-luna-gold text-sm tracking-[0.3em] font-medium mb-2">
             FEATURES
           </p>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-luna-text-primary mb-4">
             機能紹介
           </h1>
           <div className="w-16 h-1 bg-luna-gold mx-auto rounded-full mb-4" />
@@ -52,7 +52,7 @@ export default function FeaturesContent() {
                     <div className="w-10 h-10 rounded-lg bg-luna-gold/10 flex items-center justify-center">
                       <Icon className="w-5 h-5 text-luna-gold" />
                     </div>
-                    <h3 className="text-xl font-bold text-white">
+                    <h3 className="text-xl font-bold text-luna-text-primary">
                       {feature.title}
                     </h3>
                   </div>

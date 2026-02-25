@@ -71,7 +71,7 @@ export default function CareerContent() {
           <p className="text-luna-gold text-sm tracking-[0.3em] font-medium mb-2">
             LUNA CAREER
           </p>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-luna-text-primary mb-4">
             求人プラットフォーム構想
           </h1>
           <div className="w-16 h-1 bg-luna-gold mx-auto rounded-full mb-4" />
@@ -89,7 +89,7 @@ export default function CareerContent() {
       {/* Why Luna Pos */}
       <Section>
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-2xl font-bold text-white text-center mb-4">
+          <h2 className="text-2xl font-bold text-luna-text-primary text-center mb-4">
             なぜ LunaPos が求人をやるのか
           </h2>
           <p className="text-luna-text-secondary leading-relaxed text-center mb-4">
@@ -100,7 +100,7 @@ export default function CareerContent() {
             LunaPosは店舗の指名本数、売上実績、客単価、シフト稼働率といった
             営業データをリアルタイムで保持しています。
             このデータを求人領域に活用することで、既存の求人媒体には不可能だった
-            <span className="text-white font-medium">「裏付けのある求人」</span>
+            <span className="text-luna-text-primary font-medium">「裏付けのある求人」</span>
             が実現します。
           </p>
         </div>
@@ -108,7 +108,7 @@ export default function CareerContent() {
 
       {/* Features */}
       <Section className="bg-luna-surface/50">
-        <h2 className="text-2xl font-bold text-white text-center mb-8">
+        <h2 className="text-2xl font-bold text-luna-text-primary text-center mb-8">
           具体的にできること
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -121,7 +121,7 @@ export default function CareerContent() {
                     <Icon className="w-5 h-5 text-luna-gold" />
                   </div>
                   <div>
-                    <h3 className="text-white font-bold mb-2">
+                    <h3 className="text-luna-text-primary font-bold mb-2">
                       {feature.title}
                     </h3>
                     <p className="text-luna-text-secondary text-sm leading-relaxed">
@@ -137,7 +137,7 @@ export default function CareerContent() {
 
       {/* Comparison Table */}
       <Section>
-        <h2 className="text-2xl font-bold text-white text-center mb-8">
+        <h2 className="text-2xl font-bold text-luna-text-primary text-center mb-8">
           既存求人媒体との違い
         </h2>
         <div className="max-w-4xl mx-auto overflow-x-auto">
@@ -159,13 +159,13 @@ export default function CareerContent() {
                   key={i}
                   className="border-b border-luna-border/50"
                 >
-                  <td className="py-3 px-4 text-white font-medium whitespace-nowrap">
+                  <td className="py-3 px-4 text-luna-text-primary font-medium whitespace-nowrap">
                     {row.label}
                   </td>
                   <td className="py-3 px-4 text-luna-text-secondary">
                     {row.existing}
                   </td>
-                  <td className="py-3 px-4 text-white">
+                  <td className="py-3 px-4 text-luna-text-primary">
                     {row.luna}
                   </td>
                 </tr>
@@ -178,7 +178,7 @@ export default function CareerContent() {
       {/* Roadmap note */}
       <Section className="bg-luna-surface/50">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-2xl font-bold text-white mb-4">
+          <h2 className="text-2xl font-bold text-luna-text-primary mb-4">
             展開のステップ
           </h2>
           <p className="text-luna-text-secondary leading-relaxed mb-8">
@@ -186,7 +186,7 @@ export default function CareerContent() {
             まずはPOS単体の価値で導入店舗を拡大し、蓄積されたデータとネットワークを土台にして、
             段階的に求人領域へ展開していきます。
           </p>
-          <p className="text-white font-medium italic">
+          <p className="text-luna-text-primary font-medium italic">
             LunaPosは、店舗経営の効率化から始まり、業界の人材流動を最適化するインフラへと進化する。
           </p>
         </div>

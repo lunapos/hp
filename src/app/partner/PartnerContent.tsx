@@ -136,7 +136,7 @@ export default function PartnerContent() {
             <p className="text-emerald-400 text-sm tracking-[0.3em] font-medium mb-2">
               PARTNER PROGRAM
             </p>
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            <h1 className="text-4xl md:text-5xl font-bold text-luna-text-primary mb-4">
               登録完了
             </h1>
             <div className="w-16 h-1 bg-emerald-400 mx-auto rounded-full" />
@@ -146,7 +146,7 @@ export default function PartnerContent() {
           <div className="max-w-lg mx-auto text-center">
             <Card className="border-emerald-400/30">
               <CheckCircle className="w-16 h-16 text-emerald-400 mx-auto mb-4" />
-              <h2 className="text-2xl font-bold text-white mb-2">
+              <h2 className="text-2xl font-bold text-luna-text-primary mb-2">
                 パートナー登録が完了しました
               </h2>
               <p className="text-luna-text-secondary">
@@ -170,7 +170,7 @@ export default function PartnerContent() {
           <p className="text-emerald-400 text-sm tracking-[0.3em] font-medium mb-2">
             PARTNER PROGRAM
           </p>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-luna-text-primary mb-4">
             アフィリエイトパートナー募集
           </h1>
           <div className="w-16 h-1 bg-emerald-400 mx-auto rounded-full mb-4" />
@@ -192,7 +192,7 @@ export default function PartnerContent() {
                 <div className="w-10 h-10 rounded-lg bg-emerald-400/10 flex items-center justify-center mb-4">
                   <Icon className="w-5 h-5 text-emerald-400" />
                 </div>
-                <h3 className="text-white font-bold mb-2">{benefit.title}</h3>
+                <h3 className="text-luna-text-primary font-bold mb-2">{benefit.title}</h3>
                 <p className="text-luna-text-secondary text-sm leading-relaxed">
                   {benefit.desc}
                 </p>
@@ -203,7 +203,7 @@ export default function PartnerContent() {
 
         {/* How it works */}
         <div className="mb-16">
-          <h2 className="text-2xl font-bold text-white text-center mb-8">
+          <h2 className="text-2xl font-bold text-luna-text-primary text-center mb-8">
             パートナーの流れ
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -212,7 +212,7 @@ export default function PartnerContent() {
                 <div className="text-3xl font-bold text-emerald-400/30 mb-2">
                   {step.number}
                 </div>
-                <h3 className="text-white font-bold text-sm mb-1">
+                <h3 className="text-luna-text-primary font-bold text-sm mb-1">
                   {step.title}
                 </h3>
                 <p className="text-luna-text-secondary text-xs">{step.desc}</p>
@@ -230,7 +230,7 @@ export default function PartnerContent() {
                   <Handshake className="w-5 h-5 text-emerald-400" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-white">パートナー登録</h2>
+                  <h2 className="text-xl font-bold text-luna-text-primary">パートナー登録</h2>
                   <p className="text-luna-text-secondary text-xs">
                     実装完了後に専用リンクをお送りします
                   </p>
@@ -255,7 +255,7 @@ export default function PartnerContent() {
                   value={form.name}
                   onChange={handleChange}
                   required
-                  className="w-full bg-luna-bg border border-luna-border rounded-xl px-4 py-3 text-white focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none transition-all"
+                  className="w-full bg-luna-input-bg border border-luna-border rounded-xl px-4 py-3 text-luna-text-primary focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none transition-all"
                   placeholder="例: 田中 太郎"
                 />
               </div>
@@ -270,7 +270,7 @@ export default function PartnerContent() {
                   value={form.email}
                   onChange={handleChange}
                   required
-                  className="w-full bg-luna-bg border border-luna-border rounded-xl px-4 py-3 text-white focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none transition-all"
+                  className="w-full bg-luna-input-bg border border-luna-border rounded-xl px-4 py-3 text-luna-text-primary focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none transition-all"
                   placeholder="例: tanaka@example.com"
                 />
               </div>
@@ -287,7 +287,7 @@ export default function PartnerContent() {
                     onChange={handleChange}
                     required
                     minLength={1}
-                    className="w-full bg-luna-bg border border-luna-border rounded-xl px-4 py-3 text-white focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none transition-all"
+                    className="w-full bg-luna-input-bg border border-luna-border rounded-xl px-4 py-3 text-luna-text-primary focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none transition-all"
                     placeholder="パスワードを入力"
                   />
                 </div>
@@ -302,7 +302,7 @@ export default function PartnerContent() {
                     onChange={handleChange}
                     required
                     minLength={1}
-                    className="w-full bg-luna-bg border border-luna-border rounded-xl px-4 py-3 text-white focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none transition-all"
+                    className="w-full bg-luna-input-bg border border-luna-border rounded-xl px-4 py-3 text-luna-text-primary focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none transition-all"
                     placeholder="もう一度入力"
                   />
                 </div>
@@ -318,7 +318,7 @@ export default function PartnerContent() {
                     name="phone"
                     value={form.phone}
                     onChange={handleChange}
-                    className="w-full bg-luna-bg border border-luna-border rounded-xl px-4 py-3 text-white focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none transition-all"
+                    className="w-full bg-luna-input-bg border border-luna-border rounded-xl px-4 py-3 text-luna-text-primary focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none transition-all"
                     placeholder="例: 090-1234-5678"
                   />
                 </div>
@@ -330,7 +330,7 @@ export default function PartnerContent() {
                     name="partnerType"
                     value={form.partnerType}
                     onChange={handleChange}
-                    className="w-full bg-luna-bg border border-luna-border rounded-xl px-4 py-3 text-white focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none transition-all"
+                    className="w-full bg-luna-input-bg border border-luna-border rounded-xl px-4 py-3 text-luna-text-primary focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none transition-all"
                   >
                     {partnerTypes.map((type) => (
                       <option key={type.value} value={type.value}>

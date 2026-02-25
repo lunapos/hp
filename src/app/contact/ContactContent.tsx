@@ -29,7 +29,7 @@ const initialForm: FormState = {
   message: "",
 };
 
-const inquiryTypes = ["導入相談", "投資・出資について", "パートナー募集について", "その他"];
+const inquiryTypes = ["導入相談", "自分の店に導入してほしい（決定権がない方）", "投資・出資について", "パートナー募集について", "その他"];
 
 export default function ContactContent() {
   const searchParams = useSearchParams();
@@ -87,7 +87,7 @@ export default function ContactContent() {
             <p className="text-luna-gold text-sm tracking-[0.3em] font-medium mb-2">
               CONTACT
             </p>
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            <h1 className="text-4xl md:text-5xl font-bold text-luna-text-primary mb-4">
               お問い合わせ
             </h1>
             <div className="w-16 h-1 bg-luna-gold mx-auto rounded-full" />
@@ -97,7 +97,7 @@ export default function ContactContent() {
           <div className="max-w-lg mx-auto text-center">
             <Card className="border-luna-gold/30">
               <CheckCircle className="w-16 h-16 text-emerald-400 mx-auto mb-4" />
-              <h2 className="text-2xl font-bold text-white mb-2">
+              <h2 className="text-2xl font-bold text-luna-text-primary mb-2">
                 送信が完了しました
               </h2>
               <p className="text-luna-text-secondary">
@@ -123,7 +123,7 @@ export default function ContactContent() {
           <p className="text-luna-gold text-sm tracking-[0.3em] font-medium mb-2">
             CONTACT
           </p>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-luna-text-primary mb-4">
             お問い合わせ
           </h1>
           <div className="w-16 h-1 bg-luna-gold mx-auto rounded-full mb-4" />
@@ -151,7 +151,7 @@ export default function ContactContent() {
                       value={form.companyName}
                       onChange={handleChange}
                       required
-                      className="w-full bg-luna-bg border border-luna-border rounded-xl px-4 py-3 text-white focus:border-luna-gold focus:ring-1 focus:ring-luna-gold outline-none transition-all"
+                      className="w-full bg-luna-input-bg border border-luna-border rounded-xl px-4 py-3 text-luna-text-primary focus:border-luna-gold focus:ring-1 focus:ring-luna-gold outline-none transition-all"
                       placeholder="例: Bar Moon"
                     />
                   </div>
@@ -165,7 +165,7 @@ export default function ContactContent() {
                       value={form.name}
                       onChange={handleChange}
                       required
-                      className="w-full bg-luna-bg border border-luna-border rounded-xl px-4 py-3 text-white focus:border-luna-gold focus:ring-1 focus:ring-luna-gold outline-none transition-all"
+                      className="w-full bg-luna-input-bg border border-luna-border rounded-xl px-4 py-3 text-luna-text-primary focus:border-luna-gold focus:ring-1 focus:ring-luna-gold outline-none transition-all"
                       placeholder="例: 田中 太郎"
                     />
                   </div>
@@ -182,7 +182,7 @@ export default function ContactContent() {
                       value={form.email}
                       onChange={handleChange}
                       required
-                      className="w-full bg-luna-bg border border-luna-border rounded-xl px-4 py-3 text-white focus:border-luna-gold focus:ring-1 focus:ring-luna-gold outline-none transition-all"
+                      className="w-full bg-luna-input-bg border border-luna-border rounded-xl px-4 py-3 text-luna-text-primary focus:border-luna-gold focus:ring-1 focus:ring-luna-gold outline-none transition-all"
                       placeholder="例: tanaka@example.com"
                     />
                   </div>
@@ -195,7 +195,7 @@ export default function ContactContent() {
                       name="phone"
                       value={form.phone}
                       onChange={handleChange}
-                      className="w-full bg-luna-bg border border-luna-border rounded-xl px-4 py-3 text-white focus:border-luna-gold focus:ring-1 focus:ring-luna-gold outline-none transition-all"
+                      className="w-full bg-luna-input-bg border border-luna-border rounded-xl px-4 py-3 text-luna-text-primary focus:border-luna-gold focus:ring-1 focus:ring-luna-gold outline-none transition-all"
                       placeholder="例: 03-1234-5678"
                     />
                   </div>
@@ -209,7 +209,7 @@ export default function ContactContent() {
                     name="inquiryType"
                     value={form.inquiryType}
                     onChange={handleChange}
-                    className="w-full bg-luna-bg border border-luna-border rounded-xl px-4 py-3 text-white focus:border-luna-gold focus:ring-1 focus:ring-luna-gold outline-none transition-all"
+                    className="w-full bg-luna-input-bg border border-luna-border rounded-xl px-4 py-3 text-luna-text-primary focus:border-luna-gold focus:ring-1 focus:ring-luna-gold outline-none transition-all"
                   >
                     {inquiryTypes.map((type) => (
                       <option key={type} value={type}>
@@ -228,7 +228,7 @@ export default function ContactContent() {
                     value={form.message}
                     onChange={handleChange}
                     rows={5}
-                    className="w-full bg-luna-bg border border-luna-border rounded-xl px-4 py-3 text-white focus:border-luna-gold focus:ring-1 focus:ring-luna-gold outline-none transition-all resize-none"
+                    className="w-full bg-luna-input-bg border border-luna-border rounded-xl px-4 py-3 text-luna-text-primary focus:border-luna-gold focus:ring-1 focus:ring-luna-gold outline-none transition-all resize-none"
                     placeholder="お問い合わせ内容をご記入ください"
                   />
                 </div>
@@ -253,7 +253,7 @@ export default function ContactContent() {
             <Card>
               <div className="flex items-center gap-3 mb-4">
                 <Mail className="w-5 h-5 text-luna-gold" />
-                <h3 className="text-white font-medium">メール</h3>
+                <h3 className="text-luna-text-primary font-medium">メール</h3>
               </div>
               <p className="text-luna-text-secondary text-sm">contact@lunapos.jp</p>
             </Card>

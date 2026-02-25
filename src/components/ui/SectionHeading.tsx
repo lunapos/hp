@@ -16,7 +16,7 @@ export default function SectionHeading({
           {subtitle}
         </p>
       )}
-      <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+      <h2 className="text-3xl md:text-4xl font-bold text-luna-text-primary mb-4">
         {title}
       </h2>
       <div className="w-16 h-1 bg-luna-gold mx-auto rounded-full mb-4" />

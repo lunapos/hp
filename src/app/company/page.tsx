@@ -17,7 +17,7 @@ export default function CompanyPage() {
           <p className="text-luna-gold text-sm tracking-[0.3em] font-medium mb-2">
             COMPANY
           </p>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-luna-text-primary mb-4">
             運営について
           </h1>
           <div className="w-16 h-1 bg-luna-gold mx-auto rounded-full" />
@@ -37,7 +37,7 @@ export default function CompanyPage() {
                   <dt className="sm:w-1/3 text-luna-text-secondary text-sm font-medium mb-1 sm:mb-0">
                     {info.label}
                   </dt>
-                  <dd className="sm:w-2/3 text-white text-sm">
+                  <dd className="sm:w-2/3 text-luna-text-primary text-sm">
                     {info.value}
                   </dd>
                 </div>
@@ -61,7 +61,7 @@ export default function CompanyPage() {
                 <p className="text-luna-gold text-sm tracking-[0.3em] font-medium mb-2">
                   FOUNDER
                 </p>
-                <h3 className="text-xl font-bold text-white mb-4">代表</h3>
+                <h3 className="text-xl font-bold text-luna-text-primary mb-4">代表</h3>
                 <p className="text-luna-text-secondary text-sm leading-relaxed">
                   外資系IT・通信・AI領域でエンジニアとしてキャリアを積む。日本やシンガポールを含む東南アジアでナイトエンタメ業界にも携わり、現場で感じた既存POSへの不満から、LunaPosを開発。
                 </p>
@@ -78,7 +78,7 @@ export default function CompanyPage() {
             <p className="text-luna-gold text-sm tracking-[0.3em] font-medium mb-4">
               MISSION
             </p>
-            <p className="text-2xl md:text-3xl font-bold text-white leading-relaxed">
+            <p className="text-2xl md:text-3xl font-bold text-luna-text-primary leading-relaxed">
               テクノロジーで、
               <br />
               ナイトビジネスをスマートに。

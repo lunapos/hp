@@ -27,7 +27,7 @@ export default function HeroSection() {
               </span>
             </div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6 animate-slide-up">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-luna-text-primary leading-tight mb-6 animate-slide-up">
               ナイト業界のための、
               <br />
               <span className="text-luna-gold">次世代POS</span>システム
@@ -51,7 +51,7 @@ export default function HeroSection() {
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
                       <span className="text-luna-gold text-lg">&#9789;</span>
-                      <span className="text-white text-sm font-bold tracking-wider">
+                      <span className="text-luna-text-primary text-sm font-bold tracking-wider">
                         FLOOR MAP
                       </span>
                     </div>

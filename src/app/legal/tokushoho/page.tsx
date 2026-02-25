@@ -60,7 +60,7 @@ export default function TokushohoPage() {
           <p className="text-luna-gold text-sm tracking-[0.3em] font-medium mb-2">
             LEGAL
           </p>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-luna-text-primary mb-4">
             特定商取引法に基づく表記
           </h1>
           <div className="w-16 h-1 bg-luna-gold mx-auto rounded-full" />
@@ -79,7 +79,7 @@ export default function TokushohoPage() {
                   <dt className="sm:w-1/3 text-luna-text-secondary text-sm font-medium mb-1 sm:mb-0">
                     {item.label}
                   </dt>
-                  <dd className="sm:w-2/3 text-white text-sm">{item.value}</dd>
+                  <dd className="sm:w-2/3 text-luna-text-primary text-sm">{item.value}</dd>
                 </div>
               ))}
             </div>

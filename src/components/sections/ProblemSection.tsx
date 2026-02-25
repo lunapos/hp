@@ -31,7 +31,7 @@ export default function ProblemSection() {
         })}
       </div>
 
-      <p className="text-center text-xl font-bold text-white">
+      <p className="text-center text-xl font-bold text-luna-text-primary">
         <span className="text-luna-gold">LunaPos</span> がすべて解決します。
       </p>
     </Section>

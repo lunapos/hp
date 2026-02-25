@@ -15,10 +15,10 @@ export default function PricingSection() {
       />
 
       <div className="max-w-lg mx-auto">
-        <div className="bg-luna-surface border-2 border-luna-gold rounded-2xl p-8 shadow-[0_0_30px_rgba(212,184,112,0.15)]">
+        <div className="bg-luna-surface border-2 border-luna-gold rounded-2xl p-8 shadow-[0_0_30px_rgba(var(--luna-accent-rgb),0.15)]">
           <div className="text-center mb-6">
             <div className="flex items-baseline justify-center gap-1 mb-2">
-              <span className="text-5xl font-black text-white">
+              <span className="text-5xl font-black text-luna-text-primary">
                 {PRICING_PLAN.price}
               </span>
               <span className="text-luna-text-secondary text-lg">/月（税込）</span>
@@ -27,7 +27,7 @@ export default function PricingSection() {
 
           <ul className="space-y-3 mb-6">
             {PRICING_PLAN.features.map((feature, i) => (
-              <li key={i} className="flex items-center gap-3 text-white">
+              <li key={i} className="flex items-center gap-3 text-luna-text-primary">
                 <Check className="w-5 h-5 text-luna-gold shrink-0" />
                 {feature}
               </li>

@@ -112,7 +112,7 @@ export default function ThreeWayBenefitSection() {
                       className={`w-4 h-4 ${benefit.color} shrink-0 mt-0.5`}
                     />
                     <div>
-                      <p className="text-white text-sm font-medium">
+                      <p className="text-luna-text-primary text-sm font-medium">
                         {item.title}
                       </p>
                       <p className="text-luna-text-secondary text-xs mt-0.5">

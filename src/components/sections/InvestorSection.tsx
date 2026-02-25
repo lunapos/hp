@@ -41,7 +41,7 @@ export default function InvestorSection() {
               <div className="w-10 h-10 rounded-lg bg-luna-gold/10 flex items-center justify-center mb-4">
                 <Icon className="w-5 h-5 text-luna-gold" />
               </div>
-              <h3 className="text-white font-bold mb-2">{item.title}</h3>
+              <h3 className="text-luna-text-primary font-bold mb-2">{item.title}</h3>
               <p className="text-luna-text-secondary text-sm leading-relaxed">
                 {item.desc}
               </p>
@@ -57,7 +57,7 @@ export default function InvestorSection() {
               <Building2 className="w-6 h-6 text-luna-gold" />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-white">
+              <h3 className="text-lg font-bold text-luna-text-primary">
                 LunaPos への出資をご検討の方
               </h3>
               <p className="text-luna-text-secondary text-xs">

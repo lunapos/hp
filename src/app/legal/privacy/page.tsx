@@ -58,7 +58,7 @@ export default function PrivacyPage() {
           <p className="text-luna-gold text-sm tracking-[0.3em] font-medium mb-2">
             PRIVACY POLICY
           </p>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-luna-text-primary mb-4">
             プライバシーポリシー
           </h1>
           <div className="w-16 h-1 bg-luna-gold mx-auto rounded-full" />
@@ -71,7 +71,7 @@ export default function PrivacyPage() {
             <div className="space-y-8">
               {sections.map((section, i) => (
                 <div key={i}>
-                  <h2 className="text-white font-bold mb-3">{section.title}</h2>
+                  <h2 className="text-luna-text-primary font-bold mb-3">{section.title}</h2>
                   <p className="text-luna-text-secondary text-sm leading-relaxed whitespace-pre-line">
                     {section.body}
                   </p>

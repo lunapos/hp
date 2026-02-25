@@ -1,13 +1,16 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-luna-bg: #0a0a18;
-  --color-luna-surface: #141430;
-  --color-luna-gold: #d4b870;
-  --color-luna-gold-light: #e5cc8a;
-  --color-luna-gold-dark: #8a7540;
-  --color-luna-text-secondary: #9090bb;
-  --color-luna-border: #2e2e50;
+  --color-luna-bg: var(--luna-bg);
+  --color-luna-surface: var(--luna-surface);
+  --color-luna-gold: var(--luna-gold);
+  --color-luna-gold-light: var(--luna-gold-light);
+  --color-luna-gold-dark: var(--luna-gold-dark);
+  --color-luna-text-primary: var(--luna-text-primary);
+  --color-luna-text-secondary: var(--luna-text-secondary);
+  --color-luna-text-muted: var(--luna-text-muted);
+  --color-luna-border: var(--luna-border);
+  --color-luna-input-bg: var(--luna-input-bg);
 
   --font-sans: "Noto Sans JP", sans-serif;
 
@@ -17,6 +20,36 @@
   --animate-slide-in-right: slide-in-right 0.6s ease-out forwards;
   --animate-float: float 3s ease-in-out infinite;
   --animate-pulse-glow: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Dark theme (default) */
+:root {
+  --luna-bg: #0a0a18;
+  --luna-surface: #141430;
+  --luna-gold: #d4b870;
+  --luna-gold-light: #e5cc8a;
+  --luna-gold-dark: #8a7540;
+  --luna-text-primary: #ffffff;
+  --luna-text-secondary: #9090bb;
+  --luna-text-muted: #6b6b8a;
+  --luna-border: #2e2e50;
+  --luna-input-bg: #0a0a18;
+  --luna-accent-rgb: 212, 184, 112;
+}
+
+/* Light theme */
+:root.light {
+  --luna-bg: #f8f8fc;
+  --luna-surface: #ffffff;
+  --luna-gold: #b8982e;
+  --luna-gold-light: #d4b870;
+  --luna-gold-dark: #8a7540;
+  --luna-text-primary: #1a1a2e;
+  --luna-text-secondary: #6b6b8a;
+  --luna-text-muted: #9090aa;
+  --luna-border: #e0e0ee;
+  --luna-input-bg: #f0f0f8;
+  --luna-accent-rgb: 184, 152, 46;
 }
 
 @keyframes fade-in {
@@ -45,13 +78,14 @@
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(212, 184, 112, 0.2); }
-  50% { box-shadow: 0 0 40px rgba(212, 184, 112, 0.4); }
+  0%, 100% { box-shadow: 0 0 20px rgba(var(--luna-accent-rgb), 0.2); }
+  50% { box-shadow: 0 0 40px rgba(var(--luna-accent-rgb), 0.4); }
 }
 
 body {
-  background-color: var(--color-luna-bg);
-  color: #ffffff;
+  background-color: var(--luna-bg);
+  color: var(--luna-text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .animation-delay-100 { animation-delay: 100ms; }
@@ -62,16 +96,16 @@ body {
 .animation-delay-600 { animation-delay: 600ms; }
 
 ::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: #0a0a18; }
-::-webkit-scrollbar-thumb { background: #2e2e50; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #9090bb; }
+::-webkit-scrollbar-track { background: var(--luna-bg); }
+::-webkit-scrollbar-thumb { background: var(--luna-border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--luna-text-secondary); }
 
 /* MDX article styles */
-.prose-luna h2 { color: #fff; font-size: 1.5rem; font-weight: 700; margin-top: 2.5rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #2e2e50; }
-.prose-luna h3 { color: #e5cc8a; font-size: 1.2rem; font-weight: 700; margin-top: 2rem; margin-bottom: 0.75rem; }
-.prose-luna p { color: #c0c0dd; line-height: 1.9; margin-bottom: 1.25rem; }
-.prose-luna strong { color: #d4b870; font-weight: 700; }
-.prose-luna ul, .prose-luna ol { color: #c0c0dd; margin-bottom: 1.25rem; padding-left: 1.5rem; }
+.prose-luna h2 { color: var(--luna-text-primary); font-size: 1.5rem; font-weight: 700; margin-top: 2.5rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--luna-border); }
+.prose-luna h3 { color: var(--luna-gold-light); font-size: 1.2rem; font-weight: 700; margin-top: 2rem; margin-bottom: 0.75rem; }
+.prose-luna p { color: var(--luna-text-secondary); line-height: 1.9; margin-bottom: 1.25rem; }
+.prose-luna strong { color: var(--luna-gold); font-weight: 700; }
+.prose-luna ul, .prose-luna ol { color: var(--luna-text-secondary); margin-bottom: 1.25rem; padding-left: 1.5rem; }
 .prose-luna li { margin-bottom: 0.5rem; line-height: 1.8; }
-.prose-luna a { color: #d4b870; text-decoration: underline; text-underline-offset: 2px; }
-.prose-luna a:hover { color: #e5cc8a; }
+.prose-luna a { color: var(--luna-gold); text-decoration: underline; text-underline-offset: 2px; }
+.prose-luna a:hover { color: var(--luna-gold-light); }

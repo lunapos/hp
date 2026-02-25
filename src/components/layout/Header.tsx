@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NAV_ITEMS } from "@/lib/constants";
+import ThemeToggle from "@/components/ui/ThemeToggle";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -16,7 +18,7 @@ export default function Header() {
           href="/"
           className="flex items-center gap-2 text-xl font-bold"
         >
-          <span className="text-2xl text-luna-gold">&#9789;</span>
+          <Image src="/icon.png" alt="LunaPos" width={24} height={24} />
           <span className="text-luna-gold tracking-wider">LunaPos</span>
         </Link>
 
@@ -28,37 +30,41 @@ export default function Header() {
               className={`text-sm transition-colors duration-200 ${
                 pathname === item.href
                   ? "text-luna-gold"
-                  : "text-gray-300 hover:text-white"
+                  : "text-luna-text-secondary hover:text-luna-text-primary"
               }`}
             >
               {item.label}
             </Link>
           ))}
+          <ThemeToggle />
         </nav>
 
-        <button
-          type="button"
-          className="md:hidden flex flex-col items-center justify-center gap-1.5 w-10 h-10"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          aria-label={isMenuOpen ? "メニューを閉じる" : "メニューを開く"}
-          aria-expanded={isMenuOpen}
-        >
-          <span
-            className={`block w-6 h-0.5 bg-gray-300 transition-transform duration-300 ${
-              isMenuOpen ? "rotate-45 translate-y-2" : ""
-            }`}
-          />
-          <span
-            className={`block w-6 h-0.5 bg-gray-300 transition-opacity duration-300 ${
-              isMenuOpen ? "opacity-0" : ""
-            }`}
-          />
-          <span
-            className={`block w-6 h-0.5 bg-gray-300 transition-transform duration-300 ${
-              isMenuOpen ? "-rotate-45 -translate-y-2" : ""
-            }`}
-          />
-        </button>
+        <div className="md:hidden flex items-center gap-2">
+          <ThemeToggle />
+          <button
+            type="button"
+            className="flex flex-col items-center justify-center gap-1.5 w-10 h-10"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label={isMenuOpen ? "メニューを閉じる" : "メニューを開く"}
+            aria-expanded={isMenuOpen}
+          >
+            <span
+              className={`block w-6 h-0.5 bg-luna-text-secondary transition-transform duration-300 ${
+                isMenuOpen ? "rotate-45 translate-y-2" : ""
+              }`}
+            />
+            <span
+              className={`block w-6 h-0.5 bg-luna-text-secondary transition-opacity duration-300 ${
+                isMenuOpen ? "opacity-0" : ""
+              }`}
+            />
+            <span
+              className={`block w-6 h-0.5 bg-luna-text-secondary transition-transform duration-300 ${
+                isMenuOpen ? "-rotate-45 -translate-y-2" : ""
+              }`}
+            />
+          </button>
+        </div>
       </div>
 
       <div
@@ -75,7 +81,7 @@ export default function Header() {
               className={`py-2 border-b border-luna-border transition-colors duration-200 ${
                 pathname === item.href
                   ? "text-luna-gold"
-                  : "text-gray-300 hover:text-white"
+                  : "text-luna-text-secondary hover:text-luna-text-primary"
               }`}
             >
               {item.label}

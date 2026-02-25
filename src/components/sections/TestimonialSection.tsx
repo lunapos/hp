@@ -37,7 +37,7 @@ export default function TestimonialSection() {
         {status === "success" ? (
           <Card className="border-luna-gold/30 text-center py-12">
             <CheckCircle className="w-12 h-12 text-emerald-400 mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-white mb-2">
+            <h3 className="text-xl font-bold text-luna-text-primary mb-2">
               ご投稿ありがとうございます
             </h3>
             <p className="text-luna-text-secondary text-sm">
@@ -48,7 +48,7 @@ export default function TestimonialSection() {
           <Card className="border-luna-border border-dashed">
             <div className="text-center mb-6">
               <MessageSquarePlus className="w-10 h-10 text-luna-gold/40 mx-auto mb-3" />
-              <h3 className="text-lg font-bold text-white mb-1">
+              <h3 className="text-lg font-bold text-luna-text-primary mb-1">
                 お客様の声を募集しています
               </h3>
               <p className="text-luna-text-secondary text-sm">
@@ -67,7 +67,7 @@ export default function TestimonialSection() {
                     value={form.storeName}
                     onChange={(e) => setForm({ ...form, storeName: e.target.value })}
                     required
-                    className="w-full bg-luna-bg border border-luna-border rounded-lg px-3 py-2 text-white text-sm focus:border-luna-gold focus:ring-1 focus:ring-luna-gold outline-none transition-all"
+                    className="w-full bg-luna-input-bg border border-luna-border rounded-lg px-3 py-2 text-luna-text-primary text-sm focus:border-luna-gold focus:ring-1 focus:ring-luna-gold outline-none transition-all"
                     placeholder="例: Bar Moon"
                   />
                 </div>
@@ -79,7 +79,7 @@ export default function TestimonialSection() {
                     type="text"
                     value={form.role}
                     onChange={(e) => setForm({ ...form, role: e.target.value })}
-                    className="w-full bg-luna-bg border border-luna-border rounded-lg px-3 py-2 text-white text-sm focus:border-luna-gold focus:ring-1 focus:ring-luna-gold outline-none transition-all"
+                    className="w-full bg-luna-input-bg border border-luna-border rounded-lg px-3 py-2 text-luna-text-primary text-sm focus:border-luna-gold focus:ring-1 focus:ring-luna-gold outline-none transition-all"
                     placeholder="例: オーナー"
                   />
                 </div>
@@ -94,7 +94,7 @@ export default function TestimonialSection() {
                   onChange={(e) => setForm({ ...form, message: e.target.value })}
                   required
                   rows={3}
-                  className="w-full bg-luna-bg border border-luna-border rounded-lg px-3 py-2 text-white text-sm focus:border-luna-gold focus:ring-1 focus:ring-luna-gold outline-none transition-all resize-none"
+                  className="w-full bg-luna-input-bg border border-luna-border rounded-lg px-3 py-2 text-luna-text-primary text-sm focus:border-luna-gold focus:ring-1 focus:ring-luna-gold outline-none transition-all resize-none"
                   placeholder="LunaPosを使ってみた感想をお聞かせください"
                 />
               </div>

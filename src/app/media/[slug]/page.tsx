@@ -55,7 +55,7 @@ export default async function MediaArticlePage({
             </span>
           </div>
 
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <h1 className="text-3xl md:text-4xl font-bold text-luna-text-primary mb-4">
             {article.title}
           </h1>
 

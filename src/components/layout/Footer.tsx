@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { NAV_ITEMS, BRAND } from "@/lib/constants";
 
@@ -8,12 +9,12 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <div className="flex items-center gap-2 text-xl font-bold mb-4">
-              <span className="text-2xl text-luna-gold">&#9789;</span>
+              <Image src="/icon.png" alt="LunaPos" width={24} height={24} />
               <span className="text-luna-gold tracking-wider">
                 {BRAND.name}
               </span>
             </div>
-            <p className="text-gray-400 text-sm leading-relaxed">
+            <p className="text-luna-text-secondary text-sm leading-relaxed">
               ナイト業界に特化したPOSシステム。
               <br />
               日々の売上をスマートに管理。
@@ -21,14 +22,14 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-white font-semibold mb-4">サイトマップ</h3>
+            <h3 className="text-luna-text-primary font-semibold mb-4">サイトマップ</h3>
             <ul className="flex flex-col gap-2">
               {NAV_ITEMS.map(
                 (item) => (
                   <li key={item.href}>
                     <Link
                       href={item.href}
-                      className="text-gray-400 text-sm hover:text-white transition-colors duration-200"
+                      className="text-luna-text-secondary text-sm hover:text-luna-text-primary transition-colors duration-200"
                     >
                       {item.label}
                     </Link>
@@ -40,7 +41,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-white font-semibold mb-4">業種別ページ</h3>
+            <h3 className="text-luna-text-primary font-semibold mb-4">業種別ページ</h3>
             <ul className="flex flex-col gap-2">
               {[
                 { label: "キャバクラ向け", path: "/cabaret" },
@@ -54,7 +55,7 @@ export default function Footer() {
                     href={`https://lp.lunapos.jp${item.path}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-gray-400 text-sm hover:text-white transition-colors duration-200"
+                    className="text-luna-text-secondary text-sm hover:text-luna-text-primary transition-colors duration-200"
                   >
                     {item.label}
                   </a>
@@ -62,15 +63,15 @@ export default function Footer() {
               ))}
             </ul>
             <div className="mt-6">
-              <h3 className="text-white font-semibold mb-4">お問い合わせ</h3>
-              <p className="text-gray-400 text-sm">{BRAND.email}</p>
+              <h3 className="text-luna-text-primary font-semibold mb-4">お問い合わせ</h3>
+              <p className="text-luna-text-secondary text-sm">{BRAND.email}</p>
             </div>
           </div>
         </div>
 
         <div className="mt-12 pt-8 border-t border-luna-border">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-gray-500 text-sm">
+            <p className="text-luna-text-muted text-sm">
               &copy; 2026 {BRAND.name}. All rights reserved.
             </p>
             <div className="flex items-center gap-4">
@@ -82,7 +83,7 @@ export default function Footer() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="text-gray-500 text-xs hover:text-gray-300 transition-colors duration-200"
+                  className="text-luna-text-muted text-xs hover:text-luna-text-secondary transition-colors duration-200"
                 >
                   {item.label}
                 </Link>

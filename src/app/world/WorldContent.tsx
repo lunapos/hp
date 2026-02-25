@@ -67,7 +67,7 @@ export default function WorldContent() {
           <p className="text-emerald-400 text-sm tracking-[0.3em] font-medium mb-2">
             LUNA WORLD
           </p>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-luna-text-primary mb-4">
             海外展開プログラム
           </h1>
           <div className="w-16 h-1 bg-emerald-400 mx-auto rounded-full mb-4" />
@@ -85,7 +85,7 @@ export default function WorldContent() {
       <Section>
         <div className="max-w-3xl mx-auto text-center mb-12">
           <Globe className="w-12 h-12 text-emerald-400 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-white mb-4">
+          <h2 className="text-2xl font-bold text-luna-text-primary mb-4">
             世界標準のナイトクラブPOSへ
           </h2>
           <p className="text-luna-text-secondary leading-relaxed">
@@ -98,7 +98,7 @@ export default function WorldContent() {
 
       {/* Target Regions */}
       <Section className="bg-luna-surface/50">
-        <h2 className="text-2xl font-bold text-white text-center mb-8">
+        <h2 className="text-2xl font-bold text-luna-text-primary text-center mb-8">
           展開ロードマップ
         </h2>
         <div className="max-w-3xl mx-auto space-y-4">
@@ -112,7 +112,7 @@ export default function WorldContent() {
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-1">
-                    <h3 className="text-white font-bold">{region.region}</h3>
+                    <h3 className="text-luna-text-primary font-bold">{region.region}</h3>
                     <span className="text-xs bg-emerald-400/20 text-emerald-300 px-2 py-0.5 rounded-full">
                       {region.status}
                     </span>
@@ -129,7 +129,7 @@ export default function WorldContent() {
 
       {/* Challenges */}
       <Section>
-        <h2 className="text-2xl font-bold text-white text-center mb-3">
+        <h2 className="text-2xl font-bold text-luna-text-primary text-center mb-3">
           グローバル対応の取り組み
         </h2>
         <p className="text-luna-text-secondary text-center mb-8 max-w-2xl mx-auto">
@@ -145,7 +145,7 @@ export default function WorldContent() {
                     <Icon className="w-5 h-5 text-emerald-400" />
                   </div>
                   <div>
-                    <h3 className="text-white font-bold mb-2">
+                    <h3 className="text-luna-text-primary font-bold mb-2">
                       {challenge.title}
                     </h3>
                     <p className="text-luna-text-secondary text-sm leading-relaxed">

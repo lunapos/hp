@@ -52,7 +52,7 @@ export default function LoginContent() {
           <p className="text-emerald-400 text-sm tracking-[0.3em] font-medium mb-2">
             PARTNER LOGIN
           </p>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-luna-text-primary mb-4">
             パートナーログイン
           </h1>
           <div className="w-16 h-1 bg-emerald-400 mx-auto rounded-full" />
@@ -67,7 +67,7 @@ export default function LoginContent() {
                 <LogIn className="w-5 h-5 text-emerald-400" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-white">ログイン</h2>
+                <h2 className="text-xl font-bold text-luna-text-primary">ログイン</h2>
                 <p className="text-luna-text-secondary text-xs">
                   パートナーダッシュボードへアクセス
                 </p>
@@ -84,7 +84,7 @@ export default function LoginContent() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full bg-luna-bg border border-luna-border rounded-xl px-4 py-3 text-white focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none transition-all"
+                  className="w-full bg-luna-input-bg border border-luna-border rounded-xl px-4 py-3 text-luna-text-primary focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none transition-all"
                   placeholder="tanaka@example.com"
                 />
               </div>
@@ -98,7 +98,7 @@ export default function LoginContent() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full bg-luna-bg border border-luna-border rounded-xl px-4 py-3 text-white focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none transition-all"
+                  className="w-full bg-luna-input-bg border border-luna-border rounded-xl px-4 py-3 text-luna-text-primary focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none transition-all"
                   placeholder="パスワードを入力"
                 />
               </div>

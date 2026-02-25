@@ -113,7 +113,7 @@ export default function FundContent() {
             <p className="text-purple-400 text-sm tracking-[0.3em] font-medium mb-2">
               LUNA FUND
             </p>
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            <h1 className="text-4xl md:text-5xl font-bold text-luna-text-primary mb-4">
               事前登録完了
             </h1>
             <div className="w-16 h-1 bg-purple-400 mx-auto rounded-full" />
@@ -123,7 +123,7 @@ export default function FundContent() {
           <div className="max-w-lg mx-auto text-center">
             <Card className="border-purple-400/30">
               <CheckCircle className="w-16 h-16 text-emerald-400 mx-auto mb-4" />
-              <h2 className="text-2xl font-bold text-white mb-2">
+              <h2 className="text-2xl font-bold text-luna-text-primary mb-2">
                 ウェイティングリストに登録しました
               </h2>
               <p className="text-luna-text-secondary">
@@ -149,7 +149,7 @@ export default function FundContent() {
           <p className="text-purple-400 text-sm tracking-[0.3em] font-medium mb-2">
             LUNA FUND
           </p>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-luna-text-primary mb-4">
             店舗投資プログラム
           </h1>
           <div className="w-16 h-1 bg-purple-400 mx-auto rounded-full mb-4" />
@@ -172,7 +172,7 @@ export default function FundContent() {
                 <div className="w-10 h-10 rounded-lg bg-purple-400/10 flex items-center justify-center mb-4">
                   <Icon className="w-5 h-5 text-purple-400" />
                 </div>
-                <h3 className="text-white font-bold mb-2">{feature.title}</h3>
+                <h3 className="text-luna-text-primary font-bold mb-2">{feature.title}</h3>
                 <p className="text-luna-text-secondary text-sm leading-relaxed">
                   {feature.desc}
                 </p>
@@ -189,7 +189,7 @@ export default function FundContent() {
                 <Landmark className="w-5 h-5 text-purple-400" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-white">事前登録</h2>
+                <h2 className="text-xl font-bold text-luna-text-primary">事前登録</h2>
                 <p className="text-luna-text-secondary text-xs">
                   プログラム開始時に優先的にご案内いたします
                 </p>
@@ -207,7 +207,7 @@ export default function FundContent() {
                   value={form.name}
                   onChange={handleChange}
                   required
-                  className="w-full bg-luna-bg border border-luna-border rounded-xl px-4 py-3 text-white focus:border-purple-400 focus:ring-1 focus:ring-purple-400 outline-none transition-all"
+                  className="w-full bg-luna-input-bg border border-luna-border rounded-xl px-4 py-3 text-luna-text-primary focus:border-purple-400 focus:ring-1 focus:ring-purple-400 outline-none transition-all"
                   placeholder="例: 田中 太郎"
                 />
               </div>
@@ -223,7 +223,7 @@ export default function FundContent() {
                     value={form.email}
                     onChange={handleChange}
                     required
-                    className="w-full bg-luna-bg border border-luna-border rounded-xl px-4 py-3 text-white focus:border-purple-400 focus:ring-1 focus:ring-purple-400 outline-none transition-all"
+                    className="w-full bg-luna-input-bg border border-luna-border rounded-xl px-4 py-3 text-luna-text-primary focus:border-purple-400 focus:ring-1 focus:ring-purple-400 outline-none transition-all"
                     placeholder="例: tanaka@example.com"
                   />
                 </div>
@@ -236,7 +236,7 @@ export default function FundContent() {
                     name="phone"
                     value={form.phone}
                     onChange={handleChange}
-                    className="w-full bg-luna-bg border border-luna-border rounded-xl px-4 py-3 text-white focus:border-purple-400 focus:ring-1 focus:ring-purple-400 outline-none transition-all"
+                    className="w-full bg-luna-input-bg border border-luna-border rounded-xl px-4 py-3 text-luna-text-primary focus:border-purple-400 focus:ring-1 focus:ring-purple-400 outline-none transition-all"
                     placeholder="例: 03-1234-5678"
                   />
                 </div>
@@ -250,7 +250,7 @@ export default function FundContent() {
                   name="investmentType"
                   value={form.investmentType}
                   onChange={handleChange}
-                  className="w-full bg-luna-bg border border-luna-border rounded-xl px-4 py-3 text-white focus:border-purple-400 focus:ring-1 focus:ring-purple-400 outline-none transition-all"
+                  className="w-full bg-luna-input-bg border border-luna-border rounded-xl px-4 py-3 text-luna-text-primary focus:border-purple-400 focus:ring-1 focus:ring-purple-400 outline-none transition-all"
                 >
                   {investmentTypes.map((type) => (
                     <option key={type.value} value={type.value}>
@@ -269,7 +269,7 @@ export default function FundContent() {
                   value={form.message}
                   onChange={handleChange}
                   rows={3}
-                  className="w-full bg-luna-bg border border-luna-border rounded-xl px-4 py-3 text-white focus:border-purple-400 focus:ring-1 focus:ring-purple-400 outline-none transition-all resize-none"
+                  className="w-full bg-luna-input-bg border border-luna-border rounded-xl px-4 py-3 text-luna-text-primary focus:border-purple-400 focus:ring-1 focus:ring-purple-400 outline-none transition-all resize-none"
                   placeholder="ご質問やご要望がございましたらご記入ください"
                 />
               </div>

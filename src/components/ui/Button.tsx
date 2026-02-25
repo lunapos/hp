@@ -29,11 +29,11 @@ export default function Button({
   const variantClasses = (() => {
     switch (variant) {
       case "primary":
-        return "bg-luna-gold text-white shadow-[0_0_20px_rgba(212,184,112,0.3)] hover:brightness-110 hover:scale-105 active:scale-95";
+        return "bg-luna-gold text-white shadow-[0_0_20px_rgba(var(--luna-accent-rgb),0.3)] hover:brightness-110 hover:scale-105 active:scale-95";
       case "secondary":
-        return "bg-transparent text-luna-gold-light border border-luna-gold hover:bg-white/5 active:scale-95";
+        return "bg-transparent text-luna-gold-light border border-luna-gold hover:bg-luna-border/20 active:scale-95";
       case "ghost":
-        return "bg-transparent text-luna-gold-light hover:bg-white/5 active:scale-95";
+        return "bg-transparent text-luna-gold-light hover:bg-luna-border/20 active:scale-95";
     }
   })();
 
