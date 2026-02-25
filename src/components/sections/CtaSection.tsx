@@ -15,13 +15,13 @@ export default function CtaSection() {
             まずはお気軽にご相談ください
           </h2>
           <p className="text-luna-text-secondary mb-8 max-w-lg mx-auto">
-            累計500会計まで無料でお使いいただけます。
+            現在開発中です。事前登録いただくと、リリース時に優先的にご案内いたします。
             <br />
-            導入のご相談はLINEまたはフォームで受付中です。
+            ご質問・ご相談はLINEまたはフォームで受付中です。
           </p>
           <div className="flex flex-col items-center gap-3">
             <Button href="/contact" size="lg">
-              LINEで相談する
+              事前登録・お問い合わせ
             </Button>
             <a
               href="/contact"

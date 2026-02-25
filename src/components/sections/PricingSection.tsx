@@ -39,7 +39,7 @@ export default function PricingSection() {
             <div className="flex items-center gap-2 mb-2">
               <Gift className="w-4 h-4 text-luna-gold" />
               <span className="text-luna-gold text-sm font-medium">
-                まずは無料で始められます
+                リリース時は無料でスタート
               </span>
             </div>
             <p className="text-luna-text-secondary text-sm leading-relaxed">
