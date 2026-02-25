@@ -1,5 +1,9 @@
 "use client";
 
+declare global {
+  interface Window { gtag?: (...args: unknown[]) => void }
+}
+
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Section from "@/components/layout/Section";
@@ -62,6 +66,11 @@ export default function ContactContent() {
 
       setStatus("success");
       setForm(initialForm);
+      window.gtag?.("event", "generate_lead", {
+        event_category: "contact",
+        event_label: form.inquiryType,
+        source: "hp",
+      });
     } catch (err) {
       setStatus("error");
       setErrorMessage(
