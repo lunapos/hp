@@ -42,7 +42,7 @@ export default function NewsSection() {
               <h3 className="text-luna-text-primary font-semibold">お知らせ</h3>
             </div>
             <Link
-              href="/news/announcements"
+              href="/news?tab=announcements"
               className="inline-flex items-center gap-1 text-luna-gold hover:text-luna-gold-light transition-colors duration-200 text-xs font-medium"
             >
               一覧
@@ -66,7 +66,7 @@ export default function NewsSection() {
               </h3>
             </div>
             <Link
-              href="/news/updates"
+              href="/news"
               className="inline-flex items-center gap-1 text-luna-gold hover:text-luna-gold-light transition-colors duration-200 text-xs font-medium"
             >
               一覧

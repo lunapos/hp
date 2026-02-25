@@ -1,15 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { X } from "lucide-react";
 import { NAV_ITEMS } from "@/lib/constants";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
+
+  useEffect(() => {
+    document.body.style.overflow = isMenuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMenuOpen]);
 
   return (
     <>
@@ -84,7 +92,17 @@ export default function Header() {
           isMenuOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <nav className="flex flex-col p-6 gap-4">
+        <div className="flex justify-end px-4 pt-2">
+          <button
+            type="button"
+            onClick={() => setIsMenuOpen(false)}
+            className="p-2 rounded-lg text-luna-text-secondary hover:text-luna-gold transition-colors"
+            aria-label="メニューを閉じる"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+        <nav className="flex flex-col px-6 pb-6 gap-4">
           {NAV_ITEMS.map((item) => (
             <Link
               key={item.href}

@@ -10,14 +10,22 @@ export const metadata: Metadata = {
     "LunaPosの最新情報、開発アップデート、メンテナンス情報をお届けします。",
 };
 
-export default function NewsListPage() {
+export default async function NewsListPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ tab?: string }>;
+}) {
+  const { tab } = await searchParams;
+  const defaultTab =
+    tab === "announcements" ? "announcements" : "updates";
+
   return (
     <Section className="pt-32">
       <SectionHeading
         subtitle="NEWS"
         title="お知らせ・開発アップデート"
       />
-      <NewsTabs items={newsItems} />
+      <NewsTabs items={newsItems} defaultTab={defaultTab} />
     </Section>
   );
 }

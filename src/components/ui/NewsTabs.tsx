@@ -1,10 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import ProjectBadge from "@/components/ui/ProjectBadge";
-import type { NewsItem } from "@/data/news";
+import ContentCard from "@/components/ui/ContentCard";
+import type { NewsItem, Project } from "@/data/news";
 
 const PER_PAGE = 6;
 
@@ -14,6 +13,12 @@ const TABS = [
 ] as const;
 
 type TabKey = (typeof TABS)[number]["key"];
+
+const PROJECT_FILTERS: { key: "all" | Project; label: string }[] = [
+  { key: "all", label: "すべて" },
+  { key: "HP", label: "HP" },
+  { key: "App", label: "App" },
+];
 
 function filterByTab(items: NewsItem[], tab: TabKey): NewsItem[] {
   if (tab === "announcements") {
@@ -38,20 +43,25 @@ export default function NewsTabs({
     defaultTab ?? "updates"
   );
   const [page, setPage] = useState(1);
+  const [projectFilter, setProjectFilter] = useState<"all" | Project>("all");
 
-  const filtered = filterByTab(items, activeTab);
+  let filtered = filterByTab(items, activeTab);
+  if (activeTab === "updates" && projectFilter !== "all") {
+    filtered = filtered.filter((i) => i.project === projectFilter);
+  }
   const totalPages = Math.ceil(filtered.length / PER_PAGE);
   const paged = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
   const switchTab = (tab: TabKey) => {
     setActiveTab(tab);
     setPage(1);
+    setProjectFilter("all");
   };
 
   return (
     <>
       {/* タブ */}
-      <div className="flex gap-1 mb-8 border-b border-luna-border">
+      <div className="flex gap-1 mb-6 border-b border-luna-border">
         {TABS.map((tab) => (
           <button
             key={tab.key}
@@ -71,29 +81,40 @@ export default function NewsTabs({
         ))}
       </div>
 
+      {/* プロジェクトフィルター（開発アップデートタブ時のみ） */}
+      {activeTab === "updates" && (
+        <div className="flex gap-2 mb-6 flex-wrap">
+          {PROJECT_FILTERS.map((f) => (
+            <button
+              key={f.key}
+              type="button"
+              onClick={() => {
+                setProjectFilter(f.key);
+                setPage(1);
+              }}
+              className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-colors duration-200 ${
+                projectFilter === f.key
+                  ? "border-luna-gold bg-luna-gold/15 text-luna-gold"
+                  : "border-luna-border text-luna-text-secondary hover:border-luna-gold hover:text-luna-gold"
+              }`}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* 一覧 */}
       <div className="space-y-4">
         {paged.map((item) => (
-          <Link
+          <ContentCard
             key={item.slug}
             href={`/news/${item.slug}`}
-            className="block bg-luna-surface border border-luna-border rounded-xl p-6 hover:border-luna-gold transition-all duration-300 group"
-          >
-            <div className="flex flex-col md:flex-row md:items-center gap-3 mb-2">
-              <div className="flex items-center gap-2 shrink-0">
-                <time className="text-luna-text-muted text-sm tabular-nums">
-                  {item.date}
-                </time>
-                {item.project && <ProjectBadge project={item.project} />}
-              </div>
-              <h2 className="text-luna-text-primary font-medium text-lg group-hover:text-luna-gold transition-colors duration-200">
-                {item.title}
-              </h2>
-            </div>
-            <p className="text-luna-text-secondary text-sm leading-relaxed">
-              {item.summary}
-            </p>
-          </Link>
+            date={item.date}
+            title={item.title}
+            description={item.summary}
+            project={item.project}
+          />
         ))}
       </div>
 
