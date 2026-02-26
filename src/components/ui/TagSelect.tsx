@@ -19,7 +19,7 @@ export function TagSelect({
         onChange={(e) => {
           const val = e.target.value;
           router.push(
-            val ? `/media/tag/${encodeURIComponent(val)}` : "/media"
+            val ? `/column/tag/${encodeURIComponent(val)}` : "/column"
           );
         }}
         className="appearance-none bg-luna-surface border border-luna-border text-luna-text-secondary rounded-lg pl-4 pr-10 py-2 text-sm focus:border-luna-gold focus:outline-none cursor-pointer hover:border-luna-gold transition-colors"

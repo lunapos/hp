@@ -34,7 +34,7 @@ export const NAV_ITEMS: NavItem[] = [
   { label: "\u6a5f\u80fd\u7d39\u4ecb", href: "/features" },
   { label: "\u30ed\u30fc\u30c9\u30de\u30c3\u30d7", href: "/roadmap" },
   { label: "ニュース", href: "/news" },
-  { label: "コラム", href: "/media" },
+  { label: "コラム", href: "/column" },
   { label: "運営について", href: "/company" },
   { label: "\u304a\u554f\u3044\u5408\u308f\u305b", href: "/contact" },
 ];

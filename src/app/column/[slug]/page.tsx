@@ -38,7 +38,7 @@ export default async function MediaArticlePage({
       <section className="pt-20 pb-8 px-4">
         <div className="max-w-3xl mx-auto">
           <Link
-            href="/media"
+            href="/column"
             className="inline-flex items-center gap-1 text-sm text-luna-text-secondary hover:text-luna-gold transition-colors mb-6"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -65,7 +65,7 @@ export default async function MediaArticlePage({
               {article.tags.map((tag) => (
                 <Link
                   key={tag}
-                  href={`/media/tag/${encodeURIComponent(tag)}`}
+                  href={`/column/tag/${encodeURIComponent(tag)}`}
                   className="text-xs text-luna-text-secondary hover:text-luna-gold transition-colors"
                 >
                   #{tag}
@@ -83,7 +83,7 @@ export default async function MediaArticlePage({
 
         <div className="max-w-3xl mx-auto mt-12 pt-8 border-t border-luna-border">
           <Link
-            href="/media"
+            href="/column"
             className="inline-flex items-center gap-1 text-sm text-luna-text-secondary hover:text-luna-gold transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />

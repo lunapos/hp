@@ -43,7 +43,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/media`,
+      url: `${baseUrl}/column`,
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.8,
@@ -52,7 +52,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const articles = getAllArticles();
   const mediaPages: MetadataRoute.Sitemap = articles.map((article) => ({
-    url: `${baseUrl}/media/${article.slug}`,
+    url: `${baseUrl}/column/${article.slug}`,
     lastModified: new Date(article.date),
     changeFrequency: "monthly",
     priority: 0.7,

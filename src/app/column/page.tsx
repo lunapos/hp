@@ -53,7 +53,7 @@ export default async function MediaPage({
             {paginatedArticles.map((article) => (
               <ContentCard
                 key={article.slug}
-                href={`/media/${article.slug}`}
+                href={`/column/${article.slug}`}
                 date={article.date}
                 title={article.title}
                 description={article.description}
@@ -67,7 +67,7 @@ export default async function MediaPage({
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
-          basePath="/media"
+          basePath="/column"
         />
       </div>
     </Section>

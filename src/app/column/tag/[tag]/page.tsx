@@ -62,7 +62,7 @@ export default async function TagPage({
             {paginatedArticles.map((article) => (
               <ContentCard
                 key={article.slug}
-                href={`/media/${article.slug}`}
+                href={`/column/${article.slug}`}
                 date={article.date}
                 title={article.title}
                 description={article.description}
@@ -76,7 +76,7 @@ export default async function TagPage({
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
-          basePath={`/media/tag/${encodeURIComponent(decoded)}`}
+          basePath={`/column/tag/${encodeURIComponent(decoded)}`}
         />
       </div>
     </Section>
