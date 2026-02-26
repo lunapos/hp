@@ -23,6 +23,15 @@ export interface NewsItem {
 export const newsItems: NewsItem[] = [
   // --- 2026-02-26 ---
   {
+    slug: "hp-app-screenshots",
+    date: "2026-02-26",
+    title: "HP: アプリスクリーンショットセクション追加",
+    summary:
+      "トップページにLunaPos Floorアプリの開発中画面（フロアマップ・キャスト管理）のスクリーンショットを掲載。",
+    category: "開発アップデート",
+    project: "HP",
+  },
+  {
     slug: "hp-nav-split-media-rename",
     date: "2026-02-26",
     title: "HP: ナビゲーション整理 & メディア→コラムへリネーム",
