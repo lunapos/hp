@@ -6,7 +6,7 @@ export default function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
       {/* Background decorations */}
-      <div className="absolute inset-0 bg-luna-bg" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(20,20,48,0.8)_0%,_rgba(10,10,24,1)_70%)]" />
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-luna-gold/5 rounded-full blur-3xl" />
       <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-luna-gold/3 rounded-full blur-3xl" />
 
@@ -27,13 +27,16 @@ export default function HeroSection() {
               </span>
             </div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-luna-text-primary leading-tight mb-6 animate-slide-up">
+            <h1
+              className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6 animate-slide-up"
+              style={{ textShadow: "0 2px 16px rgba(0,0,0,0.6)" }}
+            >
               ナイト業界のための、
               <br />
-              <span className="text-luna-gold">次世代POS</span>システム
+              <span className="text-luna-gold drop-shadow-lg">次世代POS</span>システム
             </h1>
 
-            <p className="text-lg text-luna-text-secondary leading-relaxed mb-8 max-w-xl animate-slide-up animation-delay-100">
+            <p className="text-lg text-luna-text-secondary leading-relaxed mb-8 max-w-xl animate-slide-up animation-delay-100 brightness-125">
               フロア管理・会計・出退勤をiPad1台で。
               <br />
               オフライン対応で安心の店舗運営を。
