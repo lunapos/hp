@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { NAV_ITEMS, BRAND } from "@/lib/constants";
+import { NAV_ITEMS, FOOTER_NAV_ITEMS, BRAND } from "@/lib/constants";
 
 export default function Footer() {
   return (
@@ -24,7 +24,7 @@ export default function Footer() {
           <div>
             <h3 className="text-luna-text-primary font-semibold mb-4">サイトマップ</h3>
             <ul className="flex flex-col gap-2">
-              {NAV_ITEMS.map(
+              {[...NAV_ITEMS, ...FOOTER_NAV_ITEMS].map(
                 (item) => (
                   <li key={item.href}>
                     <Link
@@ -36,7 +36,6 @@ export default function Footer() {
                   </li>
                 )
               )}
-
             </ul>
           </div>
 

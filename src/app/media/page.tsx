@@ -9,7 +9,7 @@ import { Pagination } from "@/components/ui/Pagination";
 const ARTICLES_PER_PAGE = 6;
 
 export const metadata: Metadata = {
-  title: "メディア",
+  title: "コラム",
   description:
     "ナイト業界の経営に役立つ情報をお届けします。POS導入ガイド、売上管理のコツ、業界トレンドなど。",
 };
@@ -32,8 +32,8 @@ export default async function MediaPage({
   return (
     <Section className="pt-32">
       <SectionHeading
-        subtitle="MEDIA"
-        title="メディア"
+        subtitle="COLUMN"
+        title="コラム"
         description="ナイト業界の経営に役立つ情報をお届けします"
       />
 

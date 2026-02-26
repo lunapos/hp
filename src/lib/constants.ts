@@ -33,12 +33,15 @@ export const NAV_ITEMS: NavItem[] = [
   { label: "\u30c8\u30c3\u30d7", href: "/" },
   { label: "\u6a5f\u80fd\u7d39\u4ecb", href: "/features" },
   { label: "\u30ed\u30fc\u30c9\u30de\u30c3\u30d7", href: "/roadmap" },
-  { label: "\u6295\u8cc7\u30fb\u51fa\u8cc7", href: "/investor" },
   { label: "ニュース", href: "/news" },
-  { label: "メディア", href: "/media" },
-  { label: "パートナー", href: "/partner" },
+  { label: "コラム", href: "/media" },
   { label: "運営について", href: "/company" },
   { label: "\u304a\u554f\u3044\u5408\u308f\u305b", href: "/contact" },
+];
+
+export const FOOTER_NAV_ITEMS: NavItem[] = [
+  { label: "\u6295\u8cc7\u30fb\u51fa\u8cc7", href: "/investor" },
+  { label: "パートナー", href: "/partner" },
 ];
 
 export const PAIN_POINTS: PainPoint[] = [

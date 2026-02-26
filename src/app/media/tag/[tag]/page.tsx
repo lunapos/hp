@@ -21,7 +21,7 @@ export async function generateMetadata({
   const decoded = decodeURIComponent(tag);
   return {
     title: `#${decoded} の記事`,
-    description: `「${decoded}」タグが付いたメディア記事の一覧です。`,
+    description: `「${decoded}」タグが付いたコラム記事の一覧です。`,
   };
 }
 
@@ -46,7 +46,7 @@ export default async function TagPage({
 
   return (
     <Section className="pt-32">
-      <SectionHeading subtitle="MEDIA" title={`#${decoded}`} />
+      <SectionHeading subtitle="COLUMN" title={`#${decoded}`} />
 
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">

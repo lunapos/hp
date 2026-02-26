@@ -42,7 +42,7 @@ export default async function MediaArticlePage({
             className="inline-flex items-center gap-1 text-sm text-luna-text-secondary hover:text-luna-gold transition-colors mb-6"
           >
             <ArrowLeft className="w-4 h-4" />
-            メディア一覧に戻る
+            コラム一覧に戻る
           </Link>
 
           <div className="flex items-center gap-3 mb-4">
@@ -87,7 +87,7 @@ export default async function MediaArticlePage({
             className="inline-flex items-center gap-1 text-sm text-luna-text-secondary hover:text-luna-gold transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            メディア一覧に戻る
+            コラム一覧に戻る
           </Link>
         </div>
       </section>
