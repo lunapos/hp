@@ -1,5 +1,4 @@
-"use client";
-
+import Image from "next/image";
 import { Tablet, WifiOff, Crown } from "lucide-react";
 
 export default function HeroSection() {
@@ -45,65 +44,18 @@ export default function HeroSection() {
             <div className="animate-slide-up animation-delay-200" />
           </div>
 
-          {/* iPad mockup area */}
+          {/* Actual app screenshot */}
           <div className="flex-1 flex justify-center animate-fade-in animation-delay-300">
-            <div className="relative w-full max-w-md">
-              <div className="bg-luna-surface border-2 border-luna-border rounded-3xl p-6 shadow-2xl animate-float">
-                <div className="bg-luna-bg rounded-2xl p-6 space-y-4">
-                  {/* Mockup: Floor map */}
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-2">
-                      <span className="text-luna-gold text-lg">&#9789;</span>
-                      <span className="text-luna-text-primary text-sm font-bold tracking-wider">
-                        FLOOR MAP
-                      </span>
-                    </div>
-                    <span className="text-luna-gold text-xs">
-                      本日売上: ¥385,000
-                    </span>
-                  </div>
-
-                  {/* Table grid */}
-                  <div className="grid grid-cols-4 gap-2">
-                    {[
-                      { name: "T1", status: "occupied" },
-                      { name: "T2", status: "empty" },
-                      { name: "T3", status: "waiting" },
-                      { name: "T4", status: "occupied" },
-                      { name: "T5", status: "occupied" },
-                      { name: "T6", status: "empty" },
-                      { name: "T7", status: "empty" },
-                      { name: "T8", status: "occupied" },
-                    ].map((table) => (
-                      <div
-                        key={table.name}
-                        className={`rounded-lg p-2 text-center text-xs font-medium ${
-                          table.status === "occupied"
-                            ? "bg-emerald-900/40 text-emerald-400 border border-emerald-800"
-                            : table.status === "waiting"
-                            ? "bg-amber-900/40 text-amber-400 border border-amber-800"
-                            : "bg-luna-surface text-luna-text-secondary border border-luna-border"
-                        }`}
-                      >
-                        <div>{table.name}</div>
-                        <div className="text-[10px] mt-0.5 opacity-70">
-                          {table.status === "occupied"
-                            ? "1:30"
-                            : table.status === "waiting"
-                            ? "会計待"
-                            : "空席"}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Bottom stats */}
-                  <div className="flex justify-between text-[10px] text-luna-text-secondary pt-2 border-t border-luna-border">
-                    <span>使用中: 4</span>
-                    <span>空席: 3</span>
-                    <span>会計待: 1</span>
-                  </div>
-                </div>
+            <div className="relative w-full max-w-lg">
+              <div className="rounded-2xl overflow-hidden border-2 border-luna-border shadow-2xl animate-float">
+                <Image
+                  src="/screenshots/floor-map.png"
+                  alt="LunaPos Floor - フロアマップ画面"
+                  width={1024}
+                  height={768}
+                  className="w-full h-auto"
+                  priority
+                />
               </div>
 
               {/* Floating badges */}
