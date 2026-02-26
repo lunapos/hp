@@ -26,7 +26,7 @@ export default function ThemeToggle() {
     <button
       type="button"
       onClick={toggle}
-      className="relative inline-flex items-center w-14 h-7 rounded-full transition-colors duration-300 focus:outline-none"
+      className="relative inline-flex items-center w-14 h-7 rounded-full transition-colors duration-300 focus:outline-none cursor-pointer"
       style={{
         backgroundColor: isLight
           ? "rgba(var(--luna-accent-rgb), 0.2)"
