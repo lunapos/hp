@@ -30,6 +30,7 @@ export const BRAND = {
 } as const;
 
 export const NAV_ITEMS: NavItem[] = [
+  { label: "\u30c8\u30c3\u30d7", href: "/" },
   { label: "\u6a5f\u80fd\u7d39\u4ecb", href: "/features" },
   { label: "ニュース", href: "/news" },
   { label: "コラム", href: "/column" },
