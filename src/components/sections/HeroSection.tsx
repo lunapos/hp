@@ -6,7 +6,7 @@ export default function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
       {/* Background decorations */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(20,20,48,0.8)_0%,_rgba(10,10,24,1)_70%)]" />
+      <div className="absolute inset-0 bg-luna-bg" />
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-luna-gold/5 rounded-full blur-3xl" />
       <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-luna-gold/3 rounded-full blur-3xl" />
 
