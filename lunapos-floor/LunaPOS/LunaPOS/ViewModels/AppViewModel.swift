@@ -16,37 +16,67 @@ final class AppViewModel {
     var registerStartAmount: Int
     var cashWithdrawals: [CashWithdrawal]
 
+    // Supabase連携
+    var storeSettings = StoreSettings()
+    var isLoadedFromSupabase = false
+    let syncEngine = SyncEngine()
+
     init() {
-        let state = Self.loadState()
-        rooms = state.rooms
-        tables = state.tables
-        casts = state.casts
-        customers = state.customers
-        menuItems = state.menuItems
-        visits = state.visits
-        payments = state.payments
-        setPlans = state.setPlans
-        registerStartAmount = state.registerStartAmount
-        cashWithdrawals = state.cashWithdrawals
+        // マスタデータ（rooms/tables/casts/menuItems/setPlans/customers）は
+        // 常にMockDataで初期化 → Supabase同期時に上書きされる
+        let master = MockData.defaultState
+        rooms = master.rooms
+        tables = master.tables
+        casts = master.casts
+        customers = master.customers
+        menuItems = master.menuItems
+        setPlans = master.setPlans
+
+        // 営業データはローカルから復元
+        let ops = Self.loadOperationalState()
+        visits = ops.visits
+        payments = ops.payments
+        registerStartAmount = ops.registerStartAmount
+        cashWithdrawals = ops.cashWithdrawals
+
+        // テーブルのvisitId/statusを営業データから復元
+        for visit in visits where !visit.isCheckedOut {
+            if let idx = tables.firstIndex(where: { $0.id == visit.tableId }) {
+                tables[idx].status = .occupied
+                tables[idx].visitId = visit.id
+            }
+        }
     }
 
-    // MARK: - Persistence
+    // MARK: - Persistence (営業データのみ保存)
 
-    private static func loadState() -> AppState {
+    private struct OperationalState: Codable {
+        var visits: [Visit]
+        var payments: [Payment]
+        var registerStartAmount: Int
+        var cashWithdrawals: [CashWithdrawal]
+    }
+
+    private static func loadOperationalState() -> OperationalState {
         guard let data = UserDefaults.standard.data(forKey: storageKey),
-              let state = try? JSONDecoder().decode(AppState.self, from: data)
+              let state = try? JSONDecoder().decode(OperationalState.self, from: data)
         else {
-            return MockData.defaultState
+            return OperationalState(
+                visits: MockData.defaultState.visits,
+                payments: MockData.defaultState.payments,
+                registerStartAmount: 0,
+                cashWithdrawals: []
+            )
         }
         return state
     }
 
     func save() {
-        let state = AppState(
-            rooms: rooms, tables: tables, casts: casts,
-            customers: customers, menuItems: menuItems,
-            visits: visits, payments: payments, setPlans: setPlans,
-            registerStartAmount: registerStartAmount, cashWithdrawals: cashWithdrawals
+        let state = OperationalState(
+            visits: visits,
+            payments: payments,
+            registerStartAmount: registerStartAmount,
+            cashWithdrawals: cashWithdrawals
         )
         if let data = try? JSONEncoder().encode(state) {
             UserDefaults.standard.set(data, forKey: Self.storageKey)
@@ -68,8 +98,10 @@ final class AppViewModel {
         if let idx = tables.firstIndex(where: { $0.id == tableId }) {
             tables[idx].status = .occupied
             tables[idx].visitId = visit.id
+            syncEngine.syncFloorTable(tables[idx])
         }
         save()
+        syncEngine.syncVisit(visit)
     }
 
     func closeTable(tableId: String) {
@@ -115,7 +147,27 @@ final class AppViewModel {
 
     func updateGuestCount(visitId: String, count: Int) {
         if let idx = visits.firstIndex(where: { $0.id == visitId }) {
-            visits[idx].guestCount = max(1, count)
+            let newCount = max(1, count)
+            let visit = visits[idx]
+            let elapsed = visit.checkInTime.elapsedMinutes()
+            let withinSet = elapsed < visit.setMinutes
+
+            if withinSet {
+                // セット時間内: セット人数も連動
+                let diff = newCount - visit.guestCount
+                visits[idx].guestCount = newCount
+                visits[idx].setGuestCount = max(1, visit.setGuestCount + diff)
+            } else {
+                // セット超過後: 総人数のみ変更（セット人数は据え置き）
+                visits[idx].guestCount = newCount
+            }
+
+            // 延長アイテムの数量も連動
+            for itemIdx in visits[idx].orderItems.indices {
+                if visits[idx].orderItems[itemIdx].menuItemId.hasPrefix("ext_") {
+                    visits[idx].orderItems[itemIdx].quantity = newCount
+                }
+            }
         }
         save()
     }
@@ -193,16 +245,26 @@ final class AppViewModel {
 
     // MARK: - Extension
 
-    func addExtension(visitId: String, minutes: Int, price: Int) {
+    func addExtension(visitId: String, minutes: Int, pricePerPerson: Int) {
         if let idx = visits.firstIndex(where: { $0.id == visitId }) {
             visits[idx].extensionMinutes += minutes
             let extItem = OrderItem(
                 menuItemId: "ext_\(Date().timeIntervalSince1970)",
                 menuItemName: "延長\(minutes)分",
-                price: price,
-                quantity: 1
+                price: pricePerPerson,
+                quantity: visits[idx].guestCount
             )
             visits[idx].orderItems.append(extItem)
+        }
+        save()
+    }
+
+    func removeLastExtension(visitId: String) {
+        if let idx = visits.firstIndex(where: { $0.id == visitId }) {
+            if let extIdx = visits[idx].orderItems.lastIndex(where: { $0.menuItemId.hasPrefix("ext_") }) {
+                visits[idx].extensionMinutes = max(0, visits[idx].extensionMinutes - 30)
+                visits[idx].orderItems.remove(at: extIdx)
+            }
         }
         save()
     }
@@ -213,10 +275,12 @@ final class AppViewModel {
         if let vIdx = visits.firstIndex(where: { $0.id == payment.visitId }) {
             visits[vIdx].isCheckedOut = true
             visits[vIdx].checkOutTime = payment.paidAt
+            syncEngine.syncVisit(visits[vIdx])
         }
         if let tIdx = tables.firstIndex(where: { $0.id == payment.tableId }) {
             tables[tIdx].status = .empty
             tables[tIdx].visitId = nil
+            syncEngine.syncFloorTable(tables[tIdx])
         }
         // Update customer
         if let visit = visits.first(where: { $0.id == payment.visitId }),
@@ -229,9 +293,11 @@ final class AppViewModel {
             } else if customers[cIdx].visitCount >= 3 {
                 customers[cIdx].rank = .repeat
             }
+            syncEngine.syncCustomer(customers[cIdx])
         }
         payments.append(payment)
         save()
+        syncEngine.syncPayment(payment)
     }
 
     // MARK: - Cast
@@ -241,6 +307,11 @@ final class AppViewModel {
             casts[idx].isWorking = true
             casts[idx].clockInTime = Date()
             casts[idx].clockOutTime = nil
+            syncEngine.syncCastShift(
+                castId: castId, clockIn: Date(), clockOut: nil,
+                scheduledIn: casts[idx].scheduledClockIn,
+                scheduledOut: casts[idx].scheduledClockOut
+            )
         }
         save()
     }
@@ -249,6 +320,13 @@ final class AppViewModel {
         if let idx = casts.firstIndex(where: { $0.id == castId }) {
             casts[idx].isWorking = false
             casts[idx].clockOutTime = Date()
+            if let clockIn = casts[idx].clockInTime {
+                syncEngine.syncCastShift(
+                    castId: castId, clockIn: clockIn, clockOut: Date(),
+                    scheduledIn: casts[idx].scheduledClockIn,
+                    scheduledOut: casts[idx].scheduledClockOut
+                )
+            }
         }
         save()
     }
@@ -341,8 +419,10 @@ final class AppViewModel {
     }
 
     func addCashWithdrawal(amount: Int, note: String?) {
-        cashWithdrawals.append(CashWithdrawal(amount: amount, note: note))
+        let withdrawal = CashWithdrawal(amount: amount, note: note)
+        cashWithdrawals.append(withdrawal)
         save()
+        syncEngine.syncCashWithdrawal(withdrawal)
     }
 
     // MARK: - Computed

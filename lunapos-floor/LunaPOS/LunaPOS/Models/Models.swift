@@ -142,6 +142,7 @@ struct Visit: Identifiable, Codable, Sendable {
     var customerId: String?
     var customerName: String?
     var guestCount: Int
+    var setGuestCount: Int
     var nominations: [CastNomination]
     var douhanCastId: String?
     var douhanQty: Int
@@ -161,6 +162,7 @@ struct Visit: Identifiable, Codable, Sendable {
         customerId: String? = nil,
         customerName: String? = nil,
         guestCount: Int,
+        setGuestCount: Int? = nil,
         nominations: [CastNomination] = [],
         douhanCastId: String? = nil,
         douhanQty: Int = 1,
@@ -179,6 +181,7 @@ struct Visit: Identifiable, Codable, Sendable {
         self.customerId = customerId
         self.customerName = customerName
         self.guestCount = guestCount
+        self.setGuestCount = setGuestCount ?? guestCount
         self.nominations = nominations
         self.douhanCastId = douhanCastId
         self.douhanQty = douhanQty

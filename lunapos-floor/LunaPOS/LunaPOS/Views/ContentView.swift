@@ -11,6 +11,8 @@ struct ContentView: View {
     @State private var selectedTableId: String?
     @State private var showCheckout = false
     @State private var path = NavigationPath()
+    @AppStorage("lunaDarkMode") private var isDarkMode = true
+    @State private var isSyncing = false
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -48,22 +50,6 @@ struct ContentView: View {
                         selectedTableId: $selectedTableId
                     )
                     .environment(vm)
-                    .toolbar {
-                        ToolbarItem(placement: .cancellationAction) {
-                            Button {
-                                selectedTableId = nil
-                                showCheckout = false
-                            } label: {
-                                HStack(spacing: 4) {
-                                    Image(systemName: "arrow.left")
-                                    Text("LunaPos").font(.caption.bold())
-                                }
-                            }
-                        }
-                    }
-                    .toolbarBackground(Color.lunaDark, for: .navigationBar)
-                    .toolbarBackground(.visible, for: .navigationBar)
-                    .toolbarColorScheme(.dark, for: .navigationBar)
                 }
             }
         }
@@ -72,53 +58,100 @@ struct ContentView: View {
     @ViewBuilder
     private var mainFloorView: some View {
         VStack(spacing: 0) {
+            customHeaderBar
             FloorView(
                 selectedTableId: $selectedTableId,
                 showCheckout: $showCheckout
             )
             .environment(vm)
         }
-        .toolbar {
-            ToolbarItem(placement: .navigation) {
-                HStack(spacing: 4) {
-                    Text("☽").font(.caption).foregroundStyle(.lunaGold.opacity(0.6))
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text("LunaPos").font(.subheadline.bold()).tracking(2).foregroundStyle(.lunaGold)
-                        Text("Floor").font(.system(size: 9, weight: .semibold)).tracking(4).foregroundStyle(.lunaGold.opacity(0.5))
+        .navigationBarHidden(true)
+    }
+
+    private var customHeaderBar: some View {
+        HStack(spacing: 0) {
+            // Left: Luna POS logo + sync
+            Button {
+                guard !isSyncing else { return }
+                isSyncing = true
+                Task {
+                    await vm.syncEngine.loadInitialData(into: vm)
+                    isSyncing = false
+                }
+            } label: {
+                HStack(spacing: 6) {
+                    if isSyncing {
+                        ProgressView()
+                            .controlSize(.small)
+                            .tint(.lunaGold)
                     }
+                    Text("☽ Luna POS")
+                        .font(.system(size: 16, weight: .bold))
+                        .tracking(1)
+                        .foregroundStyle(.lunaGold)
                 }
             }
 
-            ToolbarItem(placement: .principal) {
-                VStack(spacing: 0) {
-                    Text("売上").font(.system(size: 10)).foregroundStyle(.lunaSubtle)
-                    Text(vm.totalSales.yenFormatted).font(.subheadline.bold()).foregroundStyle(.lunaGold)
-                }
-            }
+            Spacer()
 
-            ToolbarItemGroup(placement: .primaryAction) {
+            // Center: Today's sales
+            HStack(spacing: 8) {
+                Text("本日売上")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(.lunaSubtle)
+                Text(vm.totalSales.yenFormatted)
+                    .font(.system(size: 30, weight: .heavy, design: .rounded))
+                    .foregroundStyle(.lunaGold)
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 6)
+            .background(Color.lunaGold.opacity(0.08))
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+
+            Spacer()
+
+            // Right: Action buttons
+            HStack(spacing: 20) {
+                Button {
+                    isDarkMode.toggle()
+                } label: {
+                    VStack(spacing: 3) {
+                        Image(systemName: isDarkMode ? "sun.max" : "moon.fill")
+                            .font(.system(size: 22))
+                        Text(isDarkMode ? "ライト" : "ダーク")
+                            .font(.system(size: 12, weight: .semibold))
+                    }
+                    .foregroundStyle(.white)
+                }
+
                 Button {
                     path.append(AppScreen.cast)
                 } label: {
-                    VStack(spacing: 2) {
-                        Image(systemName: "person.badge.clock").font(.subheadline)
-                        Text("キャスト").font(.system(size: 10, weight: .semibold)).tracking(1)
+                    VStack(spacing: 3) {
+                        Image(systemName: "person.badge.clock")
+                            .font(.system(size: 22))
+                        Text("キャスト")
+                            .font(.system(size: 12, weight: .semibold))
                     }
+                    .foregroundStyle(.white)
                 }
 
                 Button {
                     path.append(AppScreen.admin)
                 } label: {
-                    VStack(spacing: 2) {
-                        Image(systemName: "yensign.circle").font(.subheadline)
-                        Text("レジ").font(.system(size: 10, weight: .semibold)).tracking(1)
+                    VStack(spacing: 3) {
+                        Image(systemName: "yensign.circle")
+                            .font(.system(size: 22))
+                        Text("レジ")
+                            .font(.system(size: 12, weight: .semibold))
                     }
+                    .foregroundStyle(.white)
                 }
             }
         }
-        .toolbarBackground(Color.lunaDark, for: .navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar)
-        .toolbarColorScheme(.dark, for: .navigationBar)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
+        .background(Color.lunaDark)
     }
 }
 

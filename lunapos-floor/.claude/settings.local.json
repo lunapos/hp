@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Read(//Applications/Xcode.app/Contents/Developer/Platforms/**)"
+      "Read(//Applications/Xcode.app/Contents/Developer/Platforms/**)",
+      "Bash(defaults read com.apple.iphonesimulator)",
+      "Bash(defaults read com.apple.iphonesimulator ScreenShotSaveLocation)",
+      "Bash(defaults write com.apple.iphonesimulator ScreenShotSaveLocation \"/Users/ryuichiueda/スクショ\")"
     ]
   }
 }

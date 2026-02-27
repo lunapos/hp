@@ -1,26 +1,59 @@
 import SwiftUI
 
+// MARK: - Adaptive Color Helper
+
+private func adaptive(light: (CGFloat, CGFloat, CGFloat), dark: (CGFloat, CGFloat, CGFloat)) -> Color {
+    Color(uiColor: UIColor { traits in
+        let (r, g, b) = traits.userInterfaceStyle == .dark ? dark : light
+        return UIColor(red: r, green: g, blue: b, alpha: 1)
+    })
+}
+
 extension Color {
-    // Header / Dark elements
+    // Header / Dark elements (same in both modes)
     static let lunaDark = Color(red: 0.10, green: 0.06, blue: 0.25)        // #1a1040
     static let lunaDarkBorder = Color(red: 0.18, green: 0.12, blue: 0.38)  // #2d1f60
     static let lunaDarkLight = Color(red: 0.24, green: 0.18, blue: 0.44)   // #3d2f70
 
-    // Gold accents
+    // Gold accents (same in both modes)
     static let lunaGold = Color(red: 0.83, green: 0.72, blue: 0.44)       // #d4b870
     static let lunaGoldDark = Color(red: 0.79, green: 0.64, blue: 0.34)   // #c9a456
 
-    // Purple backgrounds
-    static let lunaBg = Color(red: 0.97, green: 0.96, blue: 1.00)         // #f8f5ff
-    static let lunaCard = Color(red: 0.95, green: 0.93, blue: 1.00)       // #f3eeff
-    static let lunaBorder = Color(red: 0.89, green: 0.85, blue: 0.95)     // #e2d9f3
+    // Adaptive backgrounds
+    static let lunaBg = adaptive(
+        light: (0.96, 0.94, 0.90),   // #f5f0e6 — warm ivory
+        dark:  (0.10, 0.08, 0.18)    // #1a1430
+    )
+    static let lunaCard = adaptive(
+        light: (1.00, 0.99, 0.96),   // #fffcf5 — warm white
+        dark:  (0.20, 0.17, 0.34)    // #332b57
+    )
+    static let lunaBorder = adaptive(
+        light: (0.84, 0.80, 0.72),   // #d6ccb8 — champagne border
+        dark:  (0.35, 0.30, 0.52)    // #594d85
+    )
 
-    // Text
-    static let lunaText = Color(red: 0.10, green: 0.06, blue: 0.25)       // #1a1040
-    static let lunaMuted = Color(red: 0.49, green: 0.43, blue: 0.63)      // #7c6ea0
-    static let lunaLight = Color(red: 0.72, green: 0.67, blue: 0.83)      // #b8acd4
-    static let lunaSubtle = Color(red: 0.56, green: 0.50, blue: 0.75)     // #9080c0
-    static let lunaLavender = Color(red: 0.77, green: 0.71, blue: 0.99)   // #c4b5fd
+    // Adaptive text
+    static let lunaText = adaptive(
+        light: (0.14, 0.11, 0.08),   // #241c14 — deep warm black
+        dark:  (0.94, 0.92, 0.97)    // #f0eaf8
+    )
+    static let lunaMuted = adaptive(
+        light: (0.46, 0.42, 0.35),   // #766b59 — warm grey-brown
+        dark:  (0.65, 0.60, 0.78)    // #a699c7
+    )
+    static let lunaLight = adaptive(
+        light: (0.66, 0.62, 0.55),   // #a89e8c — warm light grey
+        dark:  (0.52, 0.46, 0.68)    // #8575ad
+    )
+    static let lunaSubtle = adaptive(
+        light: (0.52, 0.48, 0.40),   // #857a66 — warm medium
+        dark:  (0.60, 0.54, 0.78)    // #998ac7
+    )
+    static let lunaLavender = adaptive(
+        light: (0.55, 0.45, 0.75),   // #8c73bf — deeper accent purple
+        dark:  (0.68, 0.62, 0.92)    // #ad9eeb
+    )
 }
 
 // Allow .lunaXxx in foregroundStyle() which requires ShapeStyle
@@ -61,12 +94,7 @@ extension Date {
 }
 
 func formatElapsed(_ minutes: Int) -> String {
-    let h = minutes / 60
-    let m = minutes % 60
-    if h > 0 {
-        return "\(h):\(String(format: "%02d", m))"
-    }
-    return "\(m)分"
+    "\(minutes)分"
 }
 
 func exitTime(checkIn: Date, setMinutes: Int) -> String {

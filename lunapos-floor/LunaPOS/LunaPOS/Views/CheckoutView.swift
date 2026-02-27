@@ -71,7 +71,7 @@ struct CheckoutView: View {
 
     @ViewBuilder
     private func checkoutContent(table: FloorTable, visit: Visit) -> some View {
-        let breakdown = PriceCalculator.calculate(visit: visit, setPlans: vm.setPlans)
+        let breakdown = PriceCalculator.calculate(visit: visit, setPlans: vm.setPlans, settings: vm.storeSettings)
         let discount = max(0, Int(discountInput) ?? 0)
         let total = max(0, breakdown.chargedAmount - discount) + breakdown.expenseTotal
 
@@ -119,7 +119,7 @@ struct CheckoutView: View {
                         ForEach(visit.nominations.indices, id: \.self) { i in
                             let n = visit.nominations[i]
                             if n.nominationType != .none {
-                                let fee = n.nominationType == .main ? Fees.nominationFeeMain : Fees.nominationFeeInStore
+                                let fee = n.nominationType == .main ? vm.storeSettings.nominationFeeMain : vm.storeSettings.nominationFeeInStore
                                 let c = vm.casts.first(where: { $0.id == n.castId })
                                 detailRow("\(c?.stageName ?? "") \(n.nominationType == .main ? "本指名料" : "場内指名料")", fee.yenFormatted)
                             }
@@ -241,7 +241,7 @@ struct CheckoutView: View {
             .buttonStyle(.borderedProminent)
             .tint(.lunaDark)
             .padding()
-            .background(.white)
+            .background(.lunaCard)
         }
         .toolbar {
             ToolbarItem(placement: .principal) {

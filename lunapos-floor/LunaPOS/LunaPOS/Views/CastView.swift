@@ -179,30 +179,29 @@ struct CastDetailSheet: View {
 
 func avatarView(cast: Cast, size: CGFloat) -> some View {
     Group {
-        if cast.photo != nil {
-            // In production, use AsyncImage with the URL
-            // For now, show initial
-            Circle()
-                .fill(Color.lunaCard)
+        if let name = cast.photo, let uiImage = UIImage(named: name) {
+            Image(uiImage: uiImage)
+                .resizable()
+                .scaledToFill()
                 .frame(width: size, height: size)
-                .overlay(
-                    Text(String(cast.stageName.prefix(1)))
-                        .font(.system(size: size * 0.4, weight: .semibold))
-                        .foregroundStyle(.lunaMuted)
-                )
-                .overlay(Circle().stroke(Color.lunaBorder))
+                .clipShape(Circle())
+                .overlay(Circle().stroke(Color.lunaBorder, lineWidth: 1.5))
         } else {
-            Circle()
-                .fill(Color.lunaCard)
-                .frame(width: size, height: size)
-                .overlay(
-                    Text(String(cast.stageName.prefix(1)))
-                        .font(.system(size: size * 0.4, weight: .semibold))
-                        .foregroundStyle(.lunaMuted)
-                )
-                .overlay(Circle().stroke(Color.lunaBorder))
+            initialAvatar(name: cast.stageName, size: size)
         }
     }
+}
+
+private func initialAvatar(name: String, size: CGFloat) -> some View {
+    Circle()
+        .fill(Color.lunaCard)
+        .frame(width: size, height: size)
+        .overlay(
+            Text(String(name.prefix(1)))
+                .font(.system(size: size * 0.4, weight: .semibold))
+                .foregroundStyle(.lunaMuted)
+        )
+        .overlay(Circle().stroke(Color.lunaBorder))
 }
 
 // MARK: - Cast View
@@ -213,7 +212,7 @@ struct CastView: View {
     @State private var selectedCast: Cast?
     @State private var now = Date()
 
-    private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    private let timer = Timer.publish(every: 30, on: .main, in: .common).autoconnect()
 
     private var sortedCasts: [Cast] {
         vm.casts.sorted { a, b in
@@ -232,44 +231,34 @@ struct CastView: View {
     var body: some View {
         VStack(spacing: 0) {
             // Cast grid
-            ScrollView {
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 5), spacing: 8) {
-                    ForEach(sortedCasts) { cast in
-                        Button { selectedCast = cast } label: {
-                            VStack(spacing: 6) {
-                                ZStack(alignment: .bottomTrailing) {
-                                    avatarView(cast: cast, size: 56)
+            GeometryReader { geo in
+                let cols = 5
+                let rows = Int(ceil(Double(sortedCasts.count) / Double(cols)))
+                let spacing: CGFloat = 10
+                let padding: CGFloat = 10
 
-                                    Circle()
-                                        .fill(cast.isWorking ? .green : (cast.scheduledClockIn != nil ? Color.lunaGoldDark.opacity(0.7) : .lunaLavender))
-                                        .frame(width: 12, height: 12)
-                                        .overlay(Circle().stroke(.white, lineWidth: 2))
-                                }
+                let availW = geo.size.width - padding * 2 - spacing * CGFloat(cols - 1)
+                let availH = geo.size.height - padding * 2 - spacing * CGFloat(max(rows - 1, 0))
+                let maxCardW: CGFloat = 280
+                let maxCardH: CGFloat = 280
+                let cardW = min(availW / CGFloat(cols), maxCardW)
+                let cardH = min(availH / CGFloat(max(rows, 1)), maxCardH)
+                let avatarSize = min(cardH * 0.45, cardW * 0.5)
 
-                                Text(cast.stageName)
-                                    .font(.caption)
-                                    .fontWeight(.medium)
-                                    .lineLimit(1)
+                let columns = Array(repeating: GridItem(.fixed(cardW), spacing: spacing), count: cols)
 
-                                if cast.isWorking, let t = cast.clockInTime {
-                                    Text("\(t.hhMM)〜")
-                                        .font(.system(size: 10, weight: .semibold))
-                                        .foregroundStyle(.green)
-                                } else if let s = cast.scheduledClockIn {
-                                    Text(s)
-                                        .font(.system(size: 10))
-                                        .foregroundStyle(.lunaMuted)
-                                }
+                ScrollView {
+                    LazyVGrid(columns: columns, spacing: spacing) {
+                        ForEach(sortedCasts) { cast in
+                            Button { selectedCast = cast } label: {
+                                castCard(cast: cast, cardW: cardW, cardH: cardH, avatarSize: avatarSize)
                             }
-                            .padding(8)
-                            .background(.white)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                            .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.lunaBorder))
+                            .buttonStyle(.plain)
                         }
-                        .buttonStyle(.plain)
                     }
+                    .frame(maxWidth: .infinity)
+                    .padding(padding)
                 }
-                .padding(12)
             }
             .background(Color.lunaBg)
 
@@ -317,6 +306,46 @@ struct CastView: View {
             CastDetailSheet(cast: latest).environment(vm)
         }
         .onReceive(timer) { now = $0 }
+    }
+
+    private func castCard(cast: Cast, cardW: CGFloat, cardH: CGFloat, avatarSize: CGFloat) -> some View {
+        VStack(spacing: 8) {
+            Spacer(minLength: 0)
+
+            ZStack(alignment: .bottomTrailing) {
+                avatarView(cast: cast, size: avatarSize)
+
+                Circle()
+                    .fill(cast.isWorking ? .green : (cast.scheduledClockIn != nil ? Color.lunaGoldDark.opacity(0.7) : .lunaLavender))
+                    .frame(width: 16, height: 16)
+                    .overlay(Circle().stroke(.white, lineWidth: 2))
+            }
+
+            Text(cast.stageName)
+                .font(.system(size: min(cardW * 0.1, 20), weight: .bold))
+                .lineLimit(1)
+
+            if cast.isWorking, let t = cast.clockInTime {
+                VStack(spacing: 2) {
+                    Text("\(t.hhMM)〜")
+                        .font(.system(size: min(cardW * 0.08, 17), weight: .semibold))
+                        .foregroundStyle(.green)
+                    Text(formatElapsed(t.elapsedMinutes(from: now)))
+                        .font(.system(size: min(cardW * 0.07, 15), weight: .medium))
+                        .foregroundStyle(.lunaSubtle)
+                }
+            } else if let s = cast.scheduledClockIn {
+                Text(s)
+                    .font(.system(size: min(cardW * 0.08, 17)))
+                    .foregroundStyle(.lunaMuted)
+            }
+
+            Spacer(minLength: 0)
+        }
+        .frame(width: cardW, height: cardH)
+        .background(.lunaCard)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.lunaBorder))
     }
 
     @ViewBuilder

@@ -8,23 +8,31 @@ enum MockData {
     ]
 
     static let tables: [FloorTable] = [
-        FloorTable(id: "t1", name: "1番", capacity: 4, status: .empty, position: TablePosition(x: 1, y: 1), roomId: "r1"),
+        FloorTable(id: "t1", name: "1番", capacity: 4, status: .occupied, position: TablePosition(x: 1, y: 1), visitId: "v1", roomId: "r1"),
         FloorTable(id: "t2", name: "2番", capacity: 4, status: .empty, position: TablePosition(x: 2, y: 1), roomId: "r1"),
-        FloorTable(id: "t3", name: "3番", capacity: 6, status: .empty, position: TablePosition(x: 3, y: 1), roomId: "r1"),
-        FloorTable(id: "t4", name: "4番", capacity: 4, status: .empty, position: TablePosition(x: 1, y: 2), roomId: "r1"),
-        FloorTable(id: "t5", name: "5番", capacity: 4, status: .empty, position: TablePosition(x: 2, y: 2), roomId: "r1"),
-        FloorTable(id: "t6", name: "VIP1", capacity: 8, status: .empty, position: TablePosition(x: 1, y: 1), roomId: "r2"),
+        FloorTable(id: "t3", name: "3番", capacity: 6, status: .occupied, position: TablePosition(x: 3, y: 1), visitId: "v2", roomId: "r1"),
+        FloorTable(id: "t4", name: "4番", capacity: 4, status: .waitingCheckout, position: TablePosition(x: 4, y: 1), visitId: "v3", roomId: "r1"),
+        FloorTable(id: "t5", name: "5番", capacity: 4, status: .empty, position: TablePosition(x: 1, y: 2), roomId: "r1"),
+        FloorTable(id: "t9", name: "6番", capacity: 4, status: .empty, position: TablePosition(x: 2, y: 2), roomId: "r1"),
+        FloorTable(id: "t10", name: "7番", capacity: 4, status: .empty, position: TablePosition(x: 3, y: 2), roomId: "r1"),
+        FloorTable(id: "t11", name: "8番", capacity: 4, status: .empty, position: TablePosition(x: 4, y: 2), roomId: "r1"),
+        FloorTable(id: "t12", name: "9番", capacity: 4, status: .empty, position: TablePosition(x: 1, y: 3), roomId: "r1"),
+        FloorTable(id: "t13", name: "10番", capacity: 4, status: .empty, position: TablePosition(x: 2, y: 3), roomId: "r1"),
+        FloorTable(id: "t6", name: "VIP1", capacity: 8, status: .occupied, position: TablePosition(x: 1, y: 1), visitId: "v4", roomId: "r2"),
         FloorTable(id: "t7", name: "VIP2", capacity: 6, status: .empty, position: TablePosition(x: 2, y: 1), roomId: "r2"),
-        FloorTable(id: "t8", name: "カウンター", capacity: 4, status: .empty, position: TablePosition(x: 1, y: 1), roomId: "r3"),
+        FloorTable(id: "t14", name: "VIP3", capacity: 6, status: .empty, position: TablePosition(x: 1, y: 2), roomId: "r2"),
+        FloorTable(id: "t8", name: "カウンター1", capacity: 2, status: .empty, position: TablePosition(x: 1, y: 1), roomId: "r3"),
+        FloorTable(id: "t15", name: "カウンター2", capacity: 2, status: .empty, position: TablePosition(x: 2, y: 1), roomId: "r3"),
+        FloorTable(id: "t16", name: "カウンター3", capacity: 2, status: .empty, position: TablePosition(x: 3, y: 1), roomId: "r3"),
     ]
 
     static let casts: [Cast] = [
-        Cast(id: "c1", stageName: "あいり", realName: "山田愛", isWorking: false, photo: "https://i.pravatar.cc/150?img=47"),
-        Cast(id: "c2", stageName: "さくら", realName: "田中咲", isWorking: false, photo: "https://i.pravatar.cc/150?img=45"),
-        Cast(id: "c3", stageName: "みく", realName: "鈴木美久", isWorking: false, photo: "https://i.pravatar.cc/150?img=44"),
-        Cast(id: "c4", stageName: "れな", realName: "佐藤礼奈", isWorking: false, photo: "https://i.pravatar.cc/150?img=49"),
-        Cast(id: "c5", stageName: "ゆい", realName: "伊藤唯", isWorking: false, photo: "https://i.pravatar.cc/150?img=41"),
-        Cast(id: "c6", stageName: "なな", realName: "中村奈々", isWorking: false, photo: "https://i.pravatar.cc/150?img=43"),
+        Cast(id: "c1", stageName: "あいり", realName: "山田愛", isWorking: true, clockInTime: Date().addingTimeInterval(-3600 * 3), photo: "cast1"),
+        Cast(id: "c2", stageName: "さくら", realName: "田中咲", isWorking: true, clockInTime: Date().addingTimeInterval(-3600 * 2), photo: "cast2"),
+        Cast(id: "c3", stageName: "みく", realName: "鈴木美久", isWorking: true, clockInTime: Date().addingTimeInterval(-3600 * 2.5), photo: "cast3"),
+        Cast(id: "c4", stageName: "れな", realName: "佐藤礼奈", isWorking: true, clockInTime: Date().addingTimeInterval(-3600 * 1.5), photo: "cast4"),
+        Cast(id: "c5", stageName: "ゆい", realName: "伊藤唯", isWorking: false, photo: "cast5"),
+        Cast(id: "c6", stageName: "なな", realName: "中村奈々", isWorking: false, photo: "cast6"),
     ]
 
     static let menuItems: [MenuItem] = [
@@ -53,16 +61,89 @@ enum MockData {
         Customer(id: "cu3", name: "佐藤様", visitCount: 1, totalSpend: 15000, rank: .new),
     ]
 
+    // MARK: - Demo Visits (スクショ用)
+
+    static let demoVisits: [Visit] = [
+        // v1: 1番テーブル - 田中様(VIP) 35分前入店、あいり本指名
+        Visit(
+            id: "v1", tableId: "t1", customerId: "cu1", customerName: "田中様",
+            guestCount: 2,
+            nominations: [CastNomination(castId: "c1", nominationType: .main, qty: 1)],
+            checkInTime: Date().addingTimeInterval(-35 * 60),
+            orderItems: [
+                OrderItem(menuItemId: "m1", menuItemName: "ウイスキー水割り", price: 1200, quantity: 3),
+                OrderItem(menuItemId: "m12", menuItemName: "レディースドリンク", price: 1500, quantity: 2),
+                OrderItem(menuItemId: "m9", menuItemName: "フルーツ盛り", price: 3000, quantity: 1),
+            ],
+            setMinutes: 60
+        ),
+        // v2: 3番テーブル - 山田様 15分前入店、さくら場内指名
+        Visit(
+            id: "v2", tableId: "t3", customerName: "山田様",
+            guestCount: 3,
+            nominations: [CastNomination(castId: "c2", nominationType: .inStore, qty: 1)],
+            checkInTime: Date().addingTimeInterval(-15 * 60),
+            orderItems: [
+                OrderItem(menuItemId: "m2", menuItemName: "ビール", price: 1000, quantity: 2),
+                OrderItem(menuItemId: "m3", menuItemName: "カクテル", price: 1200, quantity: 1),
+                OrderItem(menuItemId: "m12", menuItemName: "レディースドリンク", price: 1500, quantity: 1),
+            ],
+            setMinutes: 60
+        ),
+        // v3: 4番テーブル - 会計待ち 55分前入店
+        Visit(
+            id: "v3", tableId: "t4", customerName: "佐藤様",
+            guestCount: 2,
+            nominations: [CastNomination(castId: "c4", nominationType: .main, qty: 1)],
+            checkInTime: Date().addingTimeInterval(-55 * 60),
+            orderItems: [
+                OrderItem(menuItemId: "m1", menuItemName: "ウイスキー水割り", price: 1200, quantity: 2),
+                OrderItem(menuItemId: "m10", menuItemName: "おつまみセット", price: 2000, quantity: 1),
+            ],
+            setMinutes: 60
+        ),
+        // v4: VIP1 - 大口グループ 45分前入店、みく本指名 + れな場内
+        Visit(
+            id: "v4", tableId: "t6", customerName: "鈴木様",
+            guestCount: 4,
+            nominations: [
+                CastNomination(castId: "c3", nominationType: .main, qty: 1),
+                CastNomination(castId: "c4", nominationType: .inStore, qty: 1),
+            ],
+            douhanCastId: "c3", douhanQty: 1,
+            checkInTime: Date().addingTimeInterval(-45 * 60),
+            orderItems: [
+                OrderItem(menuItemId: "m8", menuItemName: "シャンパンボトル", price: 30000, quantity: 1),
+                OrderItem(menuItemId: "m5", menuItemName: "シャンパン（グラス）", price: 3000, quantity: 4),
+                OrderItem(menuItemId: "m12", menuItemName: "レディースドリンク", price: 1500, quantity: 3),
+                OrderItem(menuItemId: "m9", menuItemName: "フルーツ盛り", price: 3000, quantity: 2),
+            ],
+            setMinutes: 60
+        ),
+    ]
+
+    static let demoPayments: [Payment] = [
+        Payment(
+            id: "p1", visitId: "prev1", tableId: "t2",
+            subtotal: 33400, expenseTotal: 0, nominationFee: 5000, serviceFee: 13360, tax: 3340,
+            discount: 0, total: 55100, paymentMethod: .cash, paidAt: Date().addingTimeInterval(-90 * 60),
+            items: [
+                OrderItem(menuItemId: "m1", menuItemName: "ウイスキー水割り", price: 1200, quantity: 4),
+                OrderItem(menuItemId: "m9", menuItemName: "フルーツ盛り", price: 3000, quantity: 1),
+            ]
+        ),
+    ]
+
     static let defaultState = AppState(
         rooms: rooms,
         tables: tables,
         casts: casts,
         customers: customers,
         menuItems: menuItems,
-        visits: [],
-        payments: [],
+        visits: demoVisits,
+        payments: demoPayments,
         setPlans: setPlans,
-        registerStartAmount: 0,
+        registerStartAmount: 50000,
         cashWithdrawals: []
     )
 }

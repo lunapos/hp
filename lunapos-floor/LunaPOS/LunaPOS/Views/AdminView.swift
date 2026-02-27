@@ -45,7 +45,7 @@ struct AdminView: View {
                     }
                 }
             }
-            .background(.white)
+            .background(.lunaCard)
             .overlay(alignment: .bottom) { Divider() }
 
             // Tab content
@@ -178,7 +178,7 @@ struct ReportTabView: View {
             }
         }
         .padding()
-        .background(.white)
+        .background(.lunaCard)
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.lunaBorder))
     }
@@ -368,7 +368,7 @@ struct CastManagementTabView: View {
                     .tint(.lunaMuted)
                 }
                 .padding(12)
-                .background(.white)
+                .background(.lunaCard)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
                 .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.lunaBorder))
             }
@@ -477,7 +477,7 @@ struct MenuManagementTabView: View {
                         }
                     }
                 }
-                .background(.white)
+                .background(.lunaCard)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
                 .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.lunaBorder))
             }

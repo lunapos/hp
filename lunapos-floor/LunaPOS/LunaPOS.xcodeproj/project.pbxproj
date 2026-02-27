@@ -8,8 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		19FC3D67A981ECA37C5AA598 /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35C9ADF38A33B6183C8D370 /* MockData.swift */; };
+		1BD129FC73535AB8AEEF44E2 /* SupabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E92DF18BD5E475940BE4F6 /* SupabaseService.swift */; };
 		22BBE7F8B385550A7F862BFB /* PriceCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6EBC683C4AD966F2311D21 /* PriceCalculator.swift */; };
+		2A3CA3F0B1F8CA75CE3C9F97 /* StoreSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC2D9D03138FBB4845858FF1 /* StoreSettings.swift */; };
+		3A9133DF0DBAE9405CC59482 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 653CE9A18CB2F2C2C25DBF03 /* Supabase */; };
 		42AEB1E90125086623C35F04 /* LunaPOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDEE41A0AD2C6F08B9078B3 /* LunaPOSApp.swift */; };
+		4B7E68E2E2194674E3716DE8 /* SyncEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0B4FBD69062C7D494559475 /* SyncEngine.swift */; };
 		76D4B95BC3FB4DB03933C1C2 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396A69E5923C15D88F489236 /* Models.swift */; };
 		7CCFEFCE85FC0EA41D7772B9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C562CE23A872F25EFA0505 /* ContentView.swift */; };
 		9084AAE4110490DE72609DEF /* FloorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59C6A324BB3ED30B7B3E01F /* FloorView.swift */; };
@@ -19,6 +23,7 @@
 		C334D6940A367F333DFBB5E9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2B3E7B0690E1D6BB57C16A58 /* Assets.xcassets */; };
 		CF2927CADD6EDF3432B38539 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480C9A283E767FACA6761FBA /* Theme.swift */; };
 		D3FD52FD3C8304B3471248E9 /* AppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D04493AC941E96B28680899 /* AppViewModel.swift */; };
+		D536E01FCA61964F7BCDFF85 /* DTOs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894AF9F6CB1B8AB24932A558 /* DTOs.swift */; };
 		E5BDAFF079601A26291609B5 /* CheckoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C512060A2178FC4053F857 /* CheckoutView.swift */; };
 		FBF8DC17A87C04005305234F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F9DF5D7016B0EC3494A2FBC /* Constants.swift */; };
 /* End PBXBuildFile section */
@@ -32,14 +37,29 @@
 		2B3E7B0690E1D6BB57C16A58 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		396A69E5923C15D88F489236 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		480C9A283E767FACA6761FBA /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		48E92DF18BD5E475940BE4F6 /* SupabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseService.swift; sourceTree = "<group>"; };
 		4B71B64CEE6CA395A0DDE73B /* TableDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableDetailView.swift; sourceTree = "<group>"; };
 		4D04493AC941E96B28680899 /* AppViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppViewModel.swift; sourceTree = "<group>"; };
 		5A541F2FC51A1074BEC24B13 /* LunaPOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = LunaPOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		894AF9F6CB1B8AB24932A558 /* DTOs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTOs.swift; sourceTree = "<group>"; };
+		A0B4FBD69062C7D494559475 /* SyncEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncEngine.swift; sourceTree = "<group>"; };
 		BD757EC82BD2C42045D48D54 /* CastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CastView.swift; sourceTree = "<group>"; };
 		CE6EBC683C4AD966F2311D21 /* PriceCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceCalculator.swift; sourceTree = "<group>"; };
 		D35C9ADF38A33B6183C8D370 /* MockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockData.swift; sourceTree = "<group>"; };
 		D59C6A324BB3ED30B7B3E01F /* FloorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorView.swift; sourceTree = "<group>"; };
+		FC2D9D03138FBB4845858FF1 /* StoreSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreSettings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A64C6F1F30C2185A0CCEC884 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A9133DF0DBAE9405CC59482 /* Supabase in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		0096B69F202EABD1AD10ED39 /* LunaPOS */ = {
@@ -49,6 +69,7 @@
 				1FDEE41A0AD2C6F08B9078B3 /* LunaPOSApp.swift */,
 				90FAED86DF761D31FA137F6A /* Data */,
 				8412918E1E5921036208D4F7 /* Models */,
+				3B7306709065026B24F3EE94 /* Services */,
 				E7241C275CC6B67B75E9EC69 /* Utils */,
 				5DC07736DC86DDED05C4F744 /* ViewModels */,
 				1474C29BB1987AD8491CCD82 /* Views */,
@@ -70,6 +91,15 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		3B7306709065026B24F3EE94 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				48E92DF18BD5E475940BE4F6 /* SupabaseService.swift */,
+				A0B4FBD69062C7D494559475 /* SyncEngine.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
 		5DC07736DC86DDED05C4F744 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
@@ -89,7 +119,9 @@
 		8412918E1E5921036208D4F7 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				894AF9F6CB1B8AB24932A558 /* DTOs.swift */,
 				396A69E5923C15D88F489236 /* Models.swift */,
+				FC2D9D03138FBB4845858FF1 /* StoreSettings.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -136,6 +168,7 @@
 			buildPhases = (
 				8F84B14D989CCE68DBC172E6 /* Sources */,
 				1A8443B1633009398BFAE7A5 /* Resources */,
+				A64C6F1F30C2185A0CCEC884 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -143,6 +176,7 @@
 			);
 			name = LunaPOS;
 			packageProductDependencies = (
+				653CE9A18CB2F2C2C25DBF03 /* Supabase */,
 			);
 			productName = LunaPOS;
 			productReference = 5A541F2FC51A1074BEC24B13 /* LunaPOS.app */;
@@ -167,6 +201,9 @@
 			);
 			mainGroup = CF7F3DA9474EEE70F1EE99CD;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				8AE77740E3750627EA52C67E /* XCRemoteSwiftPackageReference "supabase-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
@@ -198,11 +235,15 @@
 				E5BDAFF079601A26291609B5 /* CheckoutView.swift in Sources */,
 				FBF8DC17A87C04005305234F /* Constants.swift in Sources */,
 				7CCFEFCE85FC0EA41D7772B9 /* ContentView.swift in Sources */,
+				D536E01FCA61964F7BCDFF85 /* DTOs.swift in Sources */,
 				9084AAE4110490DE72609DEF /* FloorView.swift in Sources */,
 				42AEB1E90125086623C35F04 /* LunaPOSApp.swift in Sources */,
 				19FC3D67A981ECA37C5AA598 /* MockData.swift in Sources */,
 				76D4B95BC3FB4DB03933C1C2 /* Models.swift in Sources */,
 				22BBE7F8B385550A7F862BFB /* PriceCalculator.swift in Sources */,
+				2A3CA3F0B1F8CA75CE3C9F97 /* StoreSettings.swift in Sources */,
+				1BD129FC73535AB8AEEF44E2 /* SupabaseService.swift in Sources */,
+				4B7E68E2E2194674E3716DE8 /* SyncEngine.swift in Sources */,
 				ADD2F18395EAF5033160533C /* TableDetailView.swift in Sources */,
 				CF2927CADD6EDF3432B38539 /* Theme.swift in Sources */,
 			);
@@ -283,6 +324,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Luna POS";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -359,6 +401,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Luna POS";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -392,6 +435,25 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		8AE77740E3750627EA52C67E /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase/supabase-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		653CE9A18CB2F2C2C25DBF03 /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8AE77740E3750627EA52C67E /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 433F1FDEB5034A18A6B17426 /* Project object */;
 }

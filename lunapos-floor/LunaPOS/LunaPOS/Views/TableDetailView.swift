@@ -5,15 +5,17 @@ import SwiftUI
 enum ActiveCategory: Hashable {
     case menu(MenuCategory)
     case expense
+    case nomination
 
     var label: String {
         switch self {
         case .menu(let cat): cat.label
         case .expense: "建て替え"
+        case .nomination: "指名・同伴"
         }
     }
 
-    static let all: [ActiveCategory] = MenuCategory.allCases.map { .menu($0) } + [.expense]
+    static let all: [ActiveCategory] = MenuCategory.allCases.map { .menu($0) } + [.nomination, .expense]
 }
 
 // MARK: - Aggregated Item
@@ -86,9 +88,9 @@ struct NominationEditSheet: View {
     private var totalFee: Int {
         entries.reduce(0) { sum, e in
             var fee = 0
-            if e.nominationType == .main { fee += Fees.nominationFeeMain }
-            if e.nominationType == .inStore { fee += Fees.nominationFeeInStore }
-            if e.isDouhan { fee += Fees.douhanFee }
+            if e.nominationType == .main { fee += vm.storeSettings.nominationFeeMain }
+            if e.nominationType == .inStore { fee += vm.storeSettings.nominationFeeInStore }
+            if e.isDouhan { fee += vm.storeSettings.douhanFee }
             return sum + fee
         }
     }
@@ -119,7 +121,7 @@ struct NominationEditSheet: View {
                                 for j in entries.indices { entries[j].isDouhan = false }
                                 entries[i].isDouhan = !was
                             } label: {
-                                Text(entries[i].isDouhan ? "同伴 ¥\(Fees.douhanFee.formatted())" : "同伴")
+                                Text(entries[i].isDouhan ? "同伴 ¥\(vm.storeSettings.douhanFee.formatted())" : "同伴")
                                     .font(.caption.bold())
                                     .padding(.horizontal, 8)
                                     .padding(.vertical, 6)
@@ -197,36 +199,45 @@ struct NominationEditSheet: View {
     }
 }
 
-// MARK: - Extension Sheet
+// MARK: - Extension Popup (Center Overlay)
 
-struct ExtensionSheet: View {
+struct ExtensionPopup: View {
     let visit: Visit
+    let onDismiss: () -> Void
     @Environment(AppViewModel.self) private var vm
-    @Environment(\.dismiss) private var dismiss
-    @State private var perPerson = 5000
+    @State private var perPerson: Int?
 
-    private var totalPrice: Int { perPerson * visit.guestCount }
+    private var effectivePerPerson: Int { perPerson ?? vm.storeSettings.extensionFeePerPerson }
+    private var totalPrice: Int { effectivePerPerson * visit.guestCount }
 
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 20) {
-                HStack(spacing: 16) {
-                    Text("30分延長")
-                        .font(.title2.bold())
-                        .foregroundStyle(.lunaGold)
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 8)
-                        .background(Color.lunaDark)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+        ZStack {
+            // 背景タップで閉じる
+            Color.black.opacity(0.5)
+                .ignoresSafeArea()
+                .onTapGesture { onDismiss() }
 
-                    Text("\(visit.guestCount)名").foregroundStyle(.lunaMuted)
+            VStack(spacing: 16) {
+                // タイトル行
+                HStack {
+                    Button("キャンセル") { onDismiss() }
+                        .foregroundStyle(.lunaMuted)
+                    Spacer()
+                    Text("30分延長 — \(visit.guestCount)名")
+                        .font(.headline)
+                    Spacer()
+                    // バランス用の透明テキスト
+                    Text("キャンセル").opacity(0)
                 }
 
                 VStack(alignment: .leading, spacing: 6) {
                     Text("1名あたりの料金").font(.caption).foregroundStyle(.lunaMuted)
                     HStack {
                         Text("¥").foregroundStyle(.lunaMuted).fontWeight(.semibold)
-                        TextField("金額", value: $perPerson, format: .number)
+                        TextField("金額", text: Binding(
+                            get: { "\(effectivePerPerson)" },
+                            set: { perPerson = Int($0) }
+                        ))
                             .font(.title.bold())
                             .keyboardType(.numberPad)
                         Text("/ 名").font(.caption).foregroundStyle(.lunaMuted)
@@ -237,7 +248,7 @@ struct ExtensionSheet: View {
                 }
 
                 HStack {
-                    Text("¥\(perPerson.formatted()) × \(visit.guestCount)名")
+                    Text("¥\(effectivePerPerson.formatted()) × \(visit.guestCount)名")
                         .font(.subheadline)
                         .foregroundStyle(.lunaMuted)
                     Spacer()
@@ -245,34 +256,28 @@ struct ExtensionSheet: View {
                         .font(.title.bold())
                         .foregroundStyle(.lunaGoldDark)
                 }
-                .padding()
-                .background(Color.lunaDark.opacity(0.05))
-                .clipShape(RoundedRectangle(cornerRadius: 12))
 
                 Button {
-                    vm.addExtension(visitId: visit.id, minutes: 30, price: totalPrice)
-                    dismiss()
+                    vm.addExtension(visitId: visit.id, minutes: 30, pricePerPerson: effectivePerPerson)
+                    onDismiss()
                 } label: {
                     Text("延長する")
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
                         .font(.headline)
+                        .foregroundStyle(.white)
+                        .background(Color.lunaDark)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
-                .buttonStyle(.borderedProminent)
-                .tint(.lunaDark)
-
-                Spacer()
+                .buttonStyle(.plain)
             }
-            .padding()
-            .navigationTitle("延長")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("キャンセル") { dismiss() }
-                }
-            }
+            .padding(20)
+            .background(Color.lunaBg)
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .overlay(RoundedRectangle(cornerRadius: 16).stroke(Color.lunaBorder))
+            .frame(maxWidth: 420)
+            .shadow(color: .black.opacity(0.3), radius: 20)
         }
-        .presentationDetents([.medium])
     }
 }
 
@@ -286,7 +291,6 @@ struct TableDetailView: View {
 
     @State private var activeCategory: ActiveCategory = .menu(.drink)
     @State private var showMoveSheet = false
-    @State private var showNomSheet = false
     @State private var showExtSheet = false
     @State private var customName = ""
     @State private var customPrice = ""
@@ -310,27 +314,22 @@ struct TableDetailView: View {
 
     @ViewBuilder
     private func tableContent(table: FloorTable, visit: Visit) -> some View {
-        let breakdown = PriceCalculator.calculate(visit: visit, setPlans: vm.setPlans)
+        let breakdown = PriceCalculator.calculate(visit: visit, setPlans: vm.setPlans, settings: vm.storeSettings)
         let total = max(0, breakdown.chargedAmount) + breakdown.expenseTotal
         let elapsedMins = visit.checkInTime.elapsedMinutes()
         let isOvertime = elapsedMins >= visit.totalSetMinutes
 
         HStack(spacing: 0) {
-            menuPane(visit: visit)
+            // 左: ヘッダー + メニュー
+            VStack(spacing: 0) {
+                tableHeaderBar(table: table, visit: visit, isOvertime: isOvertime)
+                menuPane(visit: visit)
+            }
+            // 右: ORDER（上から下まで）
             orderSlipPane(visit: visit, breakdown: breakdown, total: total)
         }
         .background(Color.lunaBg)
-        .toolbar {
-            ToolbarItem(placement: .principal) {
-                tableToolbarTitle(table: table, visit: visit)
-            }
-            ToolbarItemGroup(placement: .primaryAction) {
-                tableToolbarActions(table: table, isOvertime: isOvertime)
-            }
-        }
-        .toolbarBackground(Color.lunaDark, for: .navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar)
-        .toolbarColorScheme(.dark, for: .navigationBar)
+        .navigationBarHidden(true)
         .sheet(isPresented: $showMoveSheet) {
             MoveTableSheet(currentTableId: tableId) { toId in
                 vm.moveVisit(fromTableId: tableId, toTableId: toId)
@@ -338,18 +337,40 @@ struct TableDetailView: View {
             }
             .environment(vm)
         }
-        .sheet(isPresented: $showNomSheet) {
-            NominationEditSheet(
-                visitId: visit.id,
-                currentNominations: visit.nominations,
-                currentDouhanCastId: visit.douhanCastId
-            )
-            .environment(vm)
+        .overlay {
+            if showExtSheet {
+                ExtensionPopup(visit: visit) { showExtSheet = false }
+                    .environment(vm)
+                    .transition(.opacity)
+            }
         }
-        .sheet(isPresented: $showExtSheet) {
-            ExtensionSheet(visit: visit)
-                .environment(vm)
+    }
+
+    private func tableHeaderBar(table: FloorTable, visit: Visit, isOvertime: Bool) -> some View {
+        HStack(spacing: 8) {
+            // 戻るボタン
+            Button {
+                selectedTableId = nil
+            } label: {
+                HStack(spacing: 4) {
+                    Image(systemName: "arrow.left")
+                    Text("LunaPos").font(.caption.bold())
+                }
+                .foregroundStyle(.white)
+            }
+
+            // テーブル情報
+            tableToolbarTitle(table: table, visit: visit)
+
+            Spacer()
+
+            // アクションボタン
+            tableToolbarActions(table: table, isOvertime: isOvertime)
         }
+        .padding(.leading, 12)
+        .padding(.trailing, 24)
+        .padding(.vertical, 10)
+        .background(Color.lunaDark)
     }
 
     // MARK: - Menu Pane (Left)
@@ -367,12 +388,15 @@ struct TableDetailView: View {
                 ForEach(ActiveCategory.all, id: \.self) { cat in
                     Button {
                         activeCategory = cat
+                        if case .expense = cat {
+                            if customName.isEmpty { customName = "タバコ" }
+                        }
                     } label: {
                         Text(cat.label)
                             .font(.system(size: 14, weight: .semibold))
                             .padding(.horizontal, 16)
                             .padding(.vertical, 10)
-                            .background(activeCategory == cat ? Color.lunaDark : .white)
+                            .background(activeCategory == cat ? Color.lunaDark : .lunaCard)
                             .foregroundStyle(activeCategory == cat ? .lunaGold : .lunaMuted)
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                             .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.lunaBorder))
@@ -388,17 +412,20 @@ struct TableDetailView: View {
     private func menuGridContent(visit: Visit) -> some View {
         ScrollView {
             VStack(spacing: 12) {
-                if case .expense = activeCategory {
+                switch activeCategory {
+                case .nomination:
+                    nominationGrid(visit: visit)
+                case .expense:
                     Text("サービス料・消費税なし（立替）")
                         .font(.caption)
                         .foregroundStyle(.lunaMuted)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal)
-                } else if case .menu(let cat) = activeCategory {
+                    customItemForm(visit: visit)
+                case .menu(let cat):
                     menuItemsGrid(visit: visit, category: cat)
+                    customItemForm(visit: visit)
                 }
-
-                customItemForm(visit: visit)
             }
             .padding(.vertical, 12)
         }
@@ -427,7 +454,7 @@ struct TableDetailView: View {
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(16)
-                    .background(.white)
+                    .background(.lunaCard)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.lunaBorder))
                 }
@@ -435,6 +462,103 @@ struct TableDetailView: View {
             }
         }
         .padding(.horizontal)
+    }
+
+    // MARK: - Nomination Grid (in Menu Pane)
+
+    private func nominationGrid(visit: Visit) -> some View {
+        VStack(spacing: 8) {
+            ForEach(vm.workingCasts) { cast in
+                let nom = visit.nominations.first(where: { $0.castId == cast.id })
+                let isDouhan = visit.douhanCastId == cast.id
+                let isActive = nom != nil || isDouhan
+
+                HStack(spacing: 10) {
+                    avatarView(cast: cast, size: 36)
+
+                    Text(cast.stageName)
+                        .font(.subheadline.bold())
+                        .frame(width: 60, alignment: .leading)
+                        .lineLimit(1)
+
+                    Spacer()
+
+                    nominationTypeButton(
+                        label: "場内",
+                        fee: vm.storeSettings.nominationFeeInStore,
+                        isSelected: nom?.nominationType == .inStore
+                    ) {
+                        toggleNomination(visit: visit, castId: cast.id, type: .inStore)
+                    }
+
+                    nominationTypeButton(
+                        label: "本指名",
+                        fee: vm.storeSettings.nominationFeeMain,
+                        isSelected: nom?.nominationType == .main
+                    ) {
+                        toggleNomination(visit: visit, castId: cast.id, type: .main)
+                    }
+
+                    nominationTypeButton(
+                        label: "同伴",
+                        fee: vm.storeSettings.douhanFee,
+                        isSelected: isDouhan
+                    ) {
+                        toggleDouhan(visit: visit, castId: cast.id)
+                    }
+                }
+                .padding(10)
+                .background(isActive ? Color.lunaGoldDark.opacity(0.08) : .lunaCard)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .overlay(RoundedRectangle(cornerRadius: 12).stroke(isActive ? Color.lunaGoldDark.opacity(0.3) : Color.lunaBorder))
+            }
+
+            if vm.workingCasts.isEmpty {
+                Text("出勤中のキャストがいません")
+                    .font(.subheadline)
+                    .foregroundStyle(.lunaMuted)
+                    .padding(.vertical, 20)
+            }
+        }
+        .padding(.horizontal)
+    }
+
+    @ViewBuilder
+    private func nominationTypeButton(label: String, fee: Int, isSelected: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            VStack(spacing: 2) {
+                Text(label)
+                    .font(.system(size: 13, weight: .bold))
+                Text("¥\(fee.formatted())")
+                    .font(.system(size: 10))
+            }
+            .frame(width: 64)
+            .padding(.vertical, 6)
+            .background(isSelected ? Color.lunaGoldDark : .clear)
+            .foregroundStyle(isSelected ? .lunaDark : .lunaMuted)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .overlay(RoundedRectangle(cornerRadius: 8).stroke(isSelected ? Color.lunaGoldDark : Color.lunaBorder))
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func toggleNomination(visit: Visit, castId: String, type: NominationType) {
+        var noms = visit.nominations
+        if let idx = noms.firstIndex(where: { $0.castId == castId }) {
+            if noms[idx].nominationType == type {
+                noms.remove(at: idx)
+            } else {
+                noms[idx] = CastNomination(castId: castId, nominationType: type)
+            }
+        } else {
+            noms.append(CastNomination(castId: castId, nominationType: type))
+        }
+        vm.updateVisitNominations(visitId: visit.id, nominations: noms, douhanCastId: visit.douhanCastId)
+    }
+
+    private func toggleDouhan(visit: Visit, castId: String) {
+        let newDouhanId = visit.douhanCastId == castId ? nil : castId
+        vm.updateVisitNominations(visitId: visit.id, nominations: visit.nominations, douhanCastId: newDouhanId)
     }
 
     private func customItemForm(visit: Visit) -> some View {
@@ -481,43 +605,38 @@ struct TableDetailView: View {
     private func orderSlipPane(visit: Visit, breakdown: PriceCalculator.Breakdown, total: Int) -> some View {
         VStack(spacing: 0) {
             HStack {
-                Text("ORDER").font(.caption.bold()).foregroundStyle(.lunaMuted).tracking(2)
+                Text("ORDER").font(.subheadline.bold()).foregroundStyle(.lunaMuted).tracking(2)
                 Spacer()
             }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
-            .background(.white)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
+            .background(.lunaCard)
             .overlay(alignment: .bottom) { Divider() }
 
             orderItemsList(visit: visit, breakdown: breakdown)
 
-            orderTotalsSection(breakdown: breakdown, total: total)
+            orderTotalsSection(visit: visit, breakdown: breakdown, total: total)
         }
-        .frame(width: 320)
-        .background(.white)
+        .frame(width: 360)
+        .background(.lunaCard)
         .overlay(alignment: .leading) { Divider() }
     }
 
     private func orderItemsList(visit: Visit, breakdown: PriceCalculator.Breakdown) -> some View {
         ScrollView {
             VStack(spacing: 4) {
-                orderRow(
-                    label: "セット (\(visit.setMinutes)分)",
-                    qty: visit.guestCount,
-                    price: breakdown.setPrice,
-                    priceKey: "set",
-                    onDecrement: { vm.updateGuestCount(visitId: visit.id, count: visit.guestCount - 1) },
-                    onIncrement: { vm.updateGuestCount(visitId: visit.id, count: visit.guestCount + 1) }
-                )
+                setRow(visit: visit, price: breakdown.setPrice)
 
+                extensionRows(visit: visit)
                 nominationRows(visit: visit)
                 douhanRow(visit: visit)
                 regularItemRows(visit: visit)
-                expenseItemRows(visit: visit)
             }
             .padding(8)
+            .padding(.bottom, 4)
         }
-        .background(.white)
+        .scrollIndicators(.visible)
+        .background(.lunaCard)
     }
 
     @ViewBuilder
@@ -525,7 +644,7 @@ struct TableDetailView: View {
         ForEach(visit.nominations.indices, id: \.self) { i in
             let n = visit.nominations[i]
             if n.nominationType != .none {
-                let unitFee = PriceCalculator.nominationFee(for: n, overrides: visit.nominationFeeOverrides)
+                let unitFee = PriceCalculator.nominationFee(for: n, overrides: visit.nominationFeeOverrides, settings: vm.storeSettings)
                 let cast = vm.casts.first(where: { $0.id == n.castId })
                 orderRow(
                     label: "\(cast?.stageName ?? "") \(n.nominationType == .main ? "本指名" : "場内")",
@@ -543,7 +662,7 @@ struct TableDetailView: View {
     private func douhanRow(visit: Visit) -> some View {
         if visit.douhanCastId != nil {
             let dc = vm.casts.first(where: { $0.id == visit.douhanCastId })
-            let douhanUnitFee = visit.douhanFeeOverride ?? Fees.douhanFee
+            let douhanUnitFee = visit.douhanFeeOverride ?? vm.storeSettings.douhanFee
             let dQty = visit.douhanQty
             orderRow(
                 label: "同伴 (\(dc?.stageName ?? ""))",
@@ -557,8 +676,27 @@ struct TableDetailView: View {
     }
 
     @ViewBuilder
+    private func extensionRows(visit: Visit) -> some View {
+        let extItems = visit.orderItems.filter { $0.menuItemId.hasPrefix("ext_") }
+        if let first = extItems.first {
+            let extCount = extItems.count
+            let perPerson = first.price
+            let guestCount = first.quantity
+            let totalPrice = perPerson * guestCount * extCount
+            orderRow(
+                label: "延長30分 ×\(guestCount)名",
+                qty: extCount,
+                price: totalPrice,
+                priceKey: "ext_agg",
+                onDecrement: { vm.removeLastExtension(visitId: visit.id) },
+                onIncrement: { vm.addExtension(visitId: visit.id, minutes: 30, pricePerPerson: perPerson) }
+            )
+        }
+    }
+
+    @ViewBuilder
     private func regularItemRows(visit: Visit) -> some View {
-        let aggregated = aggregateItems(visit.orderItems.filter { !$0.isExpense })
+        let aggregated = aggregateItems(visit.orderItems.filter { !$0.isExpense && !$0.menuItemId.hasPrefix("ext_") })
         ForEach(aggregated) { item in
             orderItemRow(visitId: visit.id, item: item)
         }
@@ -569,11 +707,11 @@ struct TableDetailView: View {
         let expenseAgg = aggregateItems(visit.orderItems.filter { $0.isExpense })
         if !expenseAgg.isEmpty {
             HStack(spacing: 4) {
-                Image(systemName: "receipt").font(.system(size: 9))
-                Text("建て替え").font(.caption2)
+                Image(systemName: "receipt").font(.system(size: 12))
+                Text("建て替え").font(.caption)
             }
             .foregroundStyle(.orange.opacity(0.7))
-            .padding(.horizontal, 8)
+            .padding(.horizontal, 10)
             .padding(.top, 4)
 
             ForEach(expenseAgg) { item in
@@ -581,50 +719,53 @@ struct TableDetailView: View {
             }
         }
 
-        let regularAgg = aggregateItems(visit.orderItems.filter { !$0.isExpense })
-        if regularAgg.isEmpty && expenseAgg.isEmpty {
-            Text("まだオーダーなし")
-                .font(.caption)
-                .foregroundStyle(.lunaLight)
-                .padding(.vertical, 20)
-        }
     }
 
-    private func orderTotalsSection(breakdown: PriceCalculator.Breakdown, total: Int) -> some View {
-        VStack(spacing: 4) {
+    private func orderTotalsSection(visit: Visit, breakdown: PriceCalculator.Breakdown, total: Int) -> some View {
+        VStack(spacing: 6) {
             Divider()
             HStack {
-                Text("小計").font(.caption).foregroundStyle(.lunaMuted)
+                Text("小計").font(.subheadline).foregroundStyle(.lunaMuted)
                 Spacer()
-                Text(breakdown.subtotal.yenFormatted).font(.caption)
+                Text(breakdown.subtotal.yenFormatted).font(.subheadline)
             }
-            if breakdown.expenseTotal > 0 {
-                HStack {
-                    Text("建て替え").font(.caption).foregroundStyle(.orange.opacity(0.7))
-                    Spacer()
-                    Text(breakdown.expenseTotal.yenFormatted).font(.caption).foregroundStyle(.orange.opacity(0.7))
+            HStack {
+                Text("サービス料 (\(Int(vm.storeSettings.serviceRate * 100))%)").font(.subheadline).foregroundStyle(.lunaMuted)
+                Spacer()
+                Text(breakdown.serviceFee.yenFormatted).font(.subheadline)
+            }
+            HStack {
+                Text("消費税 (\(Int(vm.storeSettings.taxRate * 100))%)").font(.subheadline).foregroundStyle(.lunaMuted)
+                Spacer()
+                Text(breakdown.tax.yenFormatted).font(.subheadline)
+            }
+            expenseItemRows(visit: visit)
+            Divider()
+            HStack {
+                Text("合計").font(.title3.bold()).foregroundStyle(.lunaGoldDark)
+                Spacer()
+                Text(total.yenFormatted).font(.title2.bold()).foregroundStyle(.lunaGoldDark)
+            }
+
+            Button {
+                showCheckout = true
+            } label: {
+                HStack(spacing: 8) {
+                    Image(systemName: "creditcard").font(.system(size: 18))
+                    Text("会計へ進む").font(.system(size: 17, weight: .bold))
                 }
+                .foregroundStyle(.lunaDark)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 14)
+                .background(Color.lunaGold)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
             }
-            HStack {
-                Text("サービス料 (40%)").font(.caption).foregroundStyle(.lunaMuted)
-                Spacer()
-                Text(breakdown.serviceFee.yenFormatted).font(.caption)
-            }
-            HStack {
-                Text("消費税 (10%)").font(.caption).foregroundStyle(.lunaMuted)
-                Spacer()
-                Text(breakdown.tax.yenFormatted).font(.caption)
-            }
-            Divider()
-            HStack {
-                Text("合計").font(.headline).foregroundStyle(.lunaGoldDark)
-                Spacer()
-                Text(total.yenFormatted).font(.headline.bold()).foregroundStyle(.lunaGoldDark)
-            }
+            .buttonStyle(.plain)
+            .padding(.top, 4)
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 8)
-        .background(.white)
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
+        .background(.lunaCard)
     }
 
     // MARK: - Toolbar Content
@@ -665,82 +806,156 @@ struct TableDetailView: View {
         }
     }
 
-    @ViewBuilder
     private func tableToolbarActions(table: FloorTable, isOvertime: Bool) -> some View {
-        Button { showNomSheet = true } label: {
-            Label("指名", systemImage: "sparkles")
-        }
-
-        Button { showMoveSheet = true } label: {
-            Label("卓移動", systemImage: "arrow.left.arrow.right")
-        }
-
-        if isOvertime {
-            Button { showExtSheet = true } label: {
-                Label("延長", systemImage: "timer")
+        HStack(spacing: 16) {
+            Button { showMoveSheet = true } label: {
+                VStack(spacing: 4) {
+                    Image(systemName: "arrow.left.arrow.right")
+                        .font(.system(size: 26))
+                    Text("転卓")
+                        .font(.system(size: 13, weight: .semibold))
+                }
+                .foregroundStyle(.white)
+                .frame(width: 60, height: 52)
             }
-            .tint(.red)
-        }
 
-        Button {
-            vm.updateTableStatus(tableId: table.id, status: .waitingCheckout)
-            showCheckout = true
-        } label: {
-            Label("会計", systemImage: "creditcard")
+            Button { showExtSheet = true } label: {
+                VStack(spacing: 4) {
+                    Image(systemName: "timer")
+                        .font(.system(size: 26))
+                    Text("延長")
+                        .font(.system(size: 13, weight: .semibold))
+                }
+                .foregroundStyle(isOvertime ? .red : .white)
+                .frame(width: 60, height: 52)
+            }
         }
-        .tint(.lunaGold)
+    }
+
+    // MARK: - Set Row (unit price × guest count)
+
+    @ViewBuilder
+    private func setRow(visit: Visit, price: Int) -> some View {
+        let unitPrice = price / max(visit.setGuestCount, 1)
+        VStack(spacing: 2) {
+            HStack(spacing: 6) {
+                Text("セット (\(visit.setMinutes)分)")
+                    .font(.subheadline)
+                    .lineLimit(1)
+
+                Spacer()
+
+                Text("\(visit.setGuestCount)名")
+                    .font(.subheadline.bold())
+                    .frame(width: 82)
+
+                priceButton(key: "set", price: unitPrice, onConfirm: { newUnit in
+                    vm.updateSetPrice(visitId: visit.id, price: newUnit * visit.setGuestCount)
+                })
+            }
+            HStack {
+                Spacer()
+                Text("計 \(price.yenFormatted)")
+                    .font(.subheadline.bold())
+                    .foregroundStyle(.lunaGoldDark)
+            }
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 8)
+        .background(Color.lunaCard)
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+    }
+
+    // MARK: - Fixed Qty Row (Extension — unit price × guest count)
+
+    @ViewBuilder
+    private func fixedQtyRow(label: String, count: Int, price: Int, priceKey: String) -> some View {
+        let unitPrice = price / max(count, 1)
+        VStack(spacing: 2) {
+            HStack(spacing: 6) {
+                Text(label)
+                    .font(.subheadline)
+                    .lineLimit(1)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                Text("× \(count)名")
+                    .font(.subheadline.bold())
+                    .frame(width: 82)
+
+                priceButton(key: priceKey, price: unitPrice, onConfirm: { _ in })
+            }
+            HStack {
+                Spacer()
+                Text("計 \(price.yenFormatted)")
+                    .font(.subheadline.bold())
+                    .foregroundStyle(.lunaGoldDark)
+            }
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 8)
+        .background(Color.lunaCard)
+        .clipShape(RoundedRectangle(cornerRadius: 8))
     }
 
     // MARK: - Order Row
 
     @ViewBuilder
     private func orderRow(label: String, qty: Int, price: Int, priceKey: String, onDecrement: @escaping () -> Void, onIncrement: @escaping () -> Void) -> some View {
-        HStack(spacing: 4) {
-            Text(label)
-                .font(.caption)
-                .lineLimit(1)
-                .frame(maxWidth: .infinity, alignment: .leading)
+        let unitPrice = price / max(qty, 1)
+        VStack(spacing: 2) {
+            HStack(spacing: 6) {
+                Text(label)
+                    .font(.subheadline)
+                    .lineLimit(1)
+                    .frame(maxWidth: .infinity, alignment: .leading)
 
-            HStack(spacing: 4) {
-                Button { onDecrement() } label: {
-                    Image(systemName: "minus")
-                        .font(.system(size: 9))
-                        .frame(width: 20, height: 20)
-                        .background(.white)
-                        .clipShape(Circle())
-                        .overlay(Circle().stroke(Color.lunaBorder))
-                }
-                .buttonStyle(.plain)
-
-                Text("\(qty)")
-                    .font(.caption.bold())
-                    .frame(width: 16)
-
-                Button { onIncrement() } label: {
-                    Image(systemName: "plus")
-                        .font(.system(size: 9))
-                        .frame(width: 20, height: 20)
-                        .background(.white)
-                        .clipShape(Circle())
-                        .overlay(Circle().stroke(Color.lunaBorder))
-                }
-                .buttonStyle(.plain)
-            }
-            .frame(width: 64)
-
-            priceButton(key: priceKey, price: price, onConfirm: { newPrice in
-                switch priceKey {
-                case "set":
-                    if let v = visit { vm.updateSetPrice(visitId: v.id, price: newPrice) }
-                case "douhan":
-                    if let v = visit { vm.updateDouhanFee(visitId: v.id, fee: newPrice) }
-                default:
-                    if priceKey.hasPrefix("nom_"), let v = visit {
-                        let castId = String(priceKey.dropFirst(4))
-                        vm.updateNominationFee(visitId: v.id, castId: castId, fee: newPrice)
+                HStack(spacing: 6) {
+                    Button { onDecrement() } label: {
+                        Image(systemName: "minus")
+                            .font(.system(size: 12))
+                            .frame(width: 28, height: 28)
+                            .background(.lunaCard)
+                            .clipShape(Circle())
+                            .overlay(Circle().stroke(Color.lunaBorder))
                     }
+                    .buttonStyle(.plain)
+
+                    Text("\(qty)")
+                        .font(.subheadline.bold())
+                        .frame(width: 20)
+
+                    Button { onIncrement() } label: {
+                        Image(systemName: "plus")
+                            .font(.system(size: 12))
+                            .frame(width: 28, height: 28)
+                            .background(.lunaCard)
+                            .clipShape(Circle())
+                            .overlay(Circle().stroke(Color.lunaBorder))
+                    }
+                    .buttonStyle(.plain)
                 }
-            })
+                .frame(width: 82)
+
+                priceButton(key: priceKey, price: unitPrice, onConfirm: { newPrice in
+                    switch priceKey {
+                    case "set":
+                        if let v = visit { vm.updateSetPrice(visitId: v.id, price: newPrice) }
+                    case "douhan":
+                        if let v = visit { vm.updateDouhanFee(visitId: v.id, fee: newPrice) }
+                    default:
+                        if priceKey.hasPrefix("nom_"), let v = visit {
+                            let castId = String(priceKey.dropFirst(4))
+                            vm.updateNominationFee(visitId: v.id, castId: castId, fee: newPrice)
+                        }
+                    }
+                })
+            }
+            HStack {
+                Spacer()
+                Text("計 \(price.yenFormatted)")
+                    .font(.subheadline.bold())
+                    .foregroundStyle(.lunaGoldDark)
+            }
         }
         .padding(.horizontal, 8)
         .padding(.vertical, 8)
@@ -750,57 +965,65 @@ struct TableDetailView: View {
 
     @ViewBuilder
     private func orderItemRow(visitId: String, item: AggregatedItem, isExpense: Bool = false) -> some View {
-        HStack(spacing: 4) {
-            Text(item.name)
-                .font(.caption)
-                .lineLimit(1)
-                .frame(maxWidth: .infinity, alignment: .leading)
+        VStack(spacing: 2) {
+            HStack(spacing: 6) {
+                Text(item.name)
+                    .font(.subheadline)
+                    .lineLimit(1)
+                    .frame(maxWidth: .infinity, alignment: .leading)
 
-            HStack(spacing: 4) {
-                Button {
-                    if let last = item.itemIds.last {
-                        vm.removeOrderItem(visitId: visitId, itemId: last)
+                HStack(spacing: 6) {
+                    Button {
+                        if let last = item.itemIds.last {
+                            vm.removeOrderItem(visitId: visitId, itemId: last)
+                        }
+                    } label: {
+                        Image(systemName: item.quantity == 1 ? "trash" : "minus")
+                            .font(.system(size: 12))
+                            .frame(width: 28, height: 28)
+                            .background(.lunaCard)
+                            .clipShape(Circle())
+                            .overlay(Circle().stroke(isExpense ? Color.orange.opacity(0.3) : Color.lunaBorder))
                     }
-                } label: {
-                    Image(systemName: item.quantity == 1 ? "trash" : "minus")
-                        .font(.system(size: 9))
-                        .frame(width: 20, height: 20)
-                        .background(.white)
-                        .clipShape(Circle())
-                        .overlay(Circle().stroke(isExpense ? Color.orange.opacity(0.3) : Color.lunaBorder))
-                }
-                .buttonStyle(.plain)
+                    .buttonStyle(.plain)
 
-                Text("\(item.quantity)")
-                    .font(.caption.bold())
-                    .frame(width: 16)
+                    Text("\(item.quantity)")
+                        .font(.subheadline.bold())
+                        .frame(width: 20)
 
-                Button {
-                    let newItem = OrderItem(
-                        menuItemId: item.menuItemId,
-                        menuItemName: item.name,
-                        price: item.price,
-                        quantity: 1,
-                        isExpense: isExpense
-                    )
-                    vm.addOrderItem(visitId: visitId, item: newItem)
-                } label: {
-                    Image(systemName: "plus")
-                        .font(.system(size: 9))
-                        .frame(width: 20, height: 20)
-                        .background(.white)
-                        .clipShape(Circle())
-                        .overlay(Circle().stroke(isExpense ? Color.orange.opacity(0.3) : Color.lunaBorder))
+                    Button {
+                        let newItem = OrderItem(
+                            menuItemId: item.menuItemId,
+                            menuItemName: item.name,
+                            price: item.price,
+                            quantity: 1,
+                            isExpense: isExpense
+                        )
+                        vm.addOrderItem(visitId: visitId, item: newItem)
+                    } label: {
+                        Image(systemName: "plus")
+                            .font(.system(size: 12))
+                            .frame(width: 28, height: 28)
+                            .background(.lunaCard)
+                            .clipShape(Circle())
+                            .overlay(Circle().stroke(isExpense ? Color.orange.opacity(0.3) : Color.lunaBorder))
+                    }
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
+                .frame(width: 82)
+
+                priceButton(key: item.id, price: item.price, onConfirm: { newPrice in
+                    for itemId in item.itemIds {
+                        vm.updateOrderItemPrice(visitId: visitId, itemId: itemId, price: newPrice)
+                    }
+                })
             }
-            .frame(width: 64)
-
-            priceButton(key: item.id, price: item.price, onConfirm: { newPrice in
-                for itemId in item.itemIds {
-                    vm.updateOrderItemPrice(visitId: visitId, itemId: itemId, price: newPrice)
-                }
-            })
+            HStack {
+                Spacer()
+                Text("計 \((item.price * item.quantity).yenFormatted)")
+                    .font(.subheadline.bold())
+                    .foregroundStyle(.lunaGoldDark)
+            }
         }
         .padding(.horizontal, 8)
         .padding(.vertical, 8)
@@ -813,10 +1036,10 @@ struct TableDetailView: View {
     private func priceButton(key: String, price: Int, onConfirm: @escaping (Int) -> Void) -> some View {
         if editingPriceKey == key {
             HStack(spacing: 4) {
-                Text("¥").font(.system(size: 10)).foregroundStyle(.lunaMuted)
+                Text("¥").font(.system(size: 13)).foregroundStyle(.lunaMuted)
                 TextField("", text: $editingPriceValue)
-                    .font(.caption.bold())
-                    .frame(width: 56)
+                    .font(.subheadline.bold())
+                    .frame(width: 64)
                     .textFieldStyle(.roundedBorder)
                     .keyboardType(.numberPad)
                     .onSubmit {
@@ -828,25 +1051,26 @@ struct TableDetailView: View {
                     editingPriceKey = nil
                 } label: {
                     Image(systemName: "checkmark")
-                        .font(.system(size: 10, weight: .bold))
+                        .font(.system(size: 12, weight: .bold))
                         .foregroundStyle(.white)
-                        .frame(width: 20, height: 20)
+                        .frame(width: 26, height: 26)
                         .background(Color.lunaGoldDark)
                         .clipShape(Circle())
                 }
                 .buttonStyle(.plain)
             }
-            .frame(width: 96, alignment: .trailing)
+            .frame(width: 110, alignment: .trailing)
         } else {
             Button {
                 editingPriceKey = key
                 editingPriceValue = "\(price)"
             } label: {
                 Text(price.yenFormatted)
-                    .font(.caption.bold())
+                    .font(.subheadline)
+                    .foregroundStyle(.lunaMuted)
             }
             .buttonStyle(.plain)
-            .frame(width: 96, alignment: .trailing)
+            .frame(width: 110, alignment: .trailing)
         }
     }
 

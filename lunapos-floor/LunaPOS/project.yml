@@ -14,13 +14,21 @@ settings:
     TARGETED_DEVICE_FAMILY: "2"
     SWIFT_VERSION: "6.0"
 
+packages:
+  Supabase:
+    url: https://github.com/supabase/supabase-swift
+    from: "2.0.0"
+
 targets:
   LunaPOS:
     type: application
     platform: iOS
     sources:
       - LunaPOS
+    dependencies:
+      - package: Supabase
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.luna.pos
         INFOPLIST_KEY_CFBundleDisplayName: Luna POS
+        GENERATE_INFOPLIST_FILE: true
