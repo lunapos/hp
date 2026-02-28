@@ -36,7 +36,7 @@ export default function ContentCard({
         {project && <ProjectBadge project={project} />}
         <time className="text-xs text-luna-text-muted flex items-center gap-1 tabular-nums">
           <Calendar className="w-3 h-3" />
-          {date}
+          {date.slice(0, 10)}
         </time>
       </div>
       <h2 className="text-lg font-bold text-luna-text-primary mb-2 group-hover:text-luna-gold transition-colors duration-200">

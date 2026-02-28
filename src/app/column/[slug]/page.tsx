@@ -51,7 +51,7 @@ export default async function MediaArticlePage({
             </span>
             <span className="text-xs text-luna-text-secondary flex items-center gap-1">
               <Calendar className="w-3 h-3" />
-              {article.date}
+              {article.date.slice(0, 10)}
             </span>
           </div>
 
