@@ -21,16 +21,6 @@ export interface NewsItem {
 }
 
 export const newsItems: NewsItem[] = [
-  // --- 2026-02-28 ---
-  {
-    slug: "column-cast-skills-recognition",
-    date: "2026-02-28",
-    title: "コラム2本公開: キャバクラで身につく力 / 夜の仕事スキルの正当評価",
-    summary:
-      "キャスト向けコラム「キャバクラで身につく力は、キャバクラの外でも使える」「夜の仕事で身につけた力が、正当に評価される世界へ」を公開。",
-    category: "お知らせ",
-    project: "HP",
-  },
   // --- 2026-02-26 ---
   {
     slug: "hp-v0-12-0-nav-screenshots",
