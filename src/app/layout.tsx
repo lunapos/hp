@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import { Noto_Sans_JP } from "next/font/google";
+import { getLocale } from "next-intl/server";
 import Script from "next/script";
 import "./globals.css";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
-import FloatingLineButton from "@/components/ui/FloatingLineButton";
 
 const GA_ID = "G-5DHKDT51M1";
 
@@ -31,13 +29,15 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image" },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+
   return (
-    <html lang="ja" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -53,10 +53,7 @@ export default function RootLayout({
         </Script>
       </head>
       <body className={`${notoSansJP.className} antialiased`}>
-        <Header />
-        <main className="pt-16">{children}</main>
-        <Footer />
-        <FloatingLineButton />
+        {children}
       </body>
     </html>
   );

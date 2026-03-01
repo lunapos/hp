@@ -1,18 +1,30 @@
 import { NextResponse, type NextRequest } from "next/server";
+import createIntlMiddleware from "next-intl/middleware";
 import { updateSession } from "@/lib/supabase/middleware";
+import { routing } from "@/i18n/routing";
+
+const intlMiddleware = createIntlMiddleware(routing);
 
 export async function middleware(request: NextRequest) {
-  // Skip if Supabase is not configured
+  // 0. i18n ルーティング（locale 判定・リダイレクト）
+  const intlResponse = intlMiddleware(request);
+
+  // Skip Supabase if not configured
   if (
     !process.env.NEXT_PUBLIC_SUPABASE_URL ||
     !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
     process.env.NEXT_PUBLIC_SUPABASE_URL === "https://your-project.supabase.co"
   ) {
-    return NextResponse.next();
+    return intlResponse;
   }
 
   // 1. Refresh Supabase auth session
   const { supabaseResponse, user } = await updateSession(request);
+
+  // i18n で設定された cookie/header を Supabase response に引き継ぐ
+  intlResponse.headers.forEach((value, key) => {
+    supabaseResponse.headers.set(key, value);
+  });
 
   // 2. Handle ?ref= referral code tracking
   const refCode = request.nextUrl.searchParams.get("ref");
@@ -42,16 +54,20 @@ export async function middleware(request: NextRequest) {
   }
 
   // 3. Protect /partner/dashboard routes
-  if (request.nextUrl.pathname.startsWith("/partner/dashboard")) {
+  const pathname = request.nextUrl.pathname;
+  // locale prefix を除去してパス判定
+  const pathWithoutLocale = pathname.replace(/^\/(en|zh)/, "");
+
+  if (pathWithoutLocale.startsWith("/partner/dashboard")) {
     if (!user) {
       const loginUrl = new URL("/partner/login", request.url);
-      loginUrl.searchParams.set("redirect", request.nextUrl.pathname);
+      loginUrl.searchParams.set("redirect", pathname);
       return NextResponse.redirect(loginUrl);
     }
   }
 
   // 4. Redirect logged-in users away from login page
-  if (request.nextUrl.pathname === "/partner/login" && user) {
+  if (pathWithoutLocale === "/partner/login" && user) {
     return NextResponse.redirect(new URL("/partner/dashboard", request.url));
   }
 
@@ -60,6 +76,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|api|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
