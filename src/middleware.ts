@@ -1,4 +1,4 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import createIntlMiddleware from "next-intl/middleware";
 import { updateSession } from "@/lib/supabase/middleware";
 import { routing } from "@/i18n/routing";
@@ -6,8 +6,13 @@ import { routing } from "@/i18n/routing";
 const intlMiddleware = createIntlMiddleware(routing);
 
 export async function middleware(request: NextRequest) {
-  // 0. i18n ルーティング（locale 判定・リダイレクト）
+  // 0. i18n ルーティング（locale 判定・リダイレクト・リライト）
   const intlResponse = intlMiddleware(request);
+
+  // intl がリダイレクト（3xx）を返した場合はそのまま返す
+  if (intlResponse.status >= 300 && intlResponse.status < 400) {
+    return intlResponse;
+  }
 
   // Skip Supabase if not configured
   if (
@@ -18,18 +23,34 @@ export async function middleware(request: NextRequest) {
     return intlResponse;
   }
 
-  // 1. Refresh Supabase auth session
-  const { supabaseResponse, user } = await updateSession(request);
+  // 1. intl のリライト先 URL を反映して Supabase セッションを更新
+  //    as-needed モードでは / → /ja への内部リライトが行われる
+  //    この rewrite を supabaseResponse にも引き継がないと 404 になる
+  const rewriteUrl = intlResponse.headers.get("x-middleware-rewrite");
+  const effectiveRequest = rewriteUrl
+    ? new NextRequest(rewriteUrl, request)
+    : request;
 
-  // i18n で設定された cookie/header を Supabase response に引き継ぐ
+  const { supabaseResponse, user } = await updateSession(effectiveRequest);
+
+  // intl で設定された header を引き継ぐ
   intlResponse.headers.forEach((value, key) => {
-    supabaseResponse.headers.set(key, value);
+    if (key.toLowerCase() !== "x-middleware-rewrite") {
+      supabaseResponse.headers.set(key, value);
+    }
   });
+  // intl の cookie を引き継ぐ
+  for (const cookie of intlResponse.cookies.getAll()) {
+    supabaseResponse.cookies.set(cookie.name, cookie.value, cookie);
+  }
+  // リライト先を supabaseResponse にも設定
+  if (rewriteUrl) {
+    supabaseResponse.headers.set("x-middleware-rewrite", rewriteUrl);
+  }
 
   // 2. Handle ?ref= referral code tracking
   const refCode = request.nextUrl.searchParams.get("ref");
   if (refCode) {
-    // Persist ref code in cookie for 30 days
     supabaseResponse.cookies.set("ref_code", refCode, {
       maxAge: 60 * 60 * 24 * 30,
       path: "/",
@@ -37,7 +58,6 @@ export async function middleware(request: NextRequest) {
       sameSite: "lax",
     });
 
-    // Fire-and-forget: track the click via API route
     const trackUrl = new URL("/api/partner/track-click", request.url);
     fetch(trackUrl.toString(), {
       method: "POST",
@@ -48,14 +68,11 @@ export async function middleware(request: NextRequest) {
         user_agent: request.headers.get("user-agent") || "",
         page_url: request.nextUrl.pathname,
       }),
-    }).catch(() => {
-      // Silently fail -- click tracking should never block page load
-    });
+    }).catch(() => {});
   }
 
   // 3. Protect /partner/dashboard routes
   const pathname = request.nextUrl.pathname;
-  // locale prefix を除去してパス判定
   const pathWithoutLocale = pathname.replace(/^\/(en|zh)/, "");
 
   if (pathWithoutLocale.startsWith("/partner/dashboard")) {
