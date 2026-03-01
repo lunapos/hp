@@ -12,12 +12,12 @@ export default function HomePage() {
     <>
       <HeroSection />
       <ScreenshotSection />
-      <NewsSection />
       <ProblemSection />
       <FeatureHighlights />
       <PricingSection />
       <TestimonialSection />
       <FaqSection />
+      <NewsSection />
     </>
   );
 }
