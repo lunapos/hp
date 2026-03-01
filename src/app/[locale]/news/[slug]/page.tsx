@@ -6,6 +6,20 @@ import Section from "@/components/layout/Section";
 import ProjectBadge from "@/components/ui/ProjectBadge";
 import { newsItems, getLocalizedNewsBySlug } from "@/data/news";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import type { ReactNode } from "react";
+
+/** テキスト中の https:// URL をリンクに変換 */
+function linkify(text: string): ReactNode[] {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const parts = text.split(urlRegex);
+  return parts.map((part, i) =>
+    urlRegex.test(part) ? (
+      <a key={i} href={part} className="text-luna-gold hover:underline" target="_blank" rel="noopener noreferrer">{part}</a>
+    ) : (
+      part
+    )
+  );
+}
 
 interface Props {
   params: Promise<{ locale: string; slug: string }>;
@@ -77,7 +91,7 @@ export default async function NewsDetailPage({ params }: Props) {
 
           <div className="bg-luna-surface border border-luna-border rounded-xl p-6 md:p-8">
             <p className="text-luna-text-secondary leading-relaxed text-base whitespace-pre-line">
-              {item.content || item.summary}
+              {linkify(item.content || item.summary)}
             </p>
           </div>
         </article>
