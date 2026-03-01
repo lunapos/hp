@@ -711,6 +711,8 @@
     "empty": "記事の準備中です。",
     "tagEmpty": "該当する記事がありません。",
     "backToList": "コラム一覧に戻る",
+    "prevArticle": "前の記事",
+    "nextArticle": "次の記事",
     "tagTitle": "#{tag} の記事",
     "tagDescription": "「{tag}」タグが付いたコラム記事の一覧です。"
   },
@@ -718,6 +720,8 @@
     "subtitle": "NEWS",
     "title": "お知らせ・開発アップデート",
     "backToList": "お知らせ一覧に戻る",
+    "prevArticle": "前の記事",
+    "nextArticle": "次の記事",
     "categories": {
       "announcement": "お知らせ",
       "devUpdate": "開発アップデート",

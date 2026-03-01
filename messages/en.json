@@ -711,6 +711,8 @@
     "empty": "Articles are coming soon.",
     "tagEmpty": "No articles found for this tag.",
     "backToList": "Back to column list",
+    "prevArticle": "Previous",
+    "nextArticle": "Next",
     "tagTitle": "#{tag} Articles",
     "tagDescription": "Column articles tagged with \"{tag}\"."
   },
@@ -718,6 +720,8 @@
     "subtitle": "NEWS",
     "title": "News & Development Updates",
     "backToList": "Back to news list",
+    "prevArticle": "Previous",
+    "nextArticle": "Next",
     "categories": {
       "announcement": "Announcement",
       "devUpdate": "Development Update",

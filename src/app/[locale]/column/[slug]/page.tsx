@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Link } from "@/i18n/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import { getAllSlugs, getArticle } from "@/lib/media";
-import { Calendar, ArrowLeft, Tag } from "lucide-react";
+import { getAllSlugs, getArticle, getAllArticles } from "@/lib/media";
+import { Calendar, ArrowLeft, Tag, ChevronLeft, ChevronRight } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 export async function generateStaticParams() {
@@ -36,6 +36,12 @@ export default async function MediaArticlePage({
   if (!article) notFound();
 
   const t = await getTranslations('column');
+
+  // 前後の記事を取得
+  const allArticles = getAllArticles(locale);
+  const currentIndex = allArticles.findIndex((a) => a.slug === slug);
+  const prevArticle = currentIndex < allArticles.length - 1 ? allArticles[currentIndex + 1] : null;
+  const nextArticle = currentIndex > 0 ? allArticles[currentIndex - 1] : null;
 
   return (
     <>
@@ -85,7 +91,35 @@ export default async function MediaArticlePage({
           <MDXRemote source={article.content} />
         </article>
 
-        <div className="max-w-3xl mx-auto mt-12 pt-8 border-t border-luna-border">
+        {/* 前後の記事ナビゲーション */}
+        <nav className="max-w-3xl mx-auto mt-10 flex items-stretch gap-4">
+          {prevArticle ? (
+            <Link
+              href={`/column/${prevArticle.slug}`}
+              className="flex-1 group flex items-center gap-3 p-4 rounded-xl border border-luna-border hover:border-luna-gold/50 transition-colors"
+            >
+              <ChevronLeft className="w-5 h-5 text-luna-text-muted group-hover:text-luna-gold shrink-0" />
+              <div className="min-w-0">
+                <div className="text-xs text-luna-text-muted">{t('prevArticle')}</div>
+                <div className="text-sm text-luna-text-secondary group-hover:text-luna-gold truncate">{prevArticle.title}</div>
+              </div>
+            </Link>
+          ) : <div className="flex-1" />}
+          {nextArticle ? (
+            <Link
+              href={`/column/${nextArticle.slug}`}
+              className="flex-1 group flex items-center justify-end gap-3 p-4 rounded-xl border border-luna-border hover:border-luna-gold/50 transition-colors text-right"
+            >
+              <div className="min-w-0">
+                <div className="text-xs text-luna-text-muted">{t('nextArticle')}</div>
+                <div className="text-sm text-luna-text-secondary group-hover:text-luna-gold truncate">{nextArticle.title}</div>
+              </div>
+              <ChevronRight className="w-5 h-5 text-luna-text-muted group-hover:text-luna-gold shrink-0" />
+            </Link>
+          ) : <div className="flex-1" />}
+        </nav>
+
+        <div className="max-w-3xl mx-auto mt-6 pt-6 border-t border-luna-border">
           <Link
             href="/column"
             className="inline-flex items-center gap-1 text-sm text-luna-text-secondary hover:text-luna-gold transition-colors"

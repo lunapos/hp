@@ -1,10 +1,10 @@
 import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Metadata } from "next";
 import Section from "@/components/layout/Section";
 import ProjectBadge from "@/components/ui/ProjectBadge";
-import { newsItems, getLocalizedNewsBySlug } from "@/data/news";
+import { newsItems, getLocalizedNewsBySlug, getLocalizedNewsItems } from "@/data/news";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 
@@ -85,6 +85,12 @@ export default async function NewsDetailPage({ params }: Props) {
 
   const t = await getTranslations('news');
 
+  // 前後の記事を取得
+  const allItems = await getLocalizedNewsItems(locale);
+  const currentIndex = allItems.findIndex((n) => n.slug === slug);
+  const prevItem = currentIndex < allItems.length - 1 ? allItems[currentIndex + 1] : null;
+  const nextItem = currentIndex > 0 ? allItems[currentIndex - 1] : null;
+
   return (
     <Section className="pt-32">
       <div className="max-w-3xl mx-auto">
@@ -120,6 +126,34 @@ export default async function NewsDetailPage({ params }: Props) {
             {renderMarkdown(item.content || item.summary)}
           </div>
         </article>
+
+        {/* 前後の記事ナビゲーション */}
+        <nav className="mt-10 flex items-stretch gap-4">
+          {prevItem ? (
+            <Link
+              href={`/news/${prevItem.slug}`}
+              className="flex-1 group flex items-center gap-3 p-4 rounded-xl border border-luna-border hover:border-luna-gold/50 transition-colors"
+            >
+              <ChevronLeft className="w-5 h-5 text-luna-text-muted group-hover:text-luna-gold shrink-0" />
+              <div className="min-w-0">
+                <div className="text-xs text-luna-text-muted">{t('prevArticle')}</div>
+                <div className="text-sm text-luna-text-secondary group-hover:text-luna-gold truncate">{prevItem.title}</div>
+              </div>
+            </Link>
+          ) : <div className="flex-1" />}
+          {nextItem ? (
+            <Link
+              href={`/news/${nextItem.slug}`}
+              className="flex-1 group flex items-center justify-end gap-3 p-4 rounded-xl border border-luna-border hover:border-luna-gold/50 transition-colors text-right"
+            >
+              <div className="min-w-0">
+                <div className="text-xs text-luna-text-muted">{t('nextArticle')}</div>
+                <div className="text-sm text-luna-text-secondary group-hover:text-luna-gold truncate">{nextItem.title}</div>
+              </div>
+              <ChevronRight className="w-5 h-5 text-luna-text-muted group-hover:text-luna-gold shrink-0" />
+            </Link>
+          ) : <div className="flex-1" />}
+        </nav>
       </div>
     </Section>
   );

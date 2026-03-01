@@ -711,6 +711,8 @@
     "empty": "文章准备中。",
     "tagEmpty": "暂无符合条件的文章。",
     "backToList": "返回专栏列表",
+    "prevArticle": "上一篇",
+    "nextArticle": "下一篇",
     "tagTitle": "#{tag} 的文章",
     "tagDescription": "含有「{tag}」标签的专栏文章列表。"
   },
@@ -718,6 +720,8 @@
     "subtitle": "NEWS",
     "title": "公告・开发动态",
     "backToList": "返回公告列表",
+    "prevArticle": "上一篇",
+    "nextArticle": "下一篇",
     "categories": {
       "announcement": "公告",
       "devUpdate": "开发动态",
