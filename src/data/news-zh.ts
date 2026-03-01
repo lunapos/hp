@@ -286,7 +286,7 @@ export const newsTranslationsZh: Record<
     ].join("\n"),
   },
   "app-v0-7-0-dark-mode-ui": {
-    title: "v0.7.0 统一深色模式与 UI 改善",
+    title: "v0.7.0 Floor：统一深色模式与 UI 改善",
     summary:
       "将整个楼面统一为深色模式。新增深色/浅色切换按钮、放大桌台卡片、改善入店接待 UI。",
     category: "开发更新",
@@ -306,7 +306,7 @@ export const newsTranslationsZh: Record<
     ].join("\n"),
   },
   "app-v0-6-0-supabase-backend": {
-    title: "v0.6.0 Supabase 后端集成",
+    title: "v0.6.0 Floor：Supabase 后端集成",
     summary:
       "搭建了 Supabase 后端。实现了多租户 RLS、Swift SDK 对接和支持离线的 SyncEngine。",
     category: "开发更新",
@@ -578,7 +578,7 @@ export const newsTranslationsZh: Record<
     ].join("\n"),
   },
   "app-v0-1-0-initial": {
-    title: "v0.1.0 LunaPos App 初始实现",
+    title: "v0.1.0 Floor / Cast / Admin 初始实现",
     summary:
       "3个应用的初始实现：Floor（楼面地图与花名册管理）、Cast（仪表盘与销售排名）、Admin。",
     category: "开发更新",

@@ -1,13 +1,12 @@
-export type Project = "HP" | "LP" | "App";
+export type Project = "HP" | "LP" | "Floor" | "Admin" | "Cast";
 
 export const PROJECT_LABELS: Record<Project, { label: string; color: string }> =
   {
     HP: { label: "HP", color: "bg-blue-500/20 text-blue-400 border-blue-500/30" },
     LP: { label: "LP", color: "bg-purple-500/20 text-purple-400 border-purple-500/30" },
-    App: {
-      label: "App",
-      color: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
-    },
+    Floor: { label: "Floor", color: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" },
+    Admin: { label: "Admin", color: "bg-amber-500/20 text-amber-400 border-amber-500/30" },
+    Cast: { label: "Cast", color: "bg-pink-500/20 text-pink-400 border-pink-500/30" },
   };
 
 export interface NewsItem {
@@ -30,7 +29,6 @@ export const newsItems: NewsItem[] = [
     summary:
       "オーナー向け管理画面（admin.lunapos.jp）とキャスト専用画面（cast.lunapos.jp）をVercelにデプロイしました。",
     category: "お知らせ",
-    project: "App",
     content: [
       "LunaPosのWeb画面2つを公開しました。",
       "",
@@ -55,7 +53,7 @@ export const newsItems: NewsItem[] = [
     summary:
       "オーナー管理画面にキャスト・メニュー・テーブル管理、店舗設定、CSVエクスポートを実装。Vercelデプロイ完了。",
     category: "開発アップデート",
-    project: "App",
+    project: "Admin",
     content: [
       "オーナー管理画面（admin.lunapos.jp）の主要機能を実装しました。",
       "",
@@ -82,7 +80,7 @@ export const newsItems: NewsItem[] = [
     summary:
       "キャスト画面にシフト管理・ポートフォリオ機能を実装。Floor側はキャスト編集・同期エラーUIを追加。",
     category: "開発アップデート",
-    project: "App",
+    project: "Cast",
     content: [
       "キャスト専用画面（cast.lunapos.jp）とFloorの機能を拡充しました。",
       "",
@@ -201,7 +199,7 @@ export const newsItems: NewsItem[] = [
     summary:
       "ダークモード配色改善、テーブル色分け、フォントサイズ拡大、残り時間表示、伝票フォーマット統一、ツールバーテキスト表示を実施。",
     category: "開発アップデート",
-    project: "App",
+    project: "Floor",
     content: [
       "Floor アプリの視認性と操作性を大幅に改善しました。暗い店内で酔った状態でも操作しやすいUIを目指しています。",
       "",
@@ -354,11 +352,11 @@ export const newsItems: NewsItem[] = [
   {
     slug: "app-v0-7-0-dark-mode-ui",
     date: "2026-02-25",
-    title: "v0.7.0 ダークモード統一 & UI改善",
+    title: "v0.7.0 Floor: ダークモード統一 & UI改善",
     summary:
       "フロア全体をダークモードに統一。ダーク/ライト切り替えボタン、テーブルカード拡大、入店受付UI改善を実施。",
     category: "開発アップデート",
-    project: "App",
+    project: "Floor",
     content: [
       "Floor アプリのビジュアルとUIを大幅に改善しました。",
       "",
@@ -377,11 +375,11 @@ export const newsItems: NewsItem[] = [
   {
     slug: "app-v0-6-0-supabase-backend",
     date: "2026-02-25",
-    title: "v0.6.0 Supabase バックエンド統合",
+    title: "v0.6.0 Floor: Supabase バックエンド統合",
     summary:
       "Supabaseバックエンドを構築。マルチテナントRLS、Swift SDK連携、オフライン対応SyncEngineを実装。",
     category: "開発アップデート",
-    project: "App",
+    project: "Floor",
     content: [
       "LunaPos App にSupabaseバックエンドを統合しました。",
       "",
@@ -500,7 +498,6 @@ export const newsItems: NewsItem[] = [
     summary:
       "月500会計まで無料のフリーミアムモデルに移行。料金体系をワンプランに簡素化。",
     category: "開発アップデート",
-    project: "App",
     content: [
       "LunaPos App の料金体系をフリーミアムモデルに移行しました。",
       "",
@@ -536,7 +533,7 @@ export const newsItems: NewsItem[] = [
     summary:
       "管理画面にキャスト登録・編集、カテゴリ別メニュー管理、ルーム・テーブル設定を追加。",
     category: "開発アップデート",
-    project: "App",
+    project: "Admin",
     content: [
       "Admin（オーナー管理画面）にスタッフ・メニュー管理と店舗設定機能を追加しました。",
       "",
@@ -571,7 +568,7 @@ export const newsItems: NewsItem[] = [
     summary:
       "キャストアプリにシフト提出・ポートフォリオ機能、フロアアプリに会計・レポート機能を追加。",
     category: "開発アップデート",
-    project: "App",
+    project: "Cast",
     content: [
       "Cast アプリとFloor アプリに主要機能を追加しました。",
       "",
@@ -654,7 +651,7 @@ export const newsItems: NewsItem[] = [
     summary:
       "フロアアプリにテーブル詳細・オーダー入力・指名管理、管理画面に売上レポート・シフト表示を追加。",
     category: "開発アップデート",
-    project: "App",
+    project: "Floor",
     content: [
       "Floor アプリとAdmin アプリに主要機能を追加しました。",
       "",
@@ -699,11 +696,11 @@ export const newsItems: NewsItem[] = [
   {
     slug: "app-v0-1-0-initial",
     date: "2026-02-23",
-    title: "v0.1.0 LunaPos App 初期実装",
+    title: "v0.1.0 Floor / Cast / Admin 初期実装",
     summary:
       "Floor（フロアマップ・キャスト管理）、Cast（ダッシュボード・売上ランキング）、Admin の3アプリ初期実装。",
     category: "開発アップデート",
-    project: "App",
+    project: "Floor",
     content: [
       "LunaPos App（Floor / Cast / Admin）の初期バージョンを実装しました。",
       "",

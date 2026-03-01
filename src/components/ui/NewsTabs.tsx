@@ -10,7 +10,7 @@ const PER_PAGE = 6;
 
 type TabKey = "announcements" | "updates";
 
-const PROJECT_FILTER_KEYS: ("all" | Project)[] = ["all", "HP", "App"];
+type FilterKey = "all" | Project;
 
 function filterByTab(items: NewsItem[], tab: TabKey): NewsItem[] {
   if (tab === "announcements") {
@@ -45,8 +45,11 @@ export default function NewsTabs({
 
   const PROJECT_FILTERS: { key: "all" | Project; label: string }[] = [
     { key: "all", label: t("all") },
-    { key: "HP", label: t("hp") },
-    { key: "App", label: t("app") },
+    { key: "HP", label: "HP" },
+    { key: "LP", label: "LP" },
+    { key: "Floor", label: "Floor" },
+    { key: "Admin", label: "Admin" },
+    { key: "Cast", label: "Cast" },
   ];
 
   let filtered = filterByTab(items, activeTab);

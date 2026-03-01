@@ -286,7 +286,7 @@ export const newsTranslationsEn: Record<
     ].join("\n"),
   },
   "app-v0-7-0-dark-mode-ui": {
-    title: "v0.7.0 Unified Dark Mode & UI Improvements",
+    title: "v0.7.0 Floor: Unified Dark Mode & UI Improvements",
     summary:
       "Unified the entire floor to dark mode. Added dark/light toggle, enlarged table cards, and improved check-in UI.",
     category: "Development Update",
@@ -306,7 +306,7 @@ export const newsTranslationsEn: Record<
     ].join("\n"),
   },
   "app-v0-6-0-supabase-backend": {
-    title: "v0.6.0 Supabase Backend Integration",
+    title: "v0.6.0 Floor: Supabase Backend Integration",
     summary:
       "Built the Supabase backend. Implemented multi-tenant RLS, Swift SDK integration, and an offline-capable SyncEngine.",
     category: "Development Update",
@@ -579,7 +579,7 @@ export const newsTranslationsEn: Record<
     ].join("\n"),
   },
   "app-v0-1-0-initial": {
-    title: "v0.1.0 LunaPos App Initial Implementation",
+    title: "v0.1.0 Floor / Cast / Admin Initial Implementation",
     summary:
       "Initial implementation of the 3 apps: Floor (floor map & cast management), Cast (dashboard & sales ranking), and Admin.",
     category: "Development Update",
