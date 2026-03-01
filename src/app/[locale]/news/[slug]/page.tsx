@@ -8,17 +8,44 @@ import { newsItems, getLocalizedNewsBySlug } from "@/data/news";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 
-/** テキスト中の https:// URL をリンクに変換 */
-function linkify(text: string): ReactNode[] {
+/** 簡易マークダウンをReactノードに変換 */
+function renderMarkdown(text: string): ReactNode[] {
   const urlRegex = /(https?:\/\/[^\s]+)/g;
-  const parts = text.split(urlRegex);
-  return parts.map((part, i) =>
-    urlRegex.test(part) ? (
-      <a key={i} href={part} className="text-luna-gold hover:underline" target="_blank" rel="noopener noreferrer">{part}</a>
-    ) : (
-      part
-    )
-  );
+  const lines = text.split("\n");
+
+  return lines.map((line, i) => {
+    const trimmed = line.trimStart();
+
+    // 見出し
+    if (trimmed.startsWith("### ")) {
+      return <h3 key={i} className="text-lg font-bold text-luna-text-primary mt-6 mb-2">{trimmed.slice(4)}</h3>;
+    }
+    if (trimmed.startsWith("## ")) {
+      return <h2 key={i} className="text-xl font-bold text-luna-text-primary mt-8 mb-3">{trimmed.slice(3)}</h2>;
+    }
+
+    // リスト項目（・や - で始まる行）
+    if (trimmed.startsWith("・") || trimmed.startsWith("- ")) {
+      const content = trimmed.startsWith("・") ? trimmed.slice(1).trim() : trimmed.slice(2).trim();
+      return <li key={i} className="text-luna-text-secondary ml-4 list-disc">{content}</li>;
+    }
+
+    // 空行
+    if (trimmed === "") {
+      return <br key={i} />;
+    }
+
+    // 通常テキスト（URL をリンク化）
+    const parts = line.split(urlRegex);
+    const nodes = parts.map((part, j) =>
+      urlRegex.test(part) ? (
+        <a key={j} href={part} className="text-luna-gold hover:underline" target="_blank" rel="noopener noreferrer">{part}</a>
+      ) : (
+        part
+      )
+    );
+    return <p key={i} className="text-luna-text-secondary leading-relaxed">{nodes}</p>;
+  });
 }
 
 interface Props {
@@ -89,10 +116,8 @@ export default async function NewsDetailPage({ params }: Props) {
             {item.title}
           </h1>
 
-          <div className="bg-luna-surface border border-luna-border rounded-xl p-6 md:p-8">
-            <p className="text-luna-text-secondary leading-relaxed text-base whitespace-pre-line">
-              {linkify(item.content || item.summary)}
-            </p>
+          <div className="bg-luna-surface border border-luna-border rounded-xl p-6 md:p-8 space-y-1">
+            {renderMarkdown(item.content || item.summary)}
           </div>
         </article>
       </div>

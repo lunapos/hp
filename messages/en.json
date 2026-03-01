@@ -247,40 +247,43 @@
   "pricing": {
     "subtitle": "PRICING",
     "title": "Pricing Plans",
-    "description": "One straightforward plan. Your first 500 transactions are planned to be free.",
+    "description": "One straightforward plan. Your first 500 transactions are free.",
     "perMonth": "/month (tax included)",
-    "freeStart": "Start free at launch",
-    "freeNote": "After launch, you'll be able to use all features completely free for your first 500 cumulative transactions. Register in advance and we'll notify you when we go live.",
-    "aiTitle": "About AI Features",
-    "aiNote": "We plan to gradually release AI-powered features including sales forecasting, shift optimization, and customer analytics. Additional fees may apply for AI feature usage."
+    "freeNote": "Your first 500 cumulative transactions are completely free with all features. No credit card required. See FAQ for details.",
+    "aiTitle": "Setup Support",
+    "aiNote": "We're exploring features like AI-powered menu auto-registration from photos to make initial setup even easier."
   },
   "faq": {
     "subtitle": "FAQ",
     "title": "Frequently Asked Questions",
     "items": {
       "0": {
-        "question": "How long does it take to get set up?",
-        "answer": "You can be up and running in as little as 3 business days from sign-up. The initial configuration is straightforward, so even those who aren't tech-savvy can get started quickly."
+        "question": "Can I start using it right away?",
+        "answer": "Yes, you can start using it immediately after creating your account. Initial setup like menu items can be done from the admin dashboard. We're also exploring AI-powered auto-registration from photos of your menu to make setup even easier."
       },
       "1": {
         "question": "Can I export my data?",
-        "answer": "Yes, you can export sales data, customer information, and more in CSV format. Great for tax filings, sharing with your accountant, or your own analysis."
+        "answer": "Yes, you can download sales data, customer information, and more in CSV format from the admin dashboard. Perfect for tax filings or sharing with your accountant."
       },
       "2": {
         "question": "What devices does it work on?",
-        "answer": "Currently iPad is supported. We provide a screen interface optimized for in-venue use."
+        "answer": "POS operations like billing run on iPad. The admin dashboard and cast screens are accessible from any smartphone or PC browser."
       },
       "3": {
         "question": "Can I cancel at any time?",
-        "answer": "Yes, you can cancel at any time. There is no minimum contract period. Just reach out via our official LINE account and we'll take care of it right away."
+        "answer": "Yes, you can cancel on the spot anytime. Like Netflix or Spotify — start when you want, stop when you want. No contract commitments."
       },
       "4": {
-        "question": "Is it really free to use?",
-        "answer": "Yes, all features are completely free for your first 500 cumulative transactions. No credit card required. From the 501st transaction onward, the monthly plan is ¥30,000 (tax included)."
+        "question": "Is it free to use?",
+        "answer": "Yes, completely free for your first 500 cumulative transactions. No credit card required. Even after 500 transactions, POS operations continue to work. The admin dashboard requires a monthly fee of ¥30,000 (tax included). Note: under the free plan, anonymized sales data will be used for industry analysis and service improvement. See our pricing section for details."
       },
       "5": {
         "question": "Can it handle our venue's unique payroll structure?",
         "answer": "Yes, flexible configuration is available to match each venue's payroll rules, including commission rates and hourly wage settings. That said, we may not be able to accommodate every payroll structure, so please feel free to contact us for details."
+      },
+      "6": {
+        "question": "Is cast personal information safe?",
+        "answer": "Yes, cast information can only be accessed from the admin dashboard and the cast's own app. Other cast members cannot see each other's information."
       }
     }
   },
