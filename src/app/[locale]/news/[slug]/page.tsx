@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import Section from "@/components/layout/Section";
 import ProjectBadge from "@/components/ui/ProjectBadge";
 import { newsItems, getLocalizedNewsBySlug } from "@/data/news";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
 interface Props {
   params: Promise<{ locale: string; slug: string }>;
@@ -35,6 +35,7 @@ const categoryColors: Record<string, string> = {
 
 export default async function NewsDetailPage({ params }: Props) {
   const { locale, slug } = await params;
+  setRequestLocale(locale);
   const item = await getLocalizedNewsBySlug(slug, locale);
 
   if (!item) {

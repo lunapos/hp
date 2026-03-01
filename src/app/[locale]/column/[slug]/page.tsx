@@ -4,7 +4,7 @@ import { Link } from "@/i18n/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getAllSlugs, getArticle } from "@/lib/media";
 import { Calendar, ArrowLeft, Tag } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
 export async function generateStaticParams() {
   return getAllSlugs().map((slug) => ({ slug }));
@@ -31,6 +31,7 @@ export default async function MediaArticlePage({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
+  setRequestLocale(locale);
   const article = getArticle(slug, locale);
   if (!article) notFound();
 

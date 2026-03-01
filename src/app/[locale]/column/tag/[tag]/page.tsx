@@ -5,7 +5,7 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import ContentCard from "@/components/ui/ContentCard";
 import { TagSelect } from "@/components/ui/TagSelect";
 import { Pagination } from "@/components/ui/Pagination";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
 const ARTICLES_PER_PAGE = 6;
 
@@ -35,6 +35,7 @@ export default async function TagPage({
   searchParams: Promise<{ page?: string }>;
 }) {
   const { locale, tag } = await params;
+  setRequestLocale(locale);
   const { page: pageParam } = await searchParams;
   const decoded = decodeURIComponent(tag);
   const currentPage = Math.max(1, parseInt(pageParam || "1", 10));
