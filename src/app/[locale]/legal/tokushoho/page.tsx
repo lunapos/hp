@@ -44,11 +44,11 @@ const items = [
   {
     label: "解約",
     value:
-      "解約はいつでも可能です。最低利用期間の定めはありません。解約は公式LINEまたはお問い合わせフォームよりお申し出ください。",
+      "解約はいつでも可能です。最低利用期間の定めはありません。アプリ内の設定画面から解約手続きを行えます。",
   },
   {
     label: "動作環境",
-    value: "iPad（iPadOS 17以降）",
+    value: "Floor: iPad（iPadOS 17以降）\nAdmin / Cast: Webブラウザ（Chrome、Safari、Firefox 最新版）",
   },
 ];
 
