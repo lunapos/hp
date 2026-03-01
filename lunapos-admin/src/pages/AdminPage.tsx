@@ -3,9 +3,11 @@ import {
   BarChart3, Users, ShoppingBag, Settings, CalendarDays,
   TrendingUp, Clock, CreditCard, Star, Plus, Pencil, Trash2,
   Check, X, Camera, ChevronDown, ChevronUp, ChevronLeft, ChevronRight,
+  Download,
 } from 'lucide-react'
 import { useApp } from '../contexts/AppContext'
 import { initialShifts } from '../data/mockData'
+import { exportPaymentsCSV } from '../lib/csvExport'
 import type { MenuCategory, Cast } from '../types'
 
 type AdminTab = 'report' | 'shift' | 'cast' | 'menu' | 'settings'
@@ -57,6 +59,15 @@ function ReportTab() {
 
   return (
     <div className="p-4 space-y-3">
+      {/* CSVエクスポート */}
+      <button
+        onClick={() => exportPaymentsCSV(state.payments, state.visits, state.casts)}
+        disabled={state.payments.length === 0}
+        className="w-full py-3 rounded-xl bg-[#141430] border border-[#2e2e50] text-[#9090bb] font-semibold text-sm flex items-center justify-center gap-2 hover:border-[#d4b870]/50 disabled:opacity-30 disabled:cursor-not-allowed"
+      >
+        <Download size={16} />売上データをCSVエクスポート
+      </button>
+
       <div className="grid grid-cols-2 gap-3">
         {[
           { label: '本日売上', value: `¥${totalSales.toLocaleString()}`, icon: <TrendingUp size={16} />, gold: true },

@@ -377,6 +377,9 @@ struct CastManagementTabView: View {
         .sheet(isPresented: $showAdd) {
             AddCastSheet().environment(vm)
         }
+        .sheet(item: $editingCast) { cast in
+            EditCastSheet(cast: cast).environment(vm)
+        }
     }
 }
 

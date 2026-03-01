@@ -175,6 +175,68 @@ struct CastDetailSheet: View {
     }
 }
 
+// MARK: - Edit Cast Sheet
+
+struct EditCastSheet: View {
+    let cast: Cast
+    @Environment(AppViewModel.self) private var vm
+    @Environment(\.dismiss) private var dismiss
+
+    @State private var stageName = ""
+    @State private var realName = ""
+    @State private var scheduledClockIn = ""
+    @State private var scheduledClockOut = ""
+    @State private var dropOffLocation = ""
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section("基本情報") {
+                    TextField("源氏名 *", text: $stageName)
+                    TextField("本名", text: $realName)
+                }
+                Section("シフト") {
+                    TextField("出勤予定 (例: 19:00)", text: $scheduledClockIn)
+                    TextField("退勤予定 (例: 24:00)", text: $scheduledClockOut)
+                }
+                Section("その他") {
+                    TextField("送り先", text: $dropOffLocation)
+                }
+            }
+            .navigationTitle("キャスト編集")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("キャンセル") { dismiss() }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("保存") {
+                        vm.updateCast(
+                            id: cast.id,
+                            stageName: stageName.trimmingCharacters(in: .whitespaces),
+                            realName: realName.trimmingCharacters(in: .whitespaces),
+                            photo: cast.photo,
+                            scheduledClockIn: scheduledClockIn.isEmpty ? nil : scheduledClockIn,
+                            scheduledClockOut: scheduledClockOut.isEmpty ? nil : scheduledClockOut,
+                            dropOffLocation: dropOffLocation.isEmpty ? nil : dropOffLocation
+                        )
+                        dismiss()
+                    }
+                    .fontWeight(.bold)
+                    .disabled(stageName.trimmingCharacters(in: .whitespaces).isEmpty)
+                }
+            }
+            .onAppear {
+                stageName = cast.stageName
+                realName = cast.realName
+                scheduledClockIn = cast.scheduledClockIn ?? ""
+                scheduledClockOut = cast.scheduledClockOut ?? ""
+                dropOffLocation = cast.dropOffLocation ?? ""
+            }
+        }
+    }
+}
+
 // MARK: - Avatar View
 
 func avatarView(cast: Cast, size: CGFloat) -> some View {

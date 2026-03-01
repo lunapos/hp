@@ -8,6 +8,24 @@ final class SyncEngine: @unchecked Sendable {
     private let monitorQueue = DispatchQueue(label: "luna.sync.monitor")
 
     private(set) var isOnline = false
+    var lastSyncError: String?
+
+    func clearError() {
+        Task { @MainActor in
+            lastSyncError = nil
+        }
+    }
+
+    private func setSyncError(_ message: String) {
+        Task { @MainActor in
+            lastSyncError = message
+            // 5秒後に自動クリア
+            try? await Task.sleep(for: .seconds(5))
+            if lastSyncError == message {
+                lastSyncError = nil
+            }
+        }
+    }
 
     init() {
         monitor.pathUpdateHandler = { [weak self] path in
@@ -50,7 +68,7 @@ final class SyncEngine: @unchecked Sendable {
             vm.isLoadedFromSupabase = true
         } catch {
             print("[SyncEngine] Initial load failed: \(error)")
-            // ローカルデータにフォールバック（既に読み込み済み）
+            setSyncError("初期データの同期に失敗しました。ローカルデータで動作します。")
         }
     }
 
@@ -81,6 +99,7 @@ final class SyncEngine: @unchecked Sendable {
                 try await supabase.upsertOrderItems(orderRows, visitId: UUID(uuidString: visit.id)!)
             } catch {
                 print("[SyncEngine] Visit sync failed: \(error)")
+                setSyncError("来店データの同期に失敗しました")
             }
         }
     }
@@ -93,6 +112,7 @@ final class SyncEngine: @unchecked Sendable {
                 try await supabase.upsertFloorTable(row)
             } catch {
                 print("[SyncEngine] Table sync failed: \(error)")
+                setSyncError("テーブルの同期に失敗しました")
             }
         }
     }
@@ -110,6 +130,7 @@ final class SyncEngine: @unchecked Sendable {
                 try await supabase.insertPaymentItems(itemRows)
             } catch {
                 print("[SyncEngine] Payment sync failed: \(error)")
+                setSyncError("会計データの同期に失敗しました")
             }
         }
     }
@@ -130,6 +151,7 @@ final class SyncEngine: @unchecked Sendable {
                 try await supabase.upsertCastShift(row)
             } catch {
                 print("[SyncEngine] Cast shift sync failed: \(error)")
+                setSyncError("シフトデータの同期に失敗しました")
             }
         }
     }
@@ -142,6 +164,7 @@ final class SyncEngine: @unchecked Sendable {
                 try await supabase.updateCustomer(row)
             } catch {
                 print("[SyncEngine] Customer sync failed: \(error)")
+                setSyncError("顧客データの同期に失敗しました")
             }
         }
     }
@@ -154,6 +177,7 @@ final class SyncEngine: @unchecked Sendable {
                 try await supabase.insertCashWithdrawal(row)
             } catch {
                 print("[SyncEngine] Cash withdrawal sync failed: \(error)")
+                setSyncError("出金データの同期に失敗しました")
             }
         }
     }
