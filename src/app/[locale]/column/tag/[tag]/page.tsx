@@ -31,15 +31,15 @@ export default async function TagPage({
   params,
   searchParams,
 }: {
-  params: Promise<{ tag: string }>;
+  params: Promise<{ locale: string; tag: string }>;
   searchParams: Promise<{ page?: string }>;
 }) {
-  const { tag } = await params;
+  const { locale, tag } = await params;
   const { page: pageParam } = await searchParams;
   const decoded = decodeURIComponent(tag);
   const currentPage = Math.max(1, parseInt(pageParam || "1", 10));
-  const articles = getArticlesByTag(decoded);
-  const allTags = getAllTags();
+  const articles = getArticlesByTag(decoded, locale);
+  const allTags = getAllTags(locale);
   const totalPages = Math.ceil(articles.length / ARTICLES_PER_PAGE);
   const paginatedArticles = articles.slice(
     (currentPage - 1) * ARTICLES_PER_PAGE,

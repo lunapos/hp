@@ -14,14 +14,17 @@ export async function generateMetadata() {
 }
 
 export default async function MediaPage({
+  params,
   searchParams,
 }: {
+  params: Promise<{ locale: string }>;
   searchParams: Promise<{ page?: string }>;
 }) {
+  const { locale } = await params;
   const { page: pageParam } = await searchParams;
   const currentPage = Math.max(1, parseInt(pageParam || "1", 10));
-  const articles = getAllArticles();
-  const allTags = getAllTags();
+  const articles = getAllArticles(locale);
+  const allTags = getAllTags(locale);
   const totalPages = Math.ceil(articles.length / ARTICLES_PER_PAGE);
   const paginatedArticles = articles.slice(
     (currentPage - 1) * ARTICLES_PER_PAGE,

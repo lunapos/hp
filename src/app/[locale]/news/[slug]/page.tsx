@@ -1,14 +1,14 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 import Section from "@/components/layout/Section";
 import ProjectBadge from "@/components/ui/ProjectBadge";
-import { newsItems, getNewsBySlug } from "@/data/news";
+import { newsItems, getLocalizedNewsBySlug } from "@/data/news";
 import { getTranslations } from "next-intl/server";
 
 interface Props {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 }
 
 export async function generateStaticParams() {
@@ -16,8 +16,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  const item = getNewsBySlug(slug);
+  const { locale, slug } = await params;
+  const item = await getLocalizedNewsBySlug(slug, locale);
   if (!item) return {};
   return {
     title: item.title,
@@ -25,6 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+// category は常に日本語原文キー
 const categoryColors: Record<string, string> = {
   "お知らせ": "bg-blue-500/15 text-blue-400",
   "開発アップデート": "bg-emerald-500/15 text-emerald-400",
@@ -33,8 +34,8 @@ const categoryColors: Record<string, string> = {
 };
 
 export default async function NewsDetailPage({ params }: Props) {
-  const { slug } = await params;
-  const item = getNewsBySlug(slug);
+  const { locale, slug } = await params;
+  const item = await getLocalizedNewsBySlug(slug, locale);
 
   if (!item) {
     notFound();
@@ -64,7 +65,7 @@ export default async function NewsDetailPage({ params }: Props) {
                 "bg-luna-border text-luna-text-secondary"
               }`}
             >
-              {item.category}
+              {item.categoryLabel || item.category}
             </span>
             {item.project && <ProjectBadge project={item.project} />}
           </div>
@@ -74,7 +75,7 @@ export default async function NewsDetailPage({ params }: Props) {
           </h1>
 
           <div className="bg-luna-surface border border-luna-border rounded-xl p-6 md:p-8">
-            <p className="text-luna-text-secondary leading-relaxed text-base">
+            <p className="text-luna-text-secondary leading-relaxed text-base whitespace-pre-line">
               {item.content || item.summary}
             </p>
           </div>

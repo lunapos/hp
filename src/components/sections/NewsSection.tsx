@@ -1,11 +1,12 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { ArrowRight, Megaphone, Code } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import Section from "@/components/layout/Section";
 import SectionHeading from "@/components/ui/SectionHeading";
 import ProjectBadge from "@/components/ui/ProjectBadge";
-import { getNewsByCategory } from "@/data/news";
+import { getLocalizedNewsByCategory } from "@/data/news";
 import type { NewsItem } from "@/data/news";
+import { getLocale } from "next-intl/server";
 
 function NewsCard({ item }: { item: NewsItem }) {
   return (
@@ -28,8 +29,9 @@ function NewsCard({ item }: { item: NewsItem }) {
 
 export default async function NewsSection() {
   const t = await getTranslations("newsSection");
-  const announcements = getNewsByCategory("お知らせ", 3);
-  const updates = getNewsByCategory("開発アップデート", 3);
+  const locale = await getLocale();
+  const announcements = await getLocalizedNewsByCategory("お知らせ", 3, locale);
+  const updates = await getLocalizedNewsByCategory("開発アップデート", 3, locale);
 
   return (
     <Section>

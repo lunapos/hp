@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getAllSlugs, getArticle } from "@/lib/media";
 import { Calendar, ArrowLeft, Tag } from "lucide-react";
@@ -13,10 +13,10 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
-  const article = getArticle(slug);
+  const { locale, slug } = await params;
+  const article = getArticle(slug, locale);
   if (!article) return {};
 
   return {
@@ -28,10 +28,10 @@ export async function generateMetadata({
 export default async function MediaArticlePage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 }) {
-  const { slug } = await params;
-  const article = getArticle(slug);
+  const { locale, slug } = await params;
+  const article = getArticle(slug, locale);
   if (!article) notFound();
 
   const t = await getTranslations('column');

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { Calendar } from "lucide-react";
 import ProjectBadge from "@/components/ui/ProjectBadge";
 import type { Project } from "@/data/news";

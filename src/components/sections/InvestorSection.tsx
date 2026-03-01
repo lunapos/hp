@@ -4,7 +4,7 @@ import Section from "@/components/layout/Section";
 import SectionHeading from "@/components/ui/SectionHeading";
 import Card from "@/components/ui/Card";
 import { Building2, ArrowRight, TrendingUp, Users, Globe } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 
 const appealIcons = [TrendingUp, Users, Globe];

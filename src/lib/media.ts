@@ -2,7 +2,12 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 
-const CONTENT_DIR = path.join(process.cwd(), "content/column");
+const BASE_DIR = path.join(process.cwd(), "content/column");
+
+function contentDir(locale = "ja"): string {
+  // ja は直下、en/zh はサブディレクトリ
+  return locale === "ja" ? BASE_DIR : path.join(BASE_DIR, locale);
+}
 
 export interface ArticleMeta {
   slug: string;
@@ -18,15 +23,17 @@ export interface Article extends ArticleMeta {
   content: string;
 }
 
-export function getAllArticles(): ArticleMeta[] {
-  if (!fs.existsSync(CONTENT_DIR)) return [];
+export function getAllArticles(locale = "ja"): ArticleMeta[] {
+  const dir = contentDir(locale);
+  if (!fs.existsSync(dir)) return getAllArticles("ja"); // フォールバック
 
-  const files = fs.readdirSync(CONTENT_DIR).filter((f) => f.endsWith(".mdx"));
+  const files = fs.readdirSync(dir).filter((f) => f.endsWith(".mdx"));
+  if (files.length === 0 && locale !== "ja") return getAllArticles("ja");
 
   const articles = files
     .map((filename) => {
       const slug = filename.replace(/\.mdx$/, "");
-      const filePath = path.join(CONTENT_DIR, filename);
+      const filePath = path.join(dir, filename);
       const fileContent = fs.readFileSync(filePath, "utf-8");
       const { data } = matter(fileContent);
 
@@ -45,9 +52,18 @@ export function getAllArticles(): ArticleMeta[] {
   return articles;
 }
 
-export function getArticle(slug: string): Article | null {
-  const filePath = path.join(CONTENT_DIR, `${slug}.mdx`);
-  if (!fs.existsSync(filePath)) return null;
+export function getArticle(slug: string, locale = "ja"): Article | null {
+  // まず指定ロケールで探す、なければ ja にフォールバック
+  const dir = contentDir(locale);
+  let filePath = path.join(dir, `${slug}.mdx`);
+  if (!fs.existsSync(filePath)) {
+    if (locale !== "ja") {
+      filePath = path.join(BASE_DIR, `${slug}.mdx`);
+      if (!fs.existsSync(filePath)) return null;
+    } else {
+      return null;
+    }
+  }
 
   const fileContent = fs.readFileSync(filePath, "utf-8");
   const { data, content } = matter(fileContent);
@@ -64,16 +80,17 @@ export function getArticle(slug: string): Article | null {
   };
 }
 
-export function getAllSlugs(): string[] {
-  if (!fs.existsSync(CONTENT_DIR)) return [];
+export function getAllSlugs(locale = "ja"): string[] {
+  // slug は全言語共通（ja ベース）
+  if (!fs.existsSync(BASE_DIR)) return [];
   return fs
-    .readdirSync(CONTENT_DIR)
+    .readdirSync(BASE_DIR)
     .filter((f) => f.endsWith(".mdx"))
     .map((f) => f.replace(/\.mdx$/, ""));
 }
 
-export function getAllTags(): string[] {
-  const articles = getAllArticles();
+export function getAllTags(locale = "ja"): string[] {
+  const articles = getAllArticles(locale);
   const tagSet = new Set<string>();
   for (const article of articles) {
     for (const tag of article.tags) {
@@ -83,6 +100,6 @@ export function getAllTags(): string[] {
   return Array.from(tagSet);
 }
 
-export function getArticlesByTag(tag: string): ArticleMeta[] {
-  return getAllArticles().filter((article) => article.tags.includes(tag));
+export function getArticlesByTag(tag: string, locale = "ja"): ArticleMeta[] {
+  return getAllArticles(locale).filter((article) => article.tags.includes(tag));
 }
