@@ -1,11 +1,18 @@
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 import { NAV_ITEMS, FOOTER_NAV_ITEMS, BRAND } from "@/lib/constants";
+
+const LOCALE_LABELS: Record<string, string> = {
+  ja: "日本語",
+  en: "English",
+  zh: "中文",
+};
 
 export default async function Footer() {
   const tNav = await getTranslations("nav");
   const tFooter = await getTranslations("footer");
+  const currentLocale = await getLocale();
 
   return (
     <footer className="bg-luna-bg border-t border-luna-border">
@@ -89,6 +96,21 @@ export default async function Footer() {
                   className="text-luna-text-muted text-xs hover:text-luna-text-secondary transition-colors duration-200"
                 >
                   {tFooter(item.key)}
+                </Link>
+              ))}
+              <span className="text-luna-border">|</span>
+              {(["ja", "en", "zh"] as const).map((locale) => (
+                <Link
+                  key={locale}
+                  href="/"
+                  locale={locale}
+                  className={`text-xs transition-colors duration-200 ${
+                    locale === currentLocale
+                      ? "text-luna-gold"
+                      : "text-luna-text-muted hover:text-luna-text-secondary"
+                  }`}
+                >
+                  {LOCALE_LABELS[locale]}
                 </Link>
               ))}
             </div>

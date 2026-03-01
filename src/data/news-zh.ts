@@ -2,6 +2,42 @@ export const newsTranslationsZh: Record<
   string,
   { title: string; summary: string; category: string; content?: string }
 > = {
+  "hp-multilingual-support": {
+    title: "官方网站现已支持中文和英文",
+    summary:
+      "lunapos.jp 现已支持日语、英语和中文三种语言。专栏文章也可以多语言阅读。",
+    category: "公告",
+    content: [
+      "LunaPos 官方网站（lunapos.jp）现已支持英语和中文。",
+      "",
+      "・整个网站可以日语、英语和中文三种语言浏览",
+      "・专栏文章也已支持多语言阅读",
+      "・英语请访问 /en，中文请访问 /zh",
+      "・日语仍可通过 / 访问",
+      "",
+      "英语网站：https://lunapos.jp/en",
+      "中文网站：https://lunapos.jp/zh",
+    ].join("\n"),
+  },
+  "hp-v0-13-0-i18n": {
+    title: "v0.13.0 多语言支持（英语·中文）",
+    summary:
+      "通过 next-intl 实现多语言支持。新增英语和中文 UI 翻译、按语言显示文章、带 hreflang 的多语言站点地图。",
+    category: "开发更新",
+    content: [
+      "为官方网站实现了英语和中文多语言支持。",
+      "",
+      "主要变更：",
+      "・next-intl i18n 路由（ja/en/zh）",
+      "・日语不使用 URL 前缀（as-needed 模式）",
+      "・新增所有 UI 文本的英语和中文翻译文件",
+      "・文章按语言分目录（content/column/en/、content/column/zh/）",
+      "・新增新闻翻译数据（news-en.ts、news-zh.ts）",
+      "・带 hreflang alternates 的多语言站点地图",
+      "・Supabase middleware 与 intl middleware 整合",
+      "・SSG 页面的 setRequestLocale 支持",
+    ].join("\n"),
+  },
   "hp-v0-12-0-nav-screenshots": {
     title: "v0.12.0 导航整理、栏目重命名与应用截图展示",
     summary:

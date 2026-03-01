@@ -22,6 +22,49 @@ export interface NewsItem {
 }
 
 export const newsItems: NewsItem[] = [
+  // --- 2026-03-01 ---
+  {
+    slug: "hp-multilingual-support",
+    date: "2026-03-01",
+    title: "公式サイトが中国語・英語に対応しました",
+    summary:
+      "lunapos.jpが日本語・英語・中国語の3言語に対応。コラム記事も多言語で読めるようになりました。",
+    category: "お知らせ",
+    project: "HP",
+    content: [
+      "LunaPos公式サイト（lunapos.jp）が英語・中国語に対応しました。",
+      "",
+      "・サイト全体を日本語・英語・中国語の3言語で閲覧可能",
+      "・コラム記事も言語別に読めるようになりました",
+      "・英語は /en、中国語は /zh のURLでアクセスできます",
+      "・日本語はこれまで通り / でアクセスできます",
+      "",
+      "英語サイト: https://lunapos.jp/en",
+      "中国語サイト: https://lunapos.jp/zh",
+    ].join("\n"),
+  },
+  {
+    slug: "hp-v0-13-0-i18n",
+    date: "2026-03-01",
+    title: "v0.13.0 多言語対応（英語・中国語）",
+    summary:
+      "next-intlによる多言語対応を実装。英語・中国語のUIテキスト翻訳、記事の言語別表示、多言語サイトマップ（hreflang）を追加。",
+    category: "開発アップデート",
+    project: "HP",
+    content: [
+      "公式サイトに英語・中国語の多言語対応を実装しました。",
+      "",
+      "主な変更点：",
+      "・next-intl によるi18nルーティング（ja/en/zh）",
+      "・日本語はURLプレフィックスなし（as-needed モード）",
+      "・全UIテキストの英語・中国語翻訳ファイル追加",
+      "・コラム記事の言語別ディレクトリ対応（content/column/en/, content/column/zh/）",
+      "・ニュースの翻訳データ追加（news-en.ts, news-zh.ts）",
+      "・多言語サイトマップ（hreflang alternates）",
+      "・Supabase middleware と intl middleware の統合",
+      "・SSGページの setRequestLocale 対応",
+    ].join("\n"),
+  },
   // --- 2026-02-26 ---
   {
     slug: "hp-v0-12-0-nav-screenshots",

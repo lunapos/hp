@@ -2,6 +2,42 @@ export const newsTranslationsEn: Record<
   string,
   { title: string; summary: string; category: string; content?: string }
 > = {
+  "hp-multilingual-support": {
+    title: "Official Site Now Available in Chinese and English",
+    summary:
+      "lunapos.jp now supports Japanese, English, and Chinese. Column articles are also available in multiple languages.",
+    category: "Announcement",
+    content: [
+      "The LunaPos official site (lunapos.jp) is now available in English and Chinese.",
+      "",
+      "- The entire site can be viewed in Japanese, English, and Chinese",
+      "- Column articles are now available in each language",
+      "- English: access via /en, Chinese: access via /zh",
+      "- Japanese remains accessible at / as before",
+      "",
+      "English site: https://lunapos.jp/en",
+      "Chinese site: https://lunapos.jp/zh",
+    ].join("\n"),
+  },
+  "hp-v0-13-0-i18n": {
+    title: "v0.13.0 Multilingual Support (English & Chinese)",
+    summary:
+      "Implemented multilingual support via next-intl. Added English and Chinese UI translations, locale-aware articles, and multilingual sitemap with hreflang.",
+    category: "Development Update",
+    content: [
+      "Implemented English and Chinese multilingual support for the official site.",
+      "",
+      "Key changes:",
+      "- next-intl i18n routing (ja/en/zh)",
+      "- Japanese uses no URL prefix (as-needed mode)",
+      "- Added English and Chinese translation files for all UI text",
+      "- Locale-aware article directories (content/column/en/, content/column/zh/)",
+      "- Added news translation data (news-en.ts, news-zh.ts)",
+      "- Multilingual sitemap with hreflang alternates",
+      "- Integrated Supabase middleware with intl middleware",
+      "- setRequestLocale support for SSG pages",
+    ].join("\n"),
+  },
   "hp-v0-12-0-nav-screenshots": {
     title: "v0.12.0 Navigation Cleanup, Column Rename & App Screenshots",
     summary:

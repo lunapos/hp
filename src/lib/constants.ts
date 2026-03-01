@@ -40,7 +40,7 @@ export const FOOTER_NAV_ITEMS = [
 
 // テキストは messages の problems.items.{index}
 export const PAIN_POINT_ICONS: LucideIcon[] = [
-  FileWarning, Users, Clock, WifiOff, BarChart3,
+  FileWarning, Users, Clock, WifiOff, BarChart3, Calculator,
 ];
 
 // テキストは messages の featureHighlights.items.{index}
