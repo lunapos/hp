@@ -1,12 +1,11 @@
-import type { Metadata } from "next";
+import { getTranslations } from 'next-intl/server';
 import { Suspense } from "react";
 import ContactContent from "./ContactContent";
 
-export const metadata: Metadata = {
-  title: "お問い合わせ",
-  description:
-    "LunaPosへのお問い合わせ・導入のご相談はこちらから。",
-};
+export async function generateMetadata() {
+  const t = await getTranslations('metadata.contact');
+  return { title: t('title'), description: t('description') };
+}
 
 export default function ContactPage() {
   return (

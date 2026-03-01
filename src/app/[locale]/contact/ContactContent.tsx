@@ -10,6 +10,7 @@ import Section from "@/components/layout/Section";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import { Mail, CheckCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface FormState {
   companyName: string;
@@ -20,18 +21,27 @@ interface FormState {
   message: string;
 }
 
-const initialForm: FormState = {
-  companyName: "",
-  name: "",
-  email: "",
-  phone: "",
-  inquiryType: "導入相談",
-  message: "",
-};
-
-const inquiryTypes = ["導入相談", "自分の店に導入してほしい（決定権がない方）", "投資・出資について", "パートナー募集について", "その他"];
-
 export default function ContactContent() {
+  const t = useTranslations('contact');
+  const tCommon = useTranslations('common');
+
+  const inquiryTypes = [
+    t('inquiryTypes.consultation'),
+    t('inquiryTypes.request'),
+    t('inquiryTypes.investment'),
+    t('inquiryTypes.partnership'),
+    t('inquiryTypes.other'),
+  ];
+
+  const initialForm: FormState = {
+    companyName: "",
+    name: "",
+    email: "",
+    phone: "",
+    inquiryType: inquiryTypes[0],
+    message: "",
+  };
+
   const searchParams = useSearchParams();
   const defaultType = searchParams.get("type");
   const [form, setForm] = useState<FormState>({
@@ -61,7 +71,7 @@ export default function ContactContent() {
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || "送信に失敗しました");
+        throw new Error(data.error || tCommon('submitError'));
       }
 
       setStatus("success");
@@ -74,7 +84,7 @@ export default function ContactContent() {
     } catch (err) {
       setStatus("error");
       setErrorMessage(
-        err instanceof Error ? err.message : "送信に失敗しました"
+        err instanceof Error ? err.message : tCommon('submitError')
       );
     }
   };
@@ -85,10 +95,10 @@ export default function ContactContent() {
         <section className="pt-20 pb-8 px-4">
           <div className="max-w-6xl mx-auto text-center">
             <p className="text-luna-gold text-sm tracking-[0.3em] font-medium mb-2">
-              CONTACT
+              {t('subtitle')}
             </p>
             <h1 className="text-4xl md:text-5xl font-bold text-luna-text-primary mb-4">
-              お問い合わせ
+              {t('title')}
             </h1>
             <div className="w-16 h-1 bg-luna-gold mx-auto rounded-full" />
           </div>
@@ -98,15 +108,15 @@ export default function ContactContent() {
             <Card className="border-luna-gold/30">
               <CheckCircle className="w-16 h-16 text-emerald-400 mx-auto mb-4" />
               <h2 className="text-2xl font-bold text-luna-text-primary mb-2">
-                送信が完了しました
+                {t('success')}
               </h2>
               <p className="text-luna-text-secondary">
-                お問い合わせありがとうございます。
+                {t('successDescription')}
                 <br />
-                担当者より折り返しご連絡いたします。
+                {t('successFollowUp')}
               </p>
               <div className="mt-6">
-                <Button href="/">トップページに戻る</Button>
+                <Button href="/">{tCommon('backToTop')}</Button>
               </div>
             </Card>
           </div>
@@ -121,14 +131,14 @@ export default function ContactContent() {
       <section className="pt-20 pb-8 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <p className="text-luna-gold text-sm tracking-[0.3em] font-medium mb-2">
-            CONTACT
+            {t('subtitle')}
           </p>
           <h1 className="text-4xl md:text-5xl font-bold text-luna-text-primary mb-4">
-            お問い合わせ
+            {t('title')}
           </h1>
           <div className="w-16 h-1 bg-luna-gold mx-auto rounded-full mb-4" />
           <p className="text-luna-text-secondary max-w-2xl mx-auto">
-            導入のご相談・資料請求など、お気軽にお問い合わせください。
+            {t('description')}
           </p>
         </div>
       </section>
@@ -143,7 +153,7 @@ export default function ContactContent() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm text-luna-text-secondary tracking-wider mb-2">
-                      会社名・店舗名 <span className="text-red-400">*</span>
+                      {t('companyName')} <span className="text-red-400">*</span>
                     </label>
                     <input
                       type="text"
@@ -152,12 +162,12 @@ export default function ContactContent() {
                       onChange={handleChange}
                       required
                       className="w-full bg-luna-input-bg border border-luna-border rounded-xl px-4 py-3 text-luna-text-primary focus:border-luna-gold focus:ring-1 focus:ring-luna-gold outline-none transition-all"
-                      placeholder="例: Bar Moon"
+                      placeholder={t('companyPlaceholder')}
                     />
                   </div>
                   <div>
                     <label className="block text-sm text-luna-text-secondary tracking-wider mb-2">
-                      お名前 <span className="text-red-400">*</span>
+                      {tCommon('name')} <span className="text-red-400">*</span>
                     </label>
                     <input
                       type="text"
@@ -166,7 +176,7 @@ export default function ContactContent() {
                       onChange={handleChange}
                       required
                       className="w-full bg-luna-input-bg border border-luna-border rounded-xl px-4 py-3 text-luna-text-primary focus:border-luna-gold focus:ring-1 focus:ring-luna-gold outline-none transition-all"
-                      placeholder="例: 田中 太郎"
+                      placeholder={tCommon('namePlaceholder')}
                     />
                   </div>
                 </div>
@@ -174,7 +184,7 @@ export default function ContactContent() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm text-luna-text-secondary tracking-wider mb-2">
-                      メールアドレス <span className="text-red-400">*</span>
+                      {tCommon('email')} <span className="text-red-400">*</span>
                     </label>
                     <input
                       type="email"
@@ -183,12 +193,12 @@ export default function ContactContent() {
                       onChange={handleChange}
                       required
                       className="w-full bg-luna-input-bg border border-luna-border rounded-xl px-4 py-3 text-luna-text-primary focus:border-luna-gold focus:ring-1 focus:ring-luna-gold outline-none transition-all"
-                      placeholder="例: tanaka@example.com"
+                      placeholder={tCommon('emailPlaceholder')}
                     />
                   </div>
                   <div>
                     <label className="block text-sm text-luna-text-secondary tracking-wider mb-2">
-                      電話番号
+                      {tCommon('phone')}
                     </label>
                     <input
                       type="tel"
@@ -196,14 +206,14 @@ export default function ContactContent() {
                       value={form.phone}
                       onChange={handleChange}
                       className="w-full bg-luna-input-bg border border-luna-border rounded-xl px-4 py-3 text-luna-text-primary focus:border-luna-gold focus:ring-1 focus:ring-luna-gold outline-none transition-all"
-                      placeholder="例: 03-1234-5678"
+                      placeholder={tCommon('phonePlaceholder')}
                     />
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-sm text-luna-text-secondary tracking-wider mb-2">
-                    お問い合わせ種別
+                    {t('inquiryType')}
                   </label>
                   <select
                     name="inquiryType"
@@ -221,7 +231,7 @@ export default function ContactContent() {
 
                 <div>
                   <label className="block text-sm text-luna-text-secondary tracking-wider mb-2">
-                    お問い合わせ内容
+                    {t('inquiryContent')}
                   </label>
                   <textarea
                     name="message"
@@ -229,7 +239,7 @@ export default function ContactContent() {
                     onChange={handleChange}
                     rows={5}
                     className="w-full bg-luna-input-bg border border-luna-border rounded-xl px-4 py-3 text-luna-text-primary focus:border-luna-gold focus:ring-1 focus:ring-luna-gold outline-none transition-all resize-none"
-                    placeholder="お問い合わせ内容をご記入ください"
+                    placeholder={t('inquiryPlaceholder')}
                   />
                 </div>
 
@@ -242,7 +252,7 @@ export default function ContactContent() {
                     status === "submitting" ? "opacity-50 pointer-events-none" : ""
                   }`}
                 >
-                  {status === "submitting" ? "送信中..." : "送信する"}
+                  {status === "submitting" ? tCommon('submitting') : tCommon('submit')}
                 </Button>
               </form>
             </Card>
@@ -253,7 +263,7 @@ export default function ContactContent() {
             <Card>
               <div className="flex items-center gap-3 mb-4">
                 <Mail className="w-5 h-5 text-luna-gold" />
-                <h3 className="text-luna-text-primary font-medium">メール</h3>
+                <h3 className="text-luna-text-primary font-medium">{t('emailTitle')}</h3>
               </div>
               <p className="text-luna-text-secondary text-sm">contact@lunapos.jp</p>
             </Card>

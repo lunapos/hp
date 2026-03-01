@@ -4,6 +4,7 @@ import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getAllSlugs, getArticle } from "@/lib/media";
 import { Calendar, ArrowLeft, Tag } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
 export async function generateStaticParams() {
   return getAllSlugs().map((slug) => ({ slug }));
@@ -33,6 +34,8 @@ export default async function MediaArticlePage({
   const article = getArticle(slug);
   if (!article) notFound();
 
+  const t = await getTranslations('column');
+
   return (
     <>
       <section className="pt-20 pb-8 px-4">
@@ -42,7 +45,7 @@ export default async function MediaArticlePage({
             className="inline-flex items-center gap-1 text-sm text-luna-text-secondary hover:text-luna-gold transition-colors mb-6"
           >
             <ArrowLeft className="w-4 h-4" />
-            コラム一覧に戻る
+            {t('backToList')}
           </Link>
 
           <div className="flex items-center gap-3 mb-4">
@@ -87,7 +90,7 @@ export default async function MediaArticlePage({
             className="inline-flex items-center gap-1 text-sm text-luna-text-secondary hover:text-luna-gold transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            コラム一覧に戻る
+            {t('backToList')}
           </Link>
         </div>
       </section>

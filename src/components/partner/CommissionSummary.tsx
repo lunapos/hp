@@ -1,6 +1,7 @@
 "use client";
 
 import { Download, Calendar, Wallet, Clock } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Card from "@/components/ui/Card";
 import type { Commission } from "@/types/partner";
 
@@ -15,6 +16,9 @@ function formatYen(amount: number) {
 export default function CommissionSummary({
   commissions,
 }: CommissionSummaryProps) {
+  const t = useTranslations("commission");
+  const tDashboard = useTranslations("dashboard");
+
   const totalEarned = commissions
     .filter((c) => c.status === "paid")
     .reduce((sum, c) => sum + c.amount, 0);
@@ -42,14 +46,14 @@ export default function CommissionSummary({
     : "-";
 
   const handleExportCSV = () => {
-    const header = "日付,金額,ステータス,備考\n";
+    const header = t("csvHeaders") + "\n";
     const rows = commissions
       .map((c) => {
         const date = new Date(c.created_at).toLocaleDateString("ja-JP");
         const statusMap: Record<string, string> = {
-          pending: "審査中",
-          approved: "承認済",
-          paid: "支払済",
+          pending: tDashboard("statusLabels.pending"),
+          approved: tDashboard("statusLabels.approved"),
+          paid: tDashboard("statusLabels.paid"),
         };
         return `${date},${c.amount},${statusMap[c.status] || c.status},${c.note || ""}`;
       })
@@ -71,17 +75,17 @@ export default function CommissionSummary({
   const summaryCards = [
     {
       icon: Wallet,
-      label: "合計報酬（支払済）",
+      label: t("totalPaid"),
       value: formatYen(totalEarned),
     },
     {
       icon: Calendar,
-      label: "今月の報酬",
+      label: t("thisMonth"),
       value: formatYen(thisMonth),
     },
     {
       icon: Clock,
-      label: "未払い金額",
+      label: t("unpaid"),
       value: formatYen(pendingPayout),
     },
   ];
@@ -89,14 +93,14 @@ export default function CommissionSummary({
   return (
     <div className="mb-6">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-luna-text-primary font-bold">報酬サマリー</h3>
+        <h3 className="text-luna-text-primary font-bold">{t("title")}</h3>
         {commissions.length > 0 && (
           <button
             onClick={handleExportCSV}
             className="flex items-center gap-1.5 text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
           >
             <Download className="w-3.5 h-3.5" />
-            CSV出力
+            {t("csvExport")}
           </button>
         )}
       </div>
@@ -119,7 +123,7 @@ export default function CommissionSummary({
         })}
       </div>
       <p className="text-xs text-luna-text-secondary">
-        最終支払日: {lastPaidDate}
+        {t("lastPayment")} {lastPaidDate}
       </p>
     </div>
   );

@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import Section from "@/components/layout/Section";
 import SectionHeading from "@/components/ui/SectionHeading";
 import Card from "@/components/ui/Card";
 import { MessageSquarePlus, Send, CheckCircle } from "lucide-react";
 
 export default function TestimonialSection() {
+  const t = useTranslations("testimonial");
   const [form, setForm] = useState({ storeName: "", role: "", message: "" });
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
 
@@ -31,17 +33,17 @@ export default function TestimonialSection() {
 
   return (
     <Section>
-      <SectionHeading subtitle="VOICE" title="導入店舗の声" />
+      <SectionHeading subtitle={t("subtitle")} title={t("title")} />
 
       <div className="max-w-2xl mx-auto">
         {status === "success" ? (
           <Card className="border-luna-gold/30 text-center py-12">
             <CheckCircle className="w-12 h-12 text-emerald-400 mx-auto mb-4" />
             <h3 className="text-xl font-bold text-luna-text-primary mb-2">
-              ご投稿ありがとうございます
+              {t("thankYou")}
             </h3>
             <p className="text-luna-text-secondary text-sm">
-              確認後、掲載させていただきます。
+              {t("thankYouDescription")}
             </p>
           </Card>
         ) : (
@@ -49,10 +51,10 @@ export default function TestimonialSection() {
             <div className="text-center mb-6">
               <MessageSquarePlus className="w-10 h-10 text-luna-gold/40 mx-auto mb-3" />
               <h3 className="text-lg font-bold text-luna-text-primary mb-1">
-                お客様の声を募集しています
+                {t("formTitle")}
               </h3>
               <p className="text-luna-text-secondary text-sm">
-                導入いただいた店舗様からのフィードバックを順次掲載予定です。
+                {t("formDescription")}
               </p>
             </div>
 
@@ -60,7 +62,7 @@ export default function TestimonialSection() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm text-luna-text-secondary mb-1">
-                    店舗名（仮名OK） <span className="text-red-400">*</span>
+                    {t("storeName")} <span className="text-red-400">*</span>
                   </label>
                   <input
                     type="text"
@@ -68,26 +70,26 @@ export default function TestimonialSection() {
                     onChange={(e) => setForm({ ...form, storeName: e.target.value })}
                     required
                     className="w-full bg-luna-input-bg border border-luna-border rounded-lg px-3 py-2 text-luna-text-primary text-sm focus:border-luna-gold focus:ring-1 focus:ring-luna-gold outline-none transition-all"
-                    placeholder="例: Bar Moon"
+                    placeholder={t("storeNamePlaceholder")}
                   />
                 </div>
                 <div>
                   <label className="block text-sm text-luna-text-secondary mb-1">
-                    役職
+                    {t("role")}
                   </label>
                   <input
                     type="text"
                     value={form.role}
                     onChange={(e) => setForm({ ...form, role: e.target.value })}
                     className="w-full bg-luna-input-bg border border-luna-border rounded-lg px-3 py-2 text-luna-text-primary text-sm focus:border-luna-gold focus:ring-1 focus:ring-luna-gold outline-none transition-all"
-                    placeholder="例: オーナー"
+                    placeholder={t("rolePlaceholder")}
                   />
                 </div>
               </div>
 
               <div>
                 <label className="block text-sm text-luna-text-secondary mb-1">
-                  ご感想・フィードバック <span className="text-red-400">*</span>
+                  {t("feedback")} <span className="text-red-400">*</span>
                 </label>
                 <textarea
                   value={form.message}
@@ -95,12 +97,12 @@ export default function TestimonialSection() {
                   required
                   rows={3}
                   className="w-full bg-luna-input-bg border border-luna-border rounded-lg px-3 py-2 text-luna-text-primary text-sm focus:border-luna-gold focus:ring-1 focus:ring-luna-gold outline-none transition-all resize-none"
-                  placeholder="LunaPosを使ってみた感想をお聞かせください"
+                  placeholder={t("feedbackPlaceholder")}
                 />
               </div>
 
               {status === "error" && (
-                <p className="text-red-400 text-sm">送信に失敗しました。もう一度お試しください。</p>
+                <p className="text-red-400 text-sm">{t("submitError")}</p>
               )}
 
               <div className="flex justify-end">
@@ -112,7 +114,7 @@ export default function TestimonialSection() {
                   }`}
                 >
                   <Send className="w-4 h-4" />
-                  {status === "submitting" ? "送信中..." : "送信する"}
+                  {status === "submitting" ? t("submitting") : t("submit")}
                 </button>
               </div>
             </form>

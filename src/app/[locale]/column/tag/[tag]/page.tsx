@@ -5,6 +5,7 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import ContentCard from "@/components/ui/ContentCard";
 import { TagSelect } from "@/components/ui/TagSelect";
 import { Pagination } from "@/components/ui/Pagination";
+import { getTranslations } from "next-intl/server";
 
 const ARTICLES_PER_PAGE = 6;
 
@@ -19,9 +20,10 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { tag } = await params;
   const decoded = decodeURIComponent(tag);
+  const t = await getTranslations('column');
   return {
-    title: `#${decoded} の記事`,
-    description: `「${decoded}」タグが付いたコラム記事の一覧です。`,
+    title: t('tagTitle', { tag: decoded }),
+    description: t('tagDescription', { tag: decoded }),
   };
 }
 
@@ -44,9 +46,11 @@ export default async function TagPage({
     currentPage * ARTICLES_PER_PAGE
   );
 
+  const t = await getTranslations('column');
+
   return (
     <Section className="pt-32">
-      <SectionHeading subtitle="COLUMN" title={`#${decoded}`} />
+      <SectionHeading subtitle={t('subtitle')} title={`#${decoded}`} />
 
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
@@ -55,7 +59,7 @@ export default async function TagPage({
 
         {paginatedArticles.length === 0 ? (
           <p className="text-center text-luna-text-secondary">
-            該当する記事がありません。
+            {t('tagEmpty')}
           </p>
         ) : (
           <div className="space-y-4">

@@ -1,35 +1,42 @@
 "use client";
 
 import Section from "@/components/layout/Section";
-import SectionHeading from "@/components/ui/SectionHeading";
 import Card from "@/components/ui/Card";
-import { ALL_FEATURES } from "@/lib/constants";
+import { ALL_FEATURE_ICONS } from "@/lib/constants";
 import { Check } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export default function FeaturesContent() {
+  const t = useTranslations('features');
+  const tAll = useTranslations('allFeatures');
+
   return (
     <>
       {/* Page Header */}
       <section className="pt-20 pb-8 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <p className="text-luna-gold text-sm tracking-[0.3em] font-medium mb-2">
-            FEATURES
+            {t('subtitle')}
           </p>
           <h1 className="text-4xl md:text-5xl font-bold text-luna-text-primary mb-4">
-            機能紹介
+            {t('title')}
           </h1>
           <div className="w-16 h-1 bg-luna-gold mx-auto rounded-full mb-4" />
           <p className="text-luna-text-secondary max-w-2xl mx-auto">
-            LunaPos Floor は、ナイト業界の現場で必要なすべての機能を
-            iPadネイティブアプリで提供します。
+            {t('description')}
           </p>
         </div>
       </section>
 
       {/* Feature Detail Cards */}
-      {ALL_FEATURES.map((feature, index) => {
-        const Icon = feature.icon;
+      {ALL_FEATURE_ICONS.map((Icon, index) => {
         const isEven = index % 2 === 0;
+        const featureData = tAll.raw(String(index) as Parameters<typeof tAll.raw>[0]) as {
+          title: string;
+          description: string;
+          details: Record<string, string>;
+        };
+        const details = Object.values(featureData.details);
 
         return (
           <Section key={index}>
@@ -53,14 +60,14 @@ export default function FeaturesContent() {
                       <Icon className="w-5 h-5 text-luna-gold" />
                     </div>
                     <h3 className="text-xl font-bold text-luna-text-primary">
-                      {feature.title}
+                      {featureData.title}
                     </h3>
                   </div>
                   <p className="text-luna-text-secondary leading-relaxed mb-4">
-                    {feature.description}
+                    {featureData.description}
                   </p>
                   <ul className="space-y-2">
-                    {feature.details.map((detail, i) => (
+                    {details.map((detail, i) => (
                       <li
                         key={i}
                         className="flex items-center gap-2 text-sm text-luna-text-secondary"

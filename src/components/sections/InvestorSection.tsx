@@ -5,32 +5,25 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import Card from "@/components/ui/Card";
 import { Building2, ArrowRight, TrendingUp, Users, Globe } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
-const appeals = [
-  {
-    icon: TrendingUp,
-    title: "成長市場",
-    desc: "ナイト業界のDXはまだ黎明期。先行者として市場を開拓する大きなチャンスがあります。",
-  },
-  {
-    icon: Users,
-    title: "導入実績",
-    desc: "実際の店舗での導入・運用実績をもとに、プロダクトの改善と拡大を進めています。",
-  },
-  {
-    icon: Globe,
-    title: "拡張性のあるビジョン",
-    desc: "POS → Luna Career → Luna Fund → Luna World と、段階的に事業領域を拡大する明確なロードマップ。",
-  },
-];
+const appealIcons = [TrendingUp, Users, Globe];
 
 export default function InvestorSection() {
+  const t = useTranslations('investor');
+
+  const appeals = ([0, 1, 2] as const).map((i) => ({
+    icon: appealIcons[i],
+    title: t(`cards.${i}.title`),
+    desc: t(`cards.${i}.description`),
+  }));
+
   return (
     <Section>
       <SectionHeading
-        subtitle="INVESTOR"
-        title="投資・出資をご検討の方へ"
-        description="ナイト業界のDXを一緒に推進するパートナーを募集しています。"
+        subtitle={t('subtitle')}
+        title={t('title')}
+        description={t('description')}
       />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
@@ -58,22 +51,21 @@ export default function InvestorSection() {
             </div>
             <div>
               <h3 className="text-lg font-bold text-luna-text-primary">
-                LunaPos への出資をご検討の方
+                {t('ctaTitle')}
               </h3>
               <p className="text-luna-text-secondary text-xs">
-                事業計画・収支見通しなどの資料をお送りします
+                {t('ctaSubtitle')}
               </p>
             </div>
           </div>
           <p className="text-luna-text-secondary text-sm leading-relaxed mb-6">
-            LunaPosはナイトエンターテインメント業界に特化したPOSシステムとして、業界のインフラとなることを目指しています。
-            事業への出資にご興味のある方は、お気軽にお問い合わせください。
+            {t('ctaDescription')}
           </p>
           <Link
             href="/contact?type=投資・出資について"
             className="inline-flex items-center gap-2 bg-luna-gold text-luna-bg px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-luna-gold-light transition-colors"
           >
-            お問い合わせ
+            {t('ctaButton')}
             <ArrowRight className="w-4 h-4" />
           </Link>
         </Card>

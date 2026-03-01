@@ -2,23 +2,15 @@
 
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 import ContentCard from "@/components/ui/ContentCard";
 import type { NewsItem, Project } from "@/data/news";
 
 const PER_PAGE = 6;
 
-const TABS = [
-  { key: "announcements", label: "お知らせ" },
-  { key: "updates", label: "開発アップデート" },
-] as const;
+type TabKey = "announcements" | "updates";
 
-type TabKey = (typeof TABS)[number]["key"];
-
-const PROJECT_FILTERS: { key: "all" | Project; label: string }[] = [
-  { key: "all", label: "すべて" },
-  { key: "HP", label: "HP" },
-  { key: "App", label: "App" },
-];
+const PROJECT_FILTER_KEYS: ("all" | Project)[] = ["all", "HP", "App"];
 
 function filterByTab(items: NewsItem[], tab: TabKey): NewsItem[] {
   if (tab === "announcements") {
@@ -39,11 +31,23 @@ export default function NewsTabs({
   items: NewsItem[];
   defaultTab?: TabKey;
 }) {
+  const t = useTranslations("newsTabs");
   const [activeTab, setActiveTab] = useState<TabKey>(
     defaultTab ?? "updates"
   );
   const [page, setPage] = useState(1);
   const [projectFilter, setProjectFilter] = useState<"all" | Project>("all");
+
+  const TABS: { key: TabKey; label: string }[] = [
+    { key: "announcements", label: t("announcements") },
+    { key: "updates", label: t("devUpdates") },
+  ];
+
+  const PROJECT_FILTERS: { key: "all" | Project; label: string }[] = [
+    { key: "all", label: t("all") },
+    { key: "HP", label: t("hp") },
+    { key: "App", label: t("app") },
+  ];
 
   let filtered = filterByTab(items, activeTab);
   if (activeTab === "updates" && projectFilter !== "all") {

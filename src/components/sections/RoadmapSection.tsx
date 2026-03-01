@@ -12,6 +12,7 @@ import {
   BadgeCheck,
   ChevronDown,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface PhaseDetail {
   title: string;
@@ -30,56 +31,9 @@ interface Phase {
   href?: string;
 }
 
-const phases: Phase[] = [
-  {
-    phase: "フェーズ 1",
-    label: "開発中",
-    icon: Tablet,
-    title: "ナイト業界特化POS",
-    description:
-      "フロア管理・会計・出退勤をiPad1台で完結。日本のナイトエンタメ業界の業務をDX化。",
-    active: true,
-    details: [
-      { title: "フロア管理", desc: "マルチルーム対応のテーブル管理、リアルタイムの空席状況" },
-      { title: "会計・精算", desc: "セット料金・指名料・サービス料の自動計算" },
-      { title: "キャスト出退勤", desc: "写真付きキャスト一覧でワンタップ出退勤" },
-      { title: "売上レポート", desc: "日次売上、キャスト別成績を自動集計" },
-    ],
-  },
-  {
-    phase: "フェーズ 2",
-    label: "設計中",
-    icon: BadgeCheck,
-    brandName: "Luna Career",
-    title: "POSデータで変える、ナイトワーク求人",
-    description:
-      "POSに蓄積された売上・指名データを求人領域に活用。実績ベースの店舗評価、キャストポートフォリオ、需要予測による採用提案で、裏付けのある求人を実現。",
-    active: false,
-    href: "/career",
-  },
-  {
-    phase: "フェーズ 3",
-    label: "計画中",
-    icon: Landmark,
-    brandName: "Luna Fund",
-    title: "資金調達サポート",
-    description:
-      "LunaPosの売上実績データを、出店資金や運転資金を支援する投資家へ共有できる機能。銀行融資に頼らない、新しい資金調達の選択肢を提供します。LunaPosを使い続けるほど信用が貯まり、将来の出店・拡大時の資金調達を後押しします。",
-    active: false,
-    href: "/fund",
-  },
-  {
-    phase: "フェーズ 4",
-    label: "構想中",
-    icon: Globe,
-    brandName: "Luna World",
-    title: "海外展開 — 世界標準のナイトクラブPOSへ",
-    description:
-      "シンガポール・東南アジアを皮切りに、世界のナイトクラブ・ラウンジ・バーへ展開。各国の料金体系・規制に対応し、ナイトエンターテインメント業界のグローバルスタンダードを目指す。",
-    active: false,
-    href: "/world",
-  },
-];
+const phaseIcons = [Tablet, BadgeCheck, Landmark, Globe];
+const phaseHrefs = [undefined, "/career", "/fund", "/world"];
+const phaseBrandNames = [undefined, "Luna Career", "Luna Fund", "Luna World"];
 
 function PhaseCard({
   item,
@@ -221,12 +175,43 @@ function PhaseCard({
 }
 
 export default function RoadmapSection() {
+  const t = useTranslations('roadmap');
+
+  const phases: Phase[] = ([0, 1, 2, 3] as const).map((i) => {
+    const phaseData = t.raw(`phases.${i}`) as {
+      label: string;
+      status: string;
+      title: string;
+      description: string;
+      details?: Record<string, { title: string; description: string }>;
+    };
+
+    const details = phaseData.details
+      ? Object.values(phaseData.details).map((d) => ({
+          title: d.title,
+          desc: d.description,
+        }))
+      : undefined;
+
+    return {
+      phase: phaseData.label,
+      label: phaseData.status,
+      icon: phaseIcons[i],
+      brandName: phaseBrandNames[i],
+      title: phaseData.title,
+      description: phaseData.description,
+      active: i === 0,
+      details,
+      href: phaseHrefs[i],
+    };
+  });
+
   return (
     <Section>
       <SectionHeading
-        subtitle="ROADMAP"
-        title="開発ロードマップ"
-        description="段階的に開発を進めています。各フェーズの進捗をご覧ください。"
+        subtitle={t('subtitle')}
+        title={t('title')}
+        description={t('description')}
       />
 
       <div className="relative">

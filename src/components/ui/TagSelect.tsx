@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { ChevronDown } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export function TagSelect({
   tags,
@@ -11,6 +12,7 @@ export function TagSelect({
   current?: string;
 }) {
   const router = useRouter();
+  const t = useTranslations("common");
 
   return (
     <div className="relative inline-block">
@@ -24,7 +26,7 @@ export function TagSelect({
         }}
         className="appearance-none bg-luna-surface border border-luna-border text-luna-text-secondary rounded-lg pl-4 pr-10 py-2 text-sm focus:border-luna-gold focus:outline-none cursor-pointer hover:border-luna-gold transition-colors"
       >
-        <option value="">すべての記事</option>
+        <option value="">{t("allArticles")}</option>
         {tags.map((tag) => (
           <option key={tag} value={tag}>
             #{tag}

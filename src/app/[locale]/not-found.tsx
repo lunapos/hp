@@ -1,6 +1,12 @@
+"use client";
+
 import Button from "@/components/ui/Button";
+import { useTranslations } from "next-intl";
 
 export default function NotFound() {
+  const t = useTranslations('notFound');
+  const tCommon = useTranslations('common');
+
   return (
     <section className="min-h-[70vh] flex items-center justify-center px-4">
       <div className="text-center">
@@ -11,9 +17,9 @@ export default function NotFound() {
           404
         </h1>
         <p className="text-luna-text-secondary text-lg mb-8">
-          お探しのページは見つかりませんでした
+          {t('message')}
         </p>
-        <Button href="/">トップページに戻る</Button>
+        <Button href="/">{tCommon('backToTop')}</Button>
       </div>
     </section>
   );

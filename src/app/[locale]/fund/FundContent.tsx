@@ -12,6 +12,7 @@ import {
   CheckCircle,
   ArrowRight,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface FormState {
   name: string;
@@ -21,39 +22,32 @@ interface FormState {
   message: string;
 }
 
-const initialForm: FormState = {
-  name: "",
-  email: "",
-  phone: "",
-  investmentType: "store",
-  message: "",
-};
-
-const investmentTypes = [
-  { value: "store", label: "店舗への投資に興味がある" },
-  { value: "both", label: "事業と店舗の両方に興味がある" },
-  { value: "other", label: "その他・まずは話を聞きたい" },
-];
-
-const features = [
-  {
-    icon: BarChart3,
-    title: "データに基づく投資判断",
-    desc: "LunaPos導入店舗のリアルな売上・経営データをもとに、投資先を選定できます。",
-  },
-  {
-    icon: Shield,
-    title: "リスクの可視化",
-    desc: "売上推移・客単価・リピート率など、店舗の健全性を示す指標を事前に確認。",
-  },
-  {
-    icon: TrendingUp,
-    title: "成長ポテンシャルの評価",
-    desc: "キャスト実績・顧客基盤など、将来性を示すデータで投資判断をサポート。",
-  },
-];
+const featureIcons = [BarChart3, Shield, TrendingUp];
 
 export default function FundContent() {
+  const t = useTranslations('fund');
+  const tCommon = useTranslations('common');
+
+  const investmentTypes = [
+    { value: "store", label: t('investmentTypes.store') },
+    { value: "both", label: t('investmentTypes.both') },
+    { value: "other", label: t('investmentTypes.other') },
+  ];
+
+  const features = ([0, 1, 2] as const).map((i) => ({
+    icon: featureIcons[i],
+    title: t(`features.${i}.title`),
+    desc: t(`features.${i}.description`),
+  }));
+
+  const initialForm: FormState = {
+    name: "",
+    email: "",
+    phone: "",
+    investmentType: "store",
+    message: "",
+  };
+
   const [form, setForm] = useState<FormState>(initialForm);
   const [status, setStatus] = useState<
     "idle" | "submitting" | "success" | "error"
@@ -84,7 +78,7 @@ export default function FundContent() {
           phone: form.phone,
           inquiryType: "Luna Fund 事前登録",
           message: `投資タイプ: ${
-            investmentTypes.find((t) => t.value === form.investmentType)
+            investmentTypes.find((tp) => tp.value === form.investmentType)
               ?.label ?? form.investmentType
           }\n\n${form.message}`,
         }),
@@ -92,7 +86,7 @@ export default function FundContent() {
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || "送信に失敗しました");
+        throw new Error(data.error || tCommon('submitError'));
       }
 
       setStatus("success");
@@ -100,7 +94,7 @@ export default function FundContent() {
     } catch (err) {
       setStatus("error");
       setErrorMessage(
-        err instanceof Error ? err.message : "送信に失敗しました"
+        err instanceof Error ? err.message : tCommon('submitError')
       );
     }
   };
@@ -114,7 +108,7 @@ export default function FundContent() {
               LUNA FUND
             </p>
             <h1 className="text-4xl md:text-5xl font-bold text-luna-text-primary mb-4">
-              事前登録完了
+              {t('successTitle')}
             </h1>
             <div className="w-16 h-1 bg-purple-400 mx-auto rounded-full" />
           </div>
@@ -124,15 +118,13 @@ export default function FundContent() {
             <Card className="border-purple-400/30">
               <CheckCircle className="w-16 h-16 text-emerald-400 mx-auto mb-4" />
               <h2 className="text-2xl font-bold text-luna-text-primary mb-2">
-                ウェイティングリストに登録しました
+                {t('successMessage')}
               </h2>
               <p className="text-luna-text-secondary">
-                Luna Fund の詳細が決まり次第、
-                <br />
-                ご登録いただいたメールアドレスにご連絡いたします。
+                {t('successDescription')}
               </p>
               <div className="mt-6">
-                <Button href="/">トップページに戻る</Button>
+                <Button href="/">{tCommon('backToTop')}</Button>
               </div>
             </Card>
           </div>
@@ -147,17 +139,17 @@ export default function FundContent() {
       <section className="pt-20 pb-8 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <p className="text-purple-400 text-sm tracking-[0.3em] font-medium mb-2">
-            LUNA FUND
+            {t('subtitle')}
           </p>
           <h1 className="text-4xl md:text-5xl font-bold text-luna-text-primary mb-4">
-            店舗投資プログラム
+            {t('title')}
           </h1>
           <div className="w-16 h-1 bg-purple-400 mx-auto rounded-full mb-4" />
           <p className="text-luna-text-secondary max-w-2xl mx-auto">
-            LunaPos導入店舗の経営データをもとに、有望な店舗への出資・融資が可能になるプログラムを準備中です。
+            {t('description')}
           </p>
           <span className="inline-block mt-3 text-xs bg-purple-400/20 text-purple-300 px-3 py-1 rounded-full font-medium">
-            準備中 - 事前登録受付中
+            {t('badge')}
           </span>
         </div>
       </section>
@@ -189,9 +181,9 @@ export default function FundContent() {
                 <Landmark className="w-5 h-5 text-purple-400" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-luna-text-primary">事前登録</h2>
+                <h2 className="text-xl font-bold text-luna-text-primary">{t('formTitle')}</h2>
                 <p className="text-luna-text-secondary text-xs">
-                  プログラム開始時に優先的にご案内いたします
+                  {t('formDescription')}
                 </p>
               </div>
             </div>
@@ -199,7 +191,7 @@ export default function FundContent() {
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
                 <label className="block text-sm text-luna-text-secondary tracking-wider mb-2">
-                  お名前 <span className="text-red-400">*</span>
+                  {tCommon('name')} <span className="text-red-400">*</span>
                 </label>
                 <input
                   type="text"
@@ -208,14 +200,14 @@ export default function FundContent() {
                   onChange={handleChange}
                   required
                   className="w-full bg-luna-input-bg border border-luna-border rounded-xl px-4 py-3 text-luna-text-primary focus:border-purple-400 focus:ring-1 focus:ring-purple-400 outline-none transition-all"
-                  placeholder="例: 田中 太郎"
+                  placeholder={tCommon('namePlaceholder')}
                 />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
                   <label className="block text-sm text-luna-text-secondary tracking-wider mb-2">
-                    メールアドレス <span className="text-red-400">*</span>
+                    {tCommon('email')} <span className="text-red-400">*</span>
                   </label>
                   <input
                     type="email"
@@ -224,12 +216,12 @@ export default function FundContent() {
                     onChange={handleChange}
                     required
                     className="w-full bg-luna-input-bg border border-luna-border rounded-xl px-4 py-3 text-luna-text-primary focus:border-purple-400 focus:ring-1 focus:ring-purple-400 outline-none transition-all"
-                    placeholder="例: tanaka@example.com"
+                    placeholder={tCommon('emailPlaceholder')}
                   />
                 </div>
                 <div>
                   <label className="block text-sm text-luna-text-secondary tracking-wider mb-2">
-                    電話番号
+                    {tCommon('phone')}
                   </label>
                   <input
                     type="tel"
@@ -237,14 +229,14 @@ export default function FundContent() {
                     value={form.phone}
                     onChange={handleChange}
                     className="w-full bg-luna-input-bg border border-luna-border rounded-xl px-4 py-3 text-luna-text-primary focus:border-purple-400 focus:ring-1 focus:ring-purple-400 outline-none transition-all"
-                    placeholder="例: 03-1234-5678"
+                    placeholder={tCommon('phonePlaceholder')}
                   />
                 </div>
               </div>
 
               <div>
                 <label className="block text-sm text-luna-text-secondary tracking-wider mb-2">
-                  ご興味のある投資タイプ
+                  {t('investmentType')}
                 </label>
                 <select
                   name="investmentType"
@@ -262,7 +254,7 @@ export default function FundContent() {
 
               <div>
                 <label className="block text-sm text-luna-text-secondary tracking-wider mb-2">
-                  メッセージ（任意）
+                  {t('message')}
                 </label>
                 <textarea
                   name="message"
@@ -270,7 +262,7 @@ export default function FundContent() {
                   onChange={handleChange}
                   rows={3}
                   className="w-full bg-luna-input-bg border border-luna-border rounded-xl px-4 py-3 text-luna-text-primary focus:border-purple-400 focus:ring-1 focus:ring-purple-400 outline-none transition-all resize-none"
-                  placeholder="ご質問やご要望がございましたらご記入ください"
+                  placeholder={t('messagePlaceholder')}
                 />
               </div>
 
@@ -288,10 +280,10 @@ export default function FundContent() {
                 }`}
               >
                 {status === "submitting" ? (
-                  "送信中..."
+                  tCommon('submitting')
                 ) : (
                   <>
-                    事前登録する
+                    {t('submitButton')}
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}

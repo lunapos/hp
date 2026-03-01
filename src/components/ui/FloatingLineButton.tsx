@@ -1,11 +1,14 @@
 "use client";
 
 import { MessageCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 // TODO: 実運用時は LINE_URL を公式アカウントの友達追加URLに変更
 const LINE_URL = "/contact";
 
 export default function FloatingLineButton() {
+  const t = useTranslations("floatingLine");
+
   return (
     <a
       href={LINE_URL}
@@ -13,9 +16,9 @@ export default function FloatingLineButton() {
     >
       <MessageCircle className="w-5 h-5 shrink-0" />
       <div className="flex flex-col items-center md:items-start">
-        <span className="text-xs md:text-sm font-bold leading-tight">LINE友達追加</span>
+        <span className="text-xs md:text-sm font-bold leading-tight">{t("title")}</span>
         <span className="text-[9px] md:text-[10px] opacity-80 leading-tight">
-          お問い合わせもこちら
+          {t("description")}
         </span>
       </div>
     </a>

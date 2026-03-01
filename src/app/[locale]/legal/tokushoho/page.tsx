@@ -1,11 +1,11 @@
-import type { Metadata } from "next";
+import { getTranslations } from 'next-intl/server';
 import Section from "@/components/layout/Section";
 import Card from "@/components/ui/Card";
 
-export const metadata: Metadata = {
-  title: "特定商取引法に基づく表記",
-  description: "LunaPosの特定商取引法に基づく表記です。",
-};
+export async function generateMetadata() {
+  const t = await getTranslations('metadata.tokushoho');
+  return { title: t('title'), description: t('description') };
+}
 
 const items = [
   { label: "販売事業者", value: "LunaPos" },
@@ -52,16 +52,18 @@ const items = [
   },
 ];
 
-export default function TokushohoPage() {
+export default async function TokushohoPage() {
+  const t = await getTranslations('legal.tokushoho');
+
   return (
     <>
       <section className="pt-20 pb-8 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <p className="text-luna-gold text-sm tracking-[0.3em] font-medium mb-2">
-            LEGAL
+            {t('subtitle')}
           </p>
           <h1 className="text-4xl md:text-5xl font-bold text-luna-text-primary mb-4">
-            特定商取引法に基づく表記
+            {t('title')}
           </h1>
           <div className="w-16 h-1 bg-luna-gold mx-auto rounded-full" />
         </div>

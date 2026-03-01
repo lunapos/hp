@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import Card from "@/components/ui/Card";
 import TrendChart from "@/components/partner/TrendChart";
 import ClickBreakdown from "@/components/partner/ClickBreakdown";
@@ -45,34 +46,6 @@ interface DashboardContentProps {
   clickBreakdown: ClickBreakdownType[];
 }
 
-const statusLabels: Record<string, { label: string; className: string }> = {
-  pending: { label: "審査中", className: "bg-yellow-400/20 text-yellow-300" },
-  confirmed: {
-    label: "確定",
-    className: "bg-emerald-400/20 text-emerald-300",
-  },
-  rejected: { label: "却下", className: "bg-red-400/20 text-red-300" },
-  approved: {
-    label: "承認済",
-    className: "bg-emerald-400/20 text-emerald-300",
-  },
-  paid: { label: "支払済", className: "bg-blue-400/20 text-blue-300" },
-};
-
-function StatusBadge({ status }: { status: string }) {
-  const config = statusLabels[status] || {
-    label: status,
-    className: "bg-luna-text-secondary/20 text-luna-text-secondary",
-  };
-  return (
-    <span
-      className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${config.className}`}
-    >
-      {config.label}
-    </span>
-  );
-}
-
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString("ja-JP", {
     year: "numeric",
@@ -85,13 +58,6 @@ function formatYen(amount: number) {
   return `\u00a5${amount.toLocaleString("ja-JP")}`;
 }
 
-const TABS: { key: TabKey; label: string; icon: typeof LayoutDashboard }[] = [
-  { key: "overview", label: "概要", icon: LayoutDashboard },
-  { key: "conversions", label: "成約", icon: Store },
-  { key: "commissions", label: "報酬", icon: Wallet },
-  { key: "settings", label: "設定", icon: Settings },
-];
-
 export default function DashboardContent({
   partner,
   stats,
@@ -100,6 +66,7 @@ export default function DashboardContent({
   clickBreakdown,
 }: DashboardContentProps) {
   const router = useRouter();
+  const t = useTranslations("dashboard");
   const [copied, setCopied] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
   const [activeTab, setActiveTab] = useState<TabKey>("overview");
@@ -110,6 +77,72 @@ export default function DashboardContent({
   const [newItemCount, setNewItemCount] = useState(0);
 
   const referralUrl = `https://lunapos.jp?ref=${partner.referral_code}`;
+
+  const statusLabels: Record<string, { label: string; className: string }> = {
+    pending: { label: t("statusLabels.pending"), className: "bg-yellow-400/20 text-yellow-300" },
+    confirmed: { label: t("statusLabels.confirmed"), className: "bg-emerald-400/20 text-emerald-300" },
+    rejected: { label: t("statusLabels.rejected"), className: "bg-red-400/20 text-red-300" },
+    approved: { label: t("statusLabels.approved"), className: "bg-emerald-400/20 text-emerald-300" },
+    paid: { label: t("statusLabels.paid"), className: "bg-blue-400/20 text-blue-300" },
+  };
+
+  function StatusBadge({ status }: { status: string }) {
+    const config = statusLabels[status] || {
+      label: status,
+      className: "bg-luna-text-secondary/20 text-luna-text-secondary",
+    };
+    return (
+      <span
+        className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${config.className}`}
+      >
+        {config.label}
+      </span>
+    );
+  }
+
+  const TABS: { key: TabKey; label: string; icon: typeof LayoutDashboard }[] = [
+    { key: "overview", label: t("tabs.overview"), icon: LayoutDashboard },
+    { key: "conversions", label: t("tabs.conversions"), icon: Store },
+    { key: "commissions", label: t("tabs.rewards"), icon: Wallet },
+    { key: "settings", label: t("tabs.settings"), icon: Settings },
+  ];
+
+  const statCards = [
+    {
+      icon: MousePointerClick,
+      label: t("stats.clicks"),
+      value: stats?.total_clicks ?? 0,
+    },
+    {
+      icon: Store,
+      label: t("stats.conversions"),
+      value: stats?.total_conversions ?? 0,
+    },
+    {
+      icon: CheckCircle,
+      label: t("stats.confirmed"),
+      value: stats?.confirmed_conversions ?? 0,
+    },
+    {
+      icon: TrendingUp,
+      label: t("stats.cvr"),
+      value: `${(stats?.total_clicks ?? 0) > 0
+        ? (((stats?.total_conversions ?? 0) / (stats?.total_clicks ?? 1)) * 100).toFixed(1)
+        : "0.0"}%`,
+    },
+    {
+      icon: BadgeJapaneseYen,
+      label: t("stats.unpaid"),
+      value: formatYen(
+        (stats?.pending_commission ?? 0) + (stats?.approved_commission ?? 0)
+      ),
+    },
+    {
+      icon: Wallet,
+      label: t("stats.paid"),
+      value: formatYen(stats?.paid_commission ?? 0),
+    },
+  ];
 
   // Notification: check for new items since last visit
   useEffect(() => {
@@ -166,49 +199,6 @@ export default function DashboardContent({
     router.push("/partner/login");
   };
 
-  const conversionRate =
-    (stats?.total_clicks ?? 0) > 0
-      ? (
-          ((stats?.total_conversions ?? 0) / (stats?.total_clicks ?? 1)) *
-          100
-        ).toFixed(1)
-      : "0.0";
-
-  const statCards = [
-    {
-      icon: MousePointerClick,
-      label: "クリック数",
-      value: stats?.total_clicks ?? 0,
-    },
-    {
-      icon: Store,
-      label: "成約数",
-      value: stats?.total_conversions ?? 0,
-    },
-    {
-      icon: CheckCircle,
-      label: "確定成約",
-      value: stats?.confirmed_conversions ?? 0,
-    },
-    {
-      icon: TrendingUp,
-      label: "CVR",
-      value: `${conversionRate}%`,
-    },
-    {
-      icon: BadgeJapaneseYen,
-      label: "未払い報酬",
-      value: formatYen(
-        (stats?.pending_commission ?? 0) + (stats?.approved_commission ?? 0)
-      ),
-    },
-    {
-      icon: Wallet,
-      label: "支払い済み",
-      value: formatYen(stats?.paid_commission ?? 0),
-    },
-  ];
-
   // Prepare chart data
   const chartData = dailyData.map((d) => ({
     label: d.date.slice(5), // MM-DD
@@ -227,7 +217,7 @@ export default function DashboardContent({
           <div className="flex items-center justify-between bg-emerald-400/10 border border-emerald-400/30 rounded-xl px-4 py-3 mb-6">
             <div className="flex items-center gap-2 text-sm text-emerald-400">
               <Bell className="w-4 h-4" />
-              前回ログイン以降: 新しい通知が {newItemCount}件 あります
+              {t("newNotifications", { count: newItemCount })}
             </div>
             <button
               onClick={() => setShowNotification(false)}
@@ -242,10 +232,10 @@ export default function DashboardContent({
         <div className="flex items-center justify-between mb-6">
           <div>
             <p className="text-emerald-400 text-sm tracking-[0.3em] font-medium mb-1">
-              PARTNER DASHBOARD
+              {t("subtitle")}
             </p>
             <h1 className="text-2xl md:text-3xl font-bold text-luna-text-primary">
-              {partner.name} さん
+              {t("greeting", { name: partner.name })}
             </h1>
           </div>
           <button
@@ -254,7 +244,7 @@ export default function DashboardContent({
             className="flex items-center gap-2 text-luna-text-secondary text-sm hover:text-luna-text-primary transition-colors"
           >
             <LogOut className="w-4 h-4" />
-            ログアウト
+            {t("logout")}
           </button>
         </div>
 
@@ -263,7 +253,7 @@ export default function DashboardContent({
           <div className="flex items-center gap-3 mb-3">
             <Link2 className="w-5 h-5 text-emerald-400" />
             <h2 className="text-luna-text-primary font-bold">
-              あなたの紹介リンク
+              {t("referralLink")}
             </h2>
           </div>
           <div className="flex items-center gap-3">
@@ -277,18 +267,18 @@ export default function DashboardContent({
               {copied ? (
                 <>
                   <Check className="w-4 h-4" />
-                  コピー済
+                  {t("copied")}
                 </>
               ) : (
                 <>
                   <Copy className="w-4 h-4" />
-                  コピー
+                  {t("copy")}
                 </>
               )}
             </button>
           </div>
           <p className="text-luna-text-secondary text-xs mt-2">
-            紹介コード: {partner.referral_code}
+            {t("referralCode")} {partner.referral_code}
           </p>
         </Card>
 
@@ -347,12 +337,12 @@ export default function DashboardContent({
             {chartData.length > 0 && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <Card>
-                  <TrendChart data={chartData} title="クリック推移" />
+                  <TrendChart data={chartData} title={t("chartClicks")} />
                 </Card>
                 <Card>
                   <TrendChart
                     data={convChartData}
-                    title="成約推移"
+                    title={t("chartConversions")}
                     color="bg-blue-400"
                   />
                 </Card>
@@ -368,11 +358,11 @@ export default function DashboardContent({
 
         {activeTab === "conversions" && (
           <div>
-            <h2 className="text-luna-text-primary font-bold mb-4">成約一覧</h2>
+            <h2 className="text-luna-text-primary font-bold mb-4">{t("conversionsTitle")}</h2>
             <Card>
               {conversions.length === 0 ? (
                 <p className="text-luna-text-secondary text-sm text-center py-8">
-                  まだ成約はありません。紹介リンクを共有して店舗を紹介しましょう。
+                  {t("conversionsEmpty")}
                 </p>
               ) : (
                 <div className="overflow-x-auto">
@@ -380,13 +370,13 @@ export default function DashboardContent({
                     <thead>
                       <tr className="border-b border-luna-border">
                         <th className="text-left text-luna-text-secondary font-medium py-3 px-2">
-                          日付
+                          {t("conversionsHeaders.date")}
                         </th>
                         <th className="text-left text-luna-text-secondary font-medium py-3 px-2">
-                          店舗名
+                          {t("conversionsHeaders.store")}
                         </th>
                         <th className="text-left text-luna-text-secondary font-medium py-3 px-2">
-                          ステータス
+                          {t("conversionsHeaders.status")}
                         </th>
                       </tr>
                     </thead>
@@ -419,11 +409,11 @@ export default function DashboardContent({
           <div>
             <CommissionSummary commissions={commissions} />
 
-            <h2 className="text-luna-text-primary font-bold mb-4">報酬履歴</h2>
+            <h2 className="text-luna-text-primary font-bold mb-4">{t("rewardsTitle")}</h2>
             <Card>
               {commissions.length === 0 ? (
                 <p className="text-luna-text-secondary text-sm text-center py-8">
-                  まだ報酬の記録はありません。
+                  {t("rewardsEmpty")}
                 </p>
               ) : (
                 <div className="overflow-x-auto">
@@ -431,16 +421,16 @@ export default function DashboardContent({
                     <thead>
                       <tr className="border-b border-luna-border">
                         <th className="text-left text-luna-text-secondary font-medium py-3 px-2">
-                          日付
+                          {t("rewardsHeaders.date")}
                         </th>
                         <th className="text-left text-luna-text-secondary font-medium py-3 px-2">
-                          金額
+                          {t("rewardsHeaders.amount")}
                         </th>
                         <th className="text-left text-luna-text-secondary font-medium py-3 px-2">
-                          ステータス
+                          {t("rewardsHeaders.status")}
                         </th>
                         <th className="text-left text-luna-text-secondary font-medium py-3 px-2">
-                          備考
+                          {t("rewardsHeaders.note")}
                         </th>
                       </tr>
                     </thead>

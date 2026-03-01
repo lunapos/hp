@@ -1,6 +1,7 @@
 "use client";
 
 import { Globe } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export interface ClickBreakdownData {
   page_url: string;
@@ -12,10 +13,12 @@ interface ClickBreakdownProps {
 }
 
 export default function ClickBreakdown({ data }: ClickBreakdownProps) {
+  const t = useTranslations("clickBreakdown");
+
   if (data.length === 0) {
     return (
       <p className="text-luna-text-secondary text-sm text-center py-6">
-        クリックデータがまだありません。
+        {t("empty")}
       </p>
     );
   }
@@ -27,7 +30,7 @@ export default function ClickBreakdown({ data }: ClickBreakdownProps) {
       <div className="flex items-center gap-2 mb-4">
         <Globe className="w-4 h-4 text-emerald-400" />
         <h3 className="text-luna-text-primary font-bold text-sm">
-          ページ別クリック数
+          {t("title")}
         </h3>
       </div>
       {data.map((item, i) => {

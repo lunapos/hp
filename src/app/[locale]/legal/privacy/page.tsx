@@ -1,11 +1,11 @@
-import type { Metadata } from "next";
+import { getTranslations } from 'next-intl/server';
 import Section from "@/components/layout/Section";
 import Card from "@/components/ui/Card";
 
-export const metadata: Metadata = {
-  title: "プライバシーポリシー",
-  description: "LunaPosのプライバシーポリシーです。",
-};
+export async function generateMetadata() {
+  const t = await getTranslations('metadata.privacy');
+  return { title: t('title'), description: t('description') };
+}
 
 const sections = [
   {
@@ -50,16 +50,18 @@ const sections = [
   },
 ];
 
-export default function PrivacyPage() {
+export default async function PrivacyPage() {
+  const t = await getTranslations('legal.privacy');
+
   return (
     <>
       <section className="pt-20 pb-8 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <p className="text-luna-gold text-sm tracking-[0.3em] font-medium mb-2">
-            PRIVACY POLICY
+            {t('subtitle')}
           </p>
           <h1 className="text-4xl md:text-5xl font-bold text-luna-text-primary mb-4">
-            プライバシーポリシー
+            {t('title')}
           </h1>
           <div className="w-16 h-1 bg-luna-gold mx-auto rounded-full" />
         </div>
@@ -79,7 +81,7 @@ export default function PrivacyPage() {
               ))}
               <div className="pt-4 border-t border-luna-border">
                 <p className="text-luna-text-secondary text-xs">
-                  制定日: 2026年2月23日
+                  {t('effectiveDate')}
                 </p>
               </div>
             </div>

@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { Sun, Moon } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export default function ThemeToggle() {
   const [isLight, setIsLight] = useState(false);
+  const t = useTranslations("common");
 
   useEffect(() => {
     setIsLight(document.documentElement.classList.contains("light"));
@@ -32,7 +34,7 @@ export default function ThemeToggle() {
           ? "rgba(var(--luna-accent-rgb), 0.2)"
           : "var(--luna-border)",
       }}
-      aria-label={isLight ? "ダークモードに切り替え" : "ライトモードに切り替え"}
+      aria-label={isLight ? t("darkMode") : t("lightMode")}
     >
       <span
         className="absolute left-1 flex items-center justify-center w-5 h-5 rounded-full shadow-sm transition-transform duration-300"

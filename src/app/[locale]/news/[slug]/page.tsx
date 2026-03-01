@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import Section from "@/components/layout/Section";
 import ProjectBadge from "@/components/ui/ProjectBadge";
 import { newsItems, getNewsBySlug } from "@/data/news";
+import { getTranslations } from "next-intl/server";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -39,6 +40,8 @@ export default async function NewsDetailPage({ params }: Props) {
     notFound();
   }
 
+  const t = await getTranslations('news');
+
   return (
     <Section className="pt-32">
       <div className="max-w-3xl mx-auto">
@@ -47,7 +50,7 @@ export default async function NewsDetailPage({ params }: Props) {
           className="inline-flex items-center gap-2 text-luna-text-secondary hover:text-luna-gold transition-colors duration-200 text-sm mb-8"
         >
           <ArrowLeft className="w-4 h-4" />
-          お知らせ一覧に戻る
+          {t('backToList')}
         </Link>
 
         <article>

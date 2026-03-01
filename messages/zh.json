@@ -1,6 +1,743 @@
 {
-  "site": {
-    "title": "LunaPos | 夜间娱乐行业POS系统",
-    "description": "面向夜总会、酒吧、小酒馆的新一代POS系统"
+  "metadata": {
+    "home": {
+      "title": "LunaPos | 夜间娱乐行业POS系统",
+      "description": "专为夜总会、女仆酒吧、小酒馆、男模俱乐部打造的新一代POS系统。一台iPad轻松管理楼层、结账与考勤。支持离线运行，门店运营更安心。"
+    },
+    "features": {
+      "title": "功能介绍",
+      "description": "LunaPos Floor全功能介绍。楼层管理、订单管理、结账、接待人员考勤管理、日报及销售报表等。"
+    },
+    "company": {
+      "title": "关于我们",
+      "description": "LunaPos运营信息。专为夜间行业开发与提供POS系统。"
+    },
+    "contact": {
+      "title": "联系我们",
+      "description": "欢迎咨询LunaPos导入及相关问题。"
+    },
+    "career": {
+      "title": "Luna Career | 招聘平台构想",
+      "description": "POS数据改变夜间工作招聘方式。实现基于实绩的门店评估、接待人员作品集及需求预测招聘建议。"
+    },
+    "fund": {
+      "title": "Luna Fund | 门店投资计划",
+      "description": "基于LunaPos导入门店的经营数据，为优质门店提供出资及融资的计划。现正接受预先登记。"
+    },
+    "investor": {
+      "title": "欢迎投资者了解详情",
+      "description": "LunaPos提供两种参与方式：对事业本身的出资，以及对导入门店的投资。"
+    },
+    "news": {
+      "title": "公告・开发动态",
+      "description": "为您提供LunaPos最新资讯、开发动态及维护信息。"
+    },
+    "column": {
+      "title": "专栏",
+      "description": "为您提供夜间行业经营相关的实用信息。POS导入指南、销售管理技巧、行业趋势等。"
+    },
+    "partner": {
+      "title": "推广合作伙伴招募",
+      "description": "利用您在夜间行业的人脉，向门店介绍LunaPos即可获得介绍报酬。"
+    },
+    "partnerLogin": {
+      "title": "合作伙伴登录",
+      "description": "LunaPos推广合作伙伴专用登录"
+    },
+    "partnerDashboard": {
+      "title": "合作伙伴控制台",
+      "description": "LunaPos推广合作伙伴专用管理界面"
+    },
+    "roadmap": {
+      "title": "开发路线图",
+      "description": "LunaPos开发路线图。以POS功能开发为核心，逐步扩展至Luna Career、Luna Fund、Luna World。"
+    },
+    "world": {
+      "title": "Luna World | 海外拓展计划",
+      "description": "将LunaPos带向全球夜间娱乐行业。以新加坡及东南亚为起点，迈向全球化布局。"
+    },
+    "terms": {
+      "title": "使用条款",
+      "description": "LunaPos使用条款。"
+    },
+    "privacy": {
+      "title": "隐私政策",
+      "description": "LunaPos隐私政策。"
+    },
+    "tokushoho": {
+      "title": "特定商业交易法相关说明",
+      "description": "LunaPos特定商业交易法相关说明。"
+    }
+  },
+  "nav": {
+    "home": "首页",
+    "features": "功能介绍",
+    "news": "新闻",
+    "column": "专栏",
+    "contact": "联系我们",
+    "roadmap": "路线图",
+    "company": "关于我们",
+    "investor": "投资",
+    "partner": "合作伙伴",
+    "menuOpen": "打开菜单",
+    "menuClose": "关闭菜单"
+  },
+  "hero": {
+    "badge": "Coming Soon - 即将陆续上线",
+    "title1": "专为夜间行业打造，",
+    "title2": "新一代POS",
+    "title3": "系统",
+    "description1": "一台iPad轻松管理楼层、结账与考勤。",
+    "description2": "支持离线运行，门店运营更安心。",
+    "floatingOffline": "离线支持",
+    "floatingNative": "iPad 原生",
+    "floatingSpecialized": "行业专属",
+    "imageAlt": "LunaPos Floor - 楼层地图界面"
+  },
+  "problems": {
+    "subtitle": "PROBLEMS",
+    "title": "您是否有以下烦恼？",
+    "solution": "LunaPos 为您一一解决。",
+    "items": {
+      "0": "手写单据错误频繁，结账时容易出现纠纷",
+      "1": "专属点名、店内点名、同伴出席管理繁琐，难以准确掌握",
+      "2": "每天花费数小时制作日报",
+      "3": "网络故障时系统无法使用",
+      "4": "现有POS不适配夜间行业的计费体系"
+    }
+  },
+  "featureHighlights": {
+    "subtitle": "FEATURES",
+    "title": "LunaPos 的特点",
+    "description": "深度了解夜间行业现场需求，专为行业定制的POS系统。",
+    "viewAll": "查看全部功能",
+    "items": {
+      "0": {
+        "title": "iPad 原生",
+        "description": "采用Swift/SwiftUI开发的iPad专用应用。原生操作体验，即便在繁忙营业中也能流畅使用。",
+        "details": {
+          "0": "快速启动・高性能",
+          "1": "针对iPad屏幕尺寸优化",
+          "2": "标准深色模式"
+        }
+      },
+      "1": {
+        "title": "离线支持",
+        "description": "本地优先设计，即使没有网络也能使用所有功能。实现营业期间零停机时间。",
+        "details": {
+          "0": "网络故障时照常运行",
+          "1": "恢复连接后自动同步数据",
+          "2": "可靠的冗余保障"
+        }
+      },
+      "2": {
+        "title": "夜间行业专属",
+        "description": "完全支持套餐费用、点名费、服务费、同伴出席等夜间行业特有的复杂计费体系。",
+        "details": {
+          "0": "复杂计费体系自动计算",
+          "1": "点名管理・接待人员管理",
+          "2": "日报・销售报表自动生成"
+        }
+      }
+    }
+  },
+  "allFeatures": {
+    "0": {
+      "title": "点名・同伴出席管理・结账",
+      "description": "按桌管理专属点名、店内点名、同伴出席，自动计算套餐费用、服务费及税额。大幅提升结账效率。",
+      "details": {
+        "0": "专属点名・店内点名・无点名切换",
+        "1": "同伴接待人员关联・同伴费用自动计算",
+        "2": "套餐费用・服务费・税额自动计算",
+        "3": "现金・刷卡・电子钱包支持",
+        "4": "收据・发票打印"
+      }
+    },
+    "1": {
+      "title": "班次・考勤管理",
+      "description": "从带照片的接待人员列表一键打卡。自动化班次管理与出勤记录。",
+      "details": {
+        "0": "照片网格一键打卡",
+        "1": "班次计划的登记与管理",
+        "2": "考勤记录自动保存",
+        "3": "自动同步至官网在职状态"
+      }
+    },
+    "2": {
+      "title": "销售报表・日报",
+      "description": "自动汇总每日销售额、接待人员个人业绩、菜单排名。制作日报所需时间归零。",
+      "details": {
+        "0": "销售汇总自动生成",
+        "1": "按支付方式分类汇总",
+        "2": "接待人员销售排行",
+        "3": "收银结算功能"
+      }
+    },
+    "3": {
+      "title": "防舞弊（操作日志）",
+      "description": "自动记录所有操作。价格变更、折扣、取消等操作可从管理界面实时查看。",
+      "details": {
+        "0": "所有操作时间戳记录",
+        "1": "价格变更・折扣・取消历史",
+        "2": "管理界面实时查看",
+        "3": "无需额外费用，标准内置"
+      }
+    },
+    "4": {
+      "title": "发票支持",
+      "description": "出具符合适格发票（Invoice）要求的收据及发票。可在设置界面轻松切换。",
+      "details": {
+        "0": "注册编号（T+13位）自动打印",
+        "1": "税率分类・税额明确标注",
+        "2": "设置界面ON/OFF切换",
+        "3": "发票・收据双支持"
+      }
+    },
+    "5": {
+      "title": "薪资计算",
+      "description": "支持提成比例、时薪、点名提成等门店独有薪资规则的自动计算。",
+      "details": {
+        "0": "门店自定义提成比例设置",
+        "1": "点名・同伴出席・饮品提成支持",
+        "2": "时薪＋绩效混合计算",
+        "3": "薪资明细自动生成"
+      }
+    },
+    "6": {
+      "title": "顾客管理",
+      "description": "统一管理消费历史、偏好、负责接待人员等顾客信息，提升服务质量。",
+      "details": {
+        "0": "到店历史・消费金额自动记录",
+        "1": "顾客备注・偏好登记",
+        "2": "负责接待人员关联",
+        "3": "顾客销售分析"
+      }
+    },
+    "7": {
+      "title": "网页管理界面",
+      "description": "外出时也可通过手机或电脑实时查看销售额和接待人员业绩。随时随地管理门店。",
+      "details": {
+        "0": "实时查看销售额・点名数",
+        "1": "菜单・价格设置",
+        "2": "接待人员管理・班次管理",
+        "3": "手机・电脑・平板均支持"
+      }
+    },
+    "8": {
+      "title": "接待人员应用",
+      "description": "接待人员专用iPhone应用，可查看个人销售额、班次及薪资。激励工作积极性。",
+      "details": {
+        "0": "查看个人销售额・点名数",
+        "1": "班次提交・变更",
+        "2": "考勤打卡",
+        "3": "查看薪资明细"
+      }
+    },
+    "9": {
+      "title": "离线支持",
+      "description": "采用SwiftData本地优先设计，即使网络故障也能使用所有功能。不中断营业。",
+      "details": {
+        "0": "网络故障时照常运行",
+        "1": "数据自动同步",
+        "2": "可靠的冗余保障"
+      }
+    }
+  },
+  "pricing": {
+    "subtitle": "PRICING",
+    "title": "收费方案",
+    "description": "简单明了，一个方案。前500笔结账免费。",
+    "perMonth": "/月（含税）",
+    "freeStart": "上线时免费开始使用",
+    "freeNote": "上线后，前500笔结账（累计）预计可免费使用全部功能。预先登记后，将在上线时第一时间通知您。",
+    "aiTitle": "关于AI功能",
+    "aiNote": "销售预测、班次优化、顾客分析等AI功能将陆续推出。使用AI功能可能需要支付额外费用。"
+  },
+  "faq": {
+    "subtitle": "FAQ",
+    "title": "常见问题",
+    "items": {
+      "0": {
+        "question": "导入需要多长时间？",
+        "answer": "从申请到最快3个工作日即可开始使用。初始设置简单，即使不熟悉IT的人也能快速上手。"
+      },
+      "1": {
+        "question": "可以导出数据吗？",
+        "answer": "可以，销售数据和顾客信息等均可以CSV格式导出。可用于报税、与税务师共享或自行分析。"
+      },
+      "2": {
+        "question": "支持哪些设备？",
+        "answer": "目前支持iPad。我们提供针对门店使用场景优化的操作界面。"
+      },
+      "3": {
+        "question": "可以随时取消吗？",
+        "answer": "可以，随时可以取消，没有最低使用期限的限制。通过官方LINE联系我们，即可立即办理。"
+      },
+      "4": {
+        "question": "可以免费使用吗？",
+        "answer": "可以，累计500笔结账以内完全免费使用。无需注册信用卡，可使用全部功能。从第501笔结账起，月费为¥30,000（含税）。"
+      },
+      "5": {
+        "question": "能否适配门店独有的薪资体系？",
+        "answer": "可以，支持提成比例、时薪等门店个性化薪资规则的灵活设置。但不保证能适配所有薪资体系，详情请咨询我们。"
+      }
+    }
+  },
+  "cta": {
+    "title": "欢迎随时咨询",
+    "description1": "目前正在开发中。预先登记后，上线时将优先通知您。",
+    "description2": "有任何问题或咨询，欢迎通过LINE或表单联系我们。",
+    "button": "预先登记・联系我们",
+    "emailLink": "通过邮件联系我们"
+  },
+  "testimonial": {
+    "subtitle": "VOICE",
+    "title": "导入门店的反馈",
+    "thankYou": "感谢您的投稿",
+    "thankYouDescription": "经审核后将予以刊登。",
+    "formTitle": "征集用户心声",
+    "formDescription": "已导入门店的反馈将陆续刊登。",
+    "storeName": "门店名称（可匿名）",
+    "role": "职位",
+    "feedback": "感想・反馈",
+    "storeNamePlaceholder": "例：Bar Moon",
+    "rolePlaceholder": "例：店长",
+    "feedbackPlaceholder": "请分享您使用LunaPos的感想",
+    "submitError": "发送失败，请重试。",
+    "submitting": "发送中...",
+    "submit": "提交"
+  },
+  "newsSection": {
+    "subtitle": "NEWS",
+    "title": "公告・开发动态",
+    "announcements": "公告",
+    "devUpdates": "开发动态",
+    "viewAll": "查看全部"
+  },
+  "roadmap": {
+    "subtitle": "ROADMAP",
+    "title": "开发路线图",
+    "description": "我们正在分阶段推进开发。请查看各阶段的进展情况。",
+    "phases": {
+      "0": {
+        "label": "阶段 1",
+        "status": "开发中",
+        "title": "夜间行业专属POS",
+        "description": "专为夜总会、女仆酒吧、酒廊、小酒馆、男模俱乐部优化的POS系统。在iPad上运行，整合楼层管理、结账、接待人员管理。离线支持实现营业期间零停机时间。",
+        "details": {
+          "0": { "title": "楼层管理", "description": "支持多包间的桌台管理，实时空位状态显示" },
+          "1": { "title": "结账・结算", "description": "套餐费用・点名费・服务费自动计算" },
+          "2": { "title": "接待人员考勤", "description": "带照片的接待人员列表一键打卡" },
+          "3": { "title": "销售报表", "description": "自动汇总每日销售额及接待人员个人业绩" }
+        }
+      },
+      "1": {
+        "label": "阶段 2",
+        "status": "设计中",
+        "title": "用POS数据改变夜间工作招聘",
+        "description": "以LunaPos销售数据为基础，构建夜间工作的招聘及人才匹配服务。基于接待人员实绩作品集与门店经营数据，打造前所未有的高可信度招聘平台。"
+      },
+      "2": {
+        "label": "阶段 3",
+        "status": "计划中",
+        "title": "融资支持",
+        "description": "基于LunaPos导入门店的经营数据，为门店提供融资支持。通过数据支撑的门店评估，搭建连接投资者与门店的平台。"
+      },
+      "3": {
+        "label": "阶段 4",
+        "status": "构想中",
+        "title": "海外拓展 — 迈向全球夜总会POS标准",
+        "description": "将在日本夜间行业积累的经验，从新加坡和东南亚开始，逐步推向全球。打造适配全球夜总会、酒廊、酒吧的多语言、多货币POS系统。"
+      }
+    }
+  },
+  "investor": {
+    "subtitle": "INVESTOR",
+    "title": "欢迎投资者了解详情",
+    "description": "我们正在寻找共同推进夜间行业数字化转型的合作伙伴。",
+    "cards": {
+      "0": { "title": "成长型市场", "description": "夜间行业的数字化转型尚处于起步阶段，作为先行者开拓市场，机遇巨大。" },
+      "1": { "title": "导入实绩", "description": "基于实际门店的导入与运营经验，持续推进产品改善与规模扩大。" },
+      "2": { "title": "可扩展的愿景", "description": "从POS → Luna Career → Luna Fund → Luna World，逐步扩展业务领域的清晰路线图。" }
+    },
+    "ctaTitle": "有意向出资LunaPos的投资者",
+    "ctaSubtitle": "我们将发送商业计划书及财务预测等资料",
+    "ctaDescription": "LunaPos致力于成为夜间娱乐行业专属POS系统，目标是成为行业基础设施。如有意向对事业出资，欢迎随时联系我们。",
+    "ctaButton": "联系我们"
+  },
+  "threeWay": {
+    "subtitle": "THREE-WAY VALUE",
+    "title": "三方共赢的机制",
+    "description": "接待人员、输出门店、接收门店，三方均受益的人才流动生态系统。",
+    "cast": {
+      "label": "接待人员",
+      "items": {
+        "0": { "title": "用数字证明实力", "description": "点名次数、销售贡献额、回头率等" },
+        "1": { "title": "在转籍谈判中占据优势", "description": "可作为时薪及待遇谈判的依据" },
+        "2": { "title": "职业积累可视化", "description": "越努力，作品集越丰富" },
+        "3": { "title": "在LunaPos导入门店工作的激励", "description": "未导入门店无法积累实绩" }
+      }
+    },
+    "sender": {
+      "label": "输出门店（现门店）",
+      "items": {
+        "0": { "title": "促进顺利离职", "description": "可将作品集发放纳入离职流程" },
+        "1": { "title": "系统化介绍费收入", "description": "附数据介绍 → 介绍成功报酬" },
+        "2": { "title": "提升接待人员留存率", "description": "「在这里积累实绩，对未来有帮助」的动力" }
+      }
+    },
+    "receiver": {
+      "label": "接收门店（转籍目的地）",
+      "items": {
+        "0": { "title": "降低招聘风险", "description": "提前确认销售实绩后再做招聘决定" },
+        "1": { "title": "设定合理待遇", "description": "基于数据提出时薪及提成比例" },
+        "2": { "title": "避免体验入职滥用", "description": "优先录用有实绩的接待人员" }
+      }
+    }
+  },
+  "screenshot": {
+    "subtitle": "PREVIEW",
+    "title": "开发中的界面",
+    "description": "这是目前正在开发中的LunaPos Floor应用实际界面",
+    "items": {
+      "0": { "caption": "楼层地图", "description": "实时显示桌台状态、剩余时间及销售额", "alt": "LunaPos Floor - 楼层地图界面" },
+      "1": { "caption": "接待人员管理", "description": "通过照片网格直观掌握考勤状态及工作时长", "alt": "LunaPos Floor - 接待人员管理界面" }
+    }
+  },
+  "footer": {
+    "tagline1": "专为夜间行业打造的POS系统。",
+    "tagline2": "智能管理每日销售。",
+    "sitemap": "网站地图",
+    "industries": "行业分类页面",
+    "industry": {
+      "cabaret": "夜总会专用",
+      "girlsBar": "女仆酒吧专用",
+      "lounge": "酒廊专用",
+      "snack": "小酒馆专用",
+      "host": "男模俱乐部专用"
+    },
+    "contactTitle": "联系我们",
+    "terms": "使用条款",
+    "privacy": "隐私政策",
+    "tokushoho": "特定商业交易法"
+  },
+  "floatingLine": {
+    "title": "添加LINE好友",
+    "description": "欢迎在此咨询"
+  },
+  "common": {
+    "darkMode": "切换至深色模式",
+    "lightMode": "切换至浅色模式",
+    "backToTop": "返回首页",
+    "submitting": "发送中...",
+    "submit": "提交",
+    "submitError": "发送失败",
+    "name": "姓名",
+    "email": "电子邮件地址",
+    "phone": "电话号码",
+    "namePlaceholder": "例：田中 太郎",
+    "emailPlaceholder": "例：tanaka@example.com",
+    "phonePlaceholder": "例：03-1234-5678",
+    "allArticles": "全部文章"
+  },
+  "newsTabs": {
+    "announcements": "公告",
+    "devUpdates": "开发动态",
+    "all": "全部",
+    "hp": "HP",
+    "app": "App",
+    "maintenance": "维护",
+    "campaign": "活动"
+  },
+  "features": {
+    "subtitle": "FEATURES",
+    "title": "功能介绍",
+    "description": "LunaPos Floor 以iPad原生应用提供夜间行业现场所需的全部功能。"
+  },
+  "company": {
+    "subtitle": "COMPANY",
+    "title": "关于我们",
+    "founderSubtitle": "FOUNDER",
+    "founderTitle": "代表",
+    "founderBio": "曾在外资IT、通信及AI领域以工程师身份积累职业经验。同时在日本及包括新加坡在内的东南亚地区参与夜间娱乐行业，因切身感受到现有POS系统的不足，由此开发了LunaPos。",
+    "missionSubtitle": "MISSION",
+    "missionTitle": "用科技，让夜间商业更智能。",
+    "missionDescription": "由深谙一线需求的工程师，为夜间娱乐行业打造真正需要的产品。从提升店主运营效率，到改善接待人员及员工的工作环境，再到优化顾客体验，我们用科技推动改变。",
+    "infoLabels": {
+      "tradeName": "商号",
+      "location": "所在地",
+      "business": "业务内容",
+      "founded": "成立时间",
+      "url": "网址"
+    },
+    "infoValues": {
+      "tradeName": "LunaPos",
+      "location": "日本东京都世田谷区",
+      "business": "夜间行业POS系统的开发与提供",
+      "founded": "2026年",
+      "url": "https://lunapos.jp"
+    }
+  },
+  "contact": {
+    "subtitle": "CONTACT",
+    "title": "联系我们",
+    "description": "导入咨询、资料索取等，欢迎随时联系我们。",
+    "companyName": "公司名・门店名称",
+    "companyPlaceholder": "例：Bar Moon",
+    "inquiryType": "咨询类型",
+    "inquiryContent": "咨询内容",
+    "inquiryPlaceholder": "请填写您的咨询内容",
+    "inquiryTypes": {
+      "consultation": "导入咨询",
+      "request": "希望自己的门店导入（无决策权者）",
+      "investment": "关于投资・出资",
+      "partnership": "关于合作伙伴招募",
+      "other": "其他"
+    },
+    "success": "发送成功",
+    "successDescription": "感谢您的咨询。",
+    "successFollowUp": "我们的负责人将尽快与您联系。",
+    "emailTitle": "电子邮件"
+  },
+  "career": {
+    "subtitle": "LUNA CAREER",
+    "title": "招聘平台构想",
+    "badge": "开发计划中",
+    "intro1": "POS数据改变夜间工作招聘方式。",
+    "intro2": "以「有数据支撑的招聘」，从根本上提升行业可信度。",
+    "whyTitle": "为什么 LunaPos 要做招聘",
+    "whyDescription": "传统招聘是门店自行申报条件发布，接待人员往往进店之后才知道真实情况。LunaPos以POS运营数据这一「事实」为基础，为招聘带来透明度与可信度。",
+    "whatTitle": "具体可以实现什么",
+    "features": {
+      "0": { "title": "基于实绩的门店评估", "description": "基于POS销售数据及考勤实绩，可视化门店经营状态。用数据判断是否是「能赚钱的门店」。" },
+      "1": { "title": "接待人员实绩作品集", "description": "将点名次数、销售贡献、工作实绩作为接待人员自身的作品集积累。成为转籍谈判的有力依据。" },
+      "2": { "title": "基于需求预测的招聘建议", "description": "根据销售趋势及旺季数据，提出「现在正是该招人的时机」的建议。" },
+      "3": { "title": "从班次到薪资一体化管理", "description": "入职后的考勤管理・薪资计算也可通过LunaPos无缝完成。" }
+    },
+    "comparisonTitle": "与现有招聘媒体的区别",
+    "comparisonHeaders": { "existing": "现有招聘网站", "luna": "Luna Career" },
+    "comparison": {
+      "0": { "label": "门店信息可信度", "existing": "自我申报", "luna": "基于POS实绩" },
+      "1": { "label": "收入信息", "existing": "「月收○万円可能」（无依据）", "luna": "基于实绩数据的平均收入" },
+      "2": { "label": "入职后管理", "existing": "无（需另外使用其他系统）", "luna": "POS联动，一体化管理" },
+      "3": { "label": "招聘时机", "existing": "凭感觉", "luna": "基于数据预测的建议" },
+      "4": { "label": "接待人员评估", "existing": "仅面试・体验入职", "luna": "过去实绩作品集" }
+    },
+    "stepsTitle": "推进步骤",
+    "stepsDescription": "Luna Career计划随着LunaPos（POS）导入门店的增加，分阶段扩展功能。目前以推广POS普及为最优先事项。",
+    "stepsNote": "Luna Career作为开发路线图中的第二阶段正在计划中。目前以POS功能的开发与稳定化为优先事项。"
+  },
+  "fund": {
+    "subtitle": "LUNA FUND",
+    "title": "门店投资计划",
+    "badge": "准备中 - 接受预先登记",
+    "description": "正在筹备基于LunaPos导入门店经营数据，向优质门店提供出资及融资的计划。",
+    "features": {
+      "0": { "title": "基于数据的投资判断", "description": "通过POS运营数据可视化销售趋势、客单价、运营效率等，辅助做出有依据的投资决策。" },
+      "1": { "title": "风险可视化", "description": "通过数据掌握与投资风险相关的指标，如销售稳定性、季节波动、接待人员留存率等。" },
+      "2": { "title": "成长潜力评估", "description": "基于历史趋势分析未来成长可能性，更容易发现有潜力的门店。" }
+    },
+    "investmentTypes": {
+      "store": "对门店投资感兴趣",
+      "both": "对事业和门店都感兴趣",
+      "other": "其他・想先了解详情"
+    },
+    "formTitle": "预先登记",
+    "formDescription": "计划启动时将优先通知您",
+    "investmentType": "感兴趣的投资类型",
+    "message": "留言（选填）",
+    "messagePlaceholder": "如有疑问或需求，请填写在此",
+    "submitButton": "预先登记",
+    "successTitle": "预先登记完成",
+    "successMessage": "已加入候补名单",
+    "successDescription": "一旦Luna Fund的详细内容确定，将通过您登记的电子邮件地址联系您。"
+  },
+  "world": {
+    "subtitle": "LUNA WORLD",
+    "title": "海外拓展计划",
+    "badge": "愿景",
+    "description": "将在日本夜间行业打磨的POS系统，带向全球夜总会、酒廊及酒吧。致力于成为夜间娱乐行业的全球标准。",
+    "visionTitle": "迈向全球夜总会POS标准",
+    "visionDescription": "日本夜间娱乐行业拥有独特的计费体系与接客文化，是全球独一无二的市场。我们将把LunaPos积累的行业专属经验，本地化后推广至各国夜总会、酒廊及酒吧。",
+    "roadmapTitle": "拓展路线图",
+    "regions": {
+      "0": { "name": "新加坡", "description": "东南亚商业中心。日系俱乐部众多，是首个海外据点的最佳选择。", "status": "首个目标" },
+      "1": { "name": "东南亚", "description": "泰国、菲律宾、马来西亚等夜生活产业繁荣的地区。", "status": "第二阶段" },
+      "2": { "name": "东亚", "description": "韩国、台湾、香港等拥有相似接客文化的市场。", "status": "第三阶段" },
+      "3": { "name": "欧美", "description": "进军夜总会及酒吧市场规模庞大的北美与欧洲。", "status": "未来构想" }
+    },
+    "challengesTitle": "全球化应对举措",
+    "challengesDescription": "我们正在针对以下课题推进海外拓展的相关工作。",
+    "challenges": {
+      "0": { "title": "多语言支持", "description": "提供支持英语、中文等各国语言的界面。" },
+      "1": { "title": "多币种・多支付方式支持", "description": "支持以当地货币结账及各国支付手段。" },
+      "2": { "title": "法规遵从", "description": "遵守各国夜间娱乐相关法规。" },
+      "3": { "title": "本地化", "description": "根据各国接客文化及计费体系进行定制化调整。" }
+    }
+  },
+  "partner": {
+    "subtitle": "PARTNER PROGRAM",
+    "title": "推广合作伙伴招募",
+    "description": "利用您在夜间行业的人脉，只需介绍LunaPos即可获得报酬。",
+    "benefits": {
+      "0": { "title": "介绍报酬", "description": "每成功促成一家门店导入LunaPos，即可获得介绍报酬。" },
+      "1": { "title": "只需介绍即可", "description": "导入支持及技术对应由LunaPos团队负责。" },
+      "2": { "title": "合作伙伴专属支持", "description": "通过专属控制台查看成果。支持团队全程提供后援。" }
+    },
+    "stepsTitle": "合作伙伴流程",
+    "steps": {
+      "0": { "title": "合作伙伴登记", "description": "通过下方表单登记" },
+      "1": { "title": "介绍门店", "description": "通过专属链接向门店介绍LunaPos" },
+      "2": { "title": "导入支持", "description": "导入对应交由LunaPos团队处理" },
+      "3": { "title": "获取报酬", "description": "导入确定后支付介绍报酬" }
+    },
+    "formTitle": "合作伙伴登记",
+    "formDescription": "实装完成后将发送专属链接给您",
+    "loginLink": "点此登录",
+    "password": "密码",
+    "passwordConfirm": "确认密码",
+    "passwordPlaceholder": "请输入密码",
+    "passwordConfirmPlaceholder": "请再次输入",
+    "partnerType": "合作伙伴类型",
+    "partnerTypes": {
+      "individual": "个人（自由职业・副业）",
+      "corporate": "法人（代理商・咨询公司）",
+      "owner": "门店老板（介绍其他门店）",
+      "other": "其他"
+    },
+    "passwordMismatch": "两次输入的密码不一致",
+    "passwordTooShort": "密码请设置6位以上",
+    "registerError": "登记失败",
+    "registering": "登记中...",
+    "register": "登记为合作伙伴",
+    "successTitle": "登记完成",
+    "successMessage": "合作伙伴登记已完成",
+    "redirecting": "正在跳转至控制台...",
+    "toDashboard": "前往控制台"
+  },
+  "login": {
+    "subtitle": "PARTNER LOGIN",
+    "title": "合作伙伴登录",
+    "cardTitle": "登录",
+    "cardDescription": "访问合作伙伴控制台",
+    "password": "密码",
+    "passwordPlaceholder": "请输入密码",
+    "loginError": "登录失败",
+    "loggingIn": "登录中...",
+    "loginButton": "登录",
+    "noAccount": "还没有账号？",
+    "registerLink": "合作伙伴登记"
+  },
+  "dashboard": {
+    "subtitle": "PARTNER DASHBOARD",
+    "greeting": "{name} 您好",
+    "logout": "退出登录",
+    "referralLink": "您的推广链接",
+    "copied": "已复制",
+    "copy": "复制",
+    "referralCode": "推广码：",
+    "newNotifications": "上次登录以来：有 {count} 条新通知",
+    "tabs": {
+      "overview": "概览",
+      "conversions": "成约",
+      "rewards": "报酬",
+      "settings": "设置"
+    },
+    "stats": {
+      "clicks": "点击数",
+      "conversions": "成约数",
+      "confirmed": "确定成约",
+      "cvr": "CVR",
+      "unpaid": "未支付报酬",
+      "paid": "已支付"
+    },
+    "chartClicks": "点击趋势",
+    "chartConversions": "成约趋势",
+    "conversionsTitle": "成约列表",
+    "conversionsEmpty": "暂无成约记录。请分享推广链接，向门店介绍LunaPos吧。",
+    "conversionsHeaders": { "date": "日期", "store": "门店名称", "status": "状态" },
+    "rewardsTitle": "报酬历史",
+    "rewardsEmpty": "暂无报酬记录。",
+    "rewardsHeaders": { "date": "日期", "amount": "金额", "status": "状态", "note": "备注" },
+    "statusLabels": {
+      "pending": "审核中",
+      "confirmed": "已确定",
+      "rejected": "已拒绝",
+      "approved": "已批准",
+      "paid": "已支付"
+    }
+  },
+  "profile": {
+    "title": "个人资料设置",
+    "name": "姓名",
+    "email": "电子邮件地址",
+    "phone": "电话号码",
+    "partnerType": "合作伙伴类型",
+    "emailReadOnly": "电子邮件地址不可更改",
+    "referralCode": "推广码：",
+    "createdAt": "账号创建日期：",
+    "saveError": "保存失败",
+    "saved": "已保存",
+    "saving": "保存中...",
+    "save": "保存"
+  },
+  "commission": {
+    "title": "报酬汇总",
+    "csvExport": "导出CSV",
+    "csvHeaders": "日期,金额,状态,备注",
+    "totalPaid": "累计报酬（已支付）",
+    "thisMonth": "本月报酬",
+    "unpaid": "未支付金额",
+    "lastPayment": "最后支付日期："
+  },
+  "clickBreakdown": {
+    "title": "按页面点击数统计",
+    "empty": "暂无点击数据。"
+  },
+  "dateRange": {
+    "7d": "7天",
+    "30d": "30天",
+    "90d": "90天",
+    "all": "全部时间"
+  },
+  "column": {
+    "subtitle": "COLUMN",
+    "title": "专栏",
+    "description": "为您提供夜间行业经营相关的实用信息",
+    "empty": "文章准备中。",
+    "tagEmpty": "暂无符合条件的文章。",
+    "backToList": "返回专栏列表",
+    "tagTitle": "#{tag} 的文章",
+    "tagDescription": "含有「{tag}」标签的专栏文章列表。"
+  },
+  "news": {
+    "subtitle": "NEWS",
+    "title": "公告・开发动态",
+    "backToList": "返回公告列表",
+    "categories": {
+      "announcement": "公告",
+      "devUpdate": "开发动态",
+      "maintenance": "维护",
+      "campaign": "活动"
+    }
+  },
+  "notFound": {
+    "message": "未找到您访问的页面"
+  },
+  "legal": {
+    "terms": {
+      "subtitle": "TERMS OF SERVICE",
+      "title": "使用条款",
+      "effectiveDate": "制定日：2026年2月23日"
+    },
+    "privacy": {
+      "subtitle": "PRIVACY POLICY",
+      "title": "隐私政策",
+      "effectiveDate": "制定日：2026年2月23日"
+    },
+    "tokushoho": {
+      "subtitle": "LEGAL",
+      "title": "特定商业交易法相关说明"
+    }
   }
 }

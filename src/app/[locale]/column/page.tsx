@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { getTranslations } from 'next-intl/server';
 import { getAllArticles, getAllTags } from "@/lib/media";
 import Section from "@/components/layout/Section";
 import SectionHeading from "@/components/ui/SectionHeading";
@@ -8,11 +8,10 @@ import { Pagination } from "@/components/ui/Pagination";
 
 const ARTICLES_PER_PAGE = 6;
 
-export const metadata: Metadata = {
-  title: "コラム",
-  description:
-    "ナイト業界の経営に役立つ情報をお届けします。POS導入ガイド、売上管理のコツ、業界トレンドなど。",
-};
+export async function generateMetadata() {
+  const t = await getTranslations('metadata.column');
+  return { title: t('title'), description: t('description') };
+}
 
 export default async function MediaPage({
   searchParams,
@@ -29,12 +28,14 @@ export default async function MediaPage({
     currentPage * ARTICLES_PER_PAGE
   );
 
+  const t = await getTranslations('column');
+
   return (
     <Section className="pt-32">
       <SectionHeading
-        subtitle="COLUMN"
-        title="コラム"
-        description="ナイト業界の経営に役立つ情報をお届けします"
+        subtitle={t('subtitle')}
+        title={t('title')}
+        description={t('description')}
       />
 
       <div className="max-w-4xl mx-auto">
@@ -46,7 +47,7 @@ export default async function MediaPage({
 
         {paginatedArticles.length === 0 ? (
           <p className="text-center text-luna-text-secondary">
-            記事の準備中です。
+            {t('empty')}
           </p>
         ) : (
           <div className="space-y-4">

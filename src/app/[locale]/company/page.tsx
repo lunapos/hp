@@ -1,24 +1,32 @@
-import type { Metadata } from "next";
+import { getTranslations } from 'next-intl/server';
 import Section from "@/components/layout/Section";
 import Card from "@/components/ui/Card";
-import { COMPANY_INFO } from "@/lib/constants";
 
-export const metadata: Metadata = {
-  title: "運営について",
-  description: "LunaPosの運営情報。ナイト業界向けPOSシステムの開発・提供。",
-};
+export async function generateMetadata() {
+  const t = await getTranslations('metadata.company');
+  return { title: t('title'), description: t('description') };
+}
 
-export default function CompanyPage() {
+export default async function CompanyPage() {
+  const t = await getTranslations('company');
+
+  const infoLabels = t.raw('infoLabels') as Record<string, string>;
+  const infoValues = t.raw('infoValues') as Record<string, string>;
+  const companyInfo = Object.keys(infoLabels).map((key) => ({
+    label: infoLabels[key],
+    value: infoValues[key],
+  }));
+
   return (
     <>
       {/* Page Header */}
       <section className="pt-20 pb-8 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <p className="text-luna-gold text-sm tracking-[0.3em] font-medium mb-2">
-            COMPANY
+            {t('subtitle')}
           </p>
           <h1 className="text-4xl md:text-5xl font-bold text-luna-text-primary mb-4">
-            運営について
+            {t('title')}
           </h1>
           <div className="w-16 h-1 bg-luna-gold mx-auto rounded-full" />
         </div>
@@ -29,7 +37,7 @@ export default function CompanyPage() {
         <div className="max-w-3xl mx-auto">
           <Card>
             <div className="divide-y divide-luna-border">
-              {COMPANY_INFO.map((info, index) => (
+              {companyInfo.map((info, index) => (
                 <div
                   key={index}
                   className="flex flex-col sm:flex-row py-4 first:pt-0 last:pb-0"
@@ -59,11 +67,11 @@ export default function CompanyPage() {
 
               <div>
                 <p className="text-luna-gold text-sm tracking-[0.3em] font-medium mb-2">
-                  FOUNDER
+                  {t('founderSubtitle')}
                 </p>
-                <h3 className="text-xl font-bold text-luna-text-primary mb-4">代表</h3>
+                <h3 className="text-xl font-bold text-luna-text-primary mb-4">{t('founderTitle')}</h3>
                 <p className="text-luna-text-secondary text-sm leading-relaxed">
-                  外資系IT・通信・AI領域でエンジニアとしてキャリアを積む。日本やシンガポールを含む東南アジアでナイトエンタメ業界にも携わり、現場で感じた既存POSへの不満から、LunaPosを開発。
+                  {t('founderBio')}
                 </p>
               </div>
             </div>
@@ -76,15 +84,13 @@ export default function CompanyPage() {
         <div className="max-w-3xl mx-auto text-center">
           <Card className="border-luna-gold/30">
             <p className="text-luna-gold text-sm tracking-[0.3em] font-medium mb-4">
-              MISSION
+              {t('missionSubtitle')}
             </p>
             <p className="text-2xl md:text-3xl font-bold text-luna-text-primary leading-relaxed">
-              テクノロジーで、
-              <br />
-              ナイトビジネスをスマートに。
+              {t('missionTitle')}
             </p>
             <p className="text-luna-text-secondary mt-4 leading-relaxed">
-              ナイトエンタメ業界に本当に必要なものを、現場を知るエンジニアが作る。オーナーの業務効率化から、キャスト・スタッフの働きやすさ、お客様の体験まで、テクノロジーで変えていきます。
+              {t('missionDescription')}
             </p>
           </Card>
         </div>

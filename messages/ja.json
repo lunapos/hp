@@ -1,6 +1,743 @@
 {
-  "site": {
-    "title": "LunaPos | ナイトエンタメ業界向けPOSシステム",
-    "description": "キャバクラ・ガールズバー・スナック・ホスト向けの次世代POSシステム"
+  "metadata": {
+    "home": {
+      "title": "LunaPos | ナイトエンタメ業界向けPOSシステム",
+      "description": "キャバクラ・ガールズバー・スナック・ホスト向けの次世代POSシステム。フロア管理・会計・出退勤をiPad1台で。オフライン対応で安心の店舗運営。"
+    },
+    "features": {
+      "title": "機能紹介",
+      "description": "LunaPos Floorの全機能をご紹介。フロア管理、オーダー管理、会計、キャスト出退勤管理、日報・売上レポートなど。"
+    },
+    "company": {
+      "title": "運営について",
+      "description": "LunaPosの運営情報。ナイト業界向けPOSシステムの開発・提供。"
+    },
+    "contact": {
+      "title": "お問い合わせ",
+      "description": "LunaPosへのお問い合わせ・導入のご相談はこちらから。"
+    },
+    "career": {
+      "title": "Luna Career | 求人プラットフォーム構想",
+      "description": "POSデータが変える、ナイトワーク求人のあり方。実績ベースの店舗評価・キャストポートフォリオ・需要予測による採用提案を実現。"
+    },
+    "fund": {
+      "title": "Luna Fund | 店舗投資プログラム",
+      "description": "LunaPos導入店舗の経営データをもとに、有望な店舗への出資・融資が可能になるプログラム。事前登録受付中。"
+    },
+    "investor": {
+      "title": "投資・出資をご検討の方へ",
+      "description": "LunaPosでは、事業そのものへの出資と、導入店舗への投資の2つの参画方法をご用意しています。"
+    },
+    "news": {
+      "title": "お知らせ・開発アップデート",
+      "description": "LunaPosの最新情報、開発アップデート、メンテナンス情報をお届けします。"
+    },
+    "column": {
+      "title": "コラム",
+      "description": "ナイト業界の経営に役立つ情報をお届けします。POS導入ガイド、売上管理のコツ、業界トレンドなど。"
+    },
+    "partner": {
+      "title": "アフィリエイトパートナー募集",
+      "description": "LunaPosを紹介して報酬を獲得。ナイト業界に精通したあなたの人脈を活かして、店舗にLunaPosを紹介するだけで紹介報酬をお受け取りいただけます。"
+    },
+    "partnerLogin": {
+      "title": "パートナーログイン",
+      "description": "LunaPosアフィリエイトパートナー専用ログイン"
+    },
+    "partnerDashboard": {
+      "title": "パートナーダッシュボード",
+      "description": "LunaPosアフィリエイトパートナー専用管理画面"
+    },
+    "roadmap": {
+      "title": "開発ロードマップ",
+      "description": "LunaPosの開発ロードマップ。POS機能の開発を軸に、Luna Career、Luna Fund、Luna Worldへ段階的に拡張。"
+    },
+    "world": {
+      "title": "Luna World | 海外展開プログラム",
+      "description": "LunaPosを世界のナイトエンターテインメント業界へ。シンガポール・東南アジアを皮切りにグローバル展開を目指します。"
+    },
+    "terms": {
+      "title": "利用規約",
+      "description": "LunaPosの利用規約です。"
+    },
+    "privacy": {
+      "title": "プライバシーポリシー",
+      "description": "LunaPosのプライバシーポリシーです。"
+    },
+    "tokushoho": {
+      "title": "特定商取引法に基づく表記",
+      "description": "LunaPosの特定商取引法に基づく表記です。"
+    }
+  },
+  "nav": {
+    "home": "ホーム",
+    "features": "機能紹介",
+    "news": "ニュース",
+    "column": "コラム",
+    "contact": "お問い合わせ",
+    "roadmap": "ロードマップ",
+    "company": "運営について",
+    "investor": "投資・出資",
+    "partner": "パートナー",
+    "menuOpen": "メニューを開く",
+    "menuClose": "メニューを閉じる"
+  },
+  "hero": {
+    "badge": "Coming Soon - 順次公開予定",
+    "title1": "ナイト業界のための、",
+    "title2": "次世代POS",
+    "title3": "システム",
+    "description1": "フロア管理・会計・出退勤をiPad1台で。",
+    "description2": "オフライン対応で安心の店舗運営を。",
+    "floatingOffline": "オフライン対応",
+    "floatingNative": "iPad ネイティブ",
+    "floatingSpecialized": "業界特化",
+    "imageAlt": "LunaPos Floor - フロアマップ画面"
+  },
+  "problems": {
+    "subtitle": "PROBLEMS",
+    "title": "こんなお悩みはありませんか？",
+    "solution": "LunaPos がすべて解決します。",
+    "items": {
+      "0": "手書き伝票のミスが多く、会計時にトラブルが発生する",
+      "1": "本指名・場内指名・同伴の管理が煩雑で正確に把握できない",
+      "2": "日報作成に毎日何時間もかかっている",
+      "3": "ネット障害時にシステムが使えなくなる",
+      "4": "既存POSがナイト業界の料金体系に合わない"
+    }
+  },
+  "featureHighlights": {
+    "subtitle": "FEATURES",
+    "title": "LunaPos の特徴",
+    "description": "ナイト業界の現場を知り尽くした、専用POSシステムです。",
+    "viewAll": "すべての機能を見る",
+    "items": {
+      "0": {
+        "title": "iPad ネイティブ",
+        "description": "Swift/SwiftUIで開発されたiPad専用アプリ。ネイティブの操作感で、忙しい営業中もストレスなく操作できます。",
+        "details": {
+          "0": "高速起動・高パフォーマンス",
+          "1": "iPad画面サイズに最適化",
+          "2": "ダークモード標準"
+        }
+      },
+      "1": {
+        "title": "オフライン対応",
+        "description": "ローカルファースト設計で、インターネットがなくても全機能が動作。営業中のダウンタイムゼロを実現します。",
+        "details": {
+          "0": "ネット障害時も通常稼働",
+          "1": "復旧時に自動データ同期",
+          "2": "安心の冗長性"
+        }
+      },
+      "2": {
+        "title": "ナイト業界特化",
+        "description": "セット料金・指名料・サービス料・同伴など、ナイト業界特有の複雑な料金体系に完全対応しています。",
+        "details": {
+          "0": "複雑な料金体系の自動計算",
+          "1": "指名管理・キャスト管理",
+          "2": "日報・売上レポート自動生成"
+        }
+      }
+    }
+  },
+  "allFeatures": {
+    "0": {
+      "title": "指名・同伴管理・会計",
+      "description": "本指名・場内指名・同伴をテーブルごとに管理し、セット料金・サービス料・税を自動計算。会計業務を大幅に効率化します。",
+      "details": {
+        "0": "本指名・場内指名・指名なしの切替",
+        "1": "同伴キャストの紐付け・同伴料自動計算",
+        "2": "セット料金・サービス料・税の自動計算",
+        "3": "現金・カード・電子マネー対応",
+        "4": "レシート・領収書印刷"
+      }
+    },
+    "1": {
+      "title": "シフト・出退勤管理",
+      "description": "写真付きキャスト一覧からワンタップ出退勤。シフト管理と実績記録を自動化します。",
+      "details": {
+        "0": "フォトグリッドでワンタップ出退勤",
+        "1": "シフト予定の登録・管理",
+        "2": "勤怠履歴の自動記録",
+        "3": "HPへの在籍状況の自動反映"
+      }
+    },
+    "2": {
+      "title": "売上レポート・日報",
+      "description": "日次売上、キャスト別成績、メニュー別ランキングを自動集計。日報作成にかかる時間をゼロに。",
+      "details": {
+        "0": "売上サマリーの自動生成",
+        "1": "支払方法別集計",
+        "2": "キャスト売上ランキング",
+        "3": "レジ精算機能"
+      }
+    },
+    "3": {
+      "title": "不正防止（操作ログ）",
+      "description": "全操作を自動記録。価格変更・割引・取消などの操作を管理画面からリアルタイムで確認できます。",
+      "details": {
+        "0": "全操作のタイムスタンプ記録",
+        "1": "価格変更・割引・取消の履歴",
+        "2": "管理画面からリアルタイム確認",
+        "3": "追加料金なしで標準搭載"
+      }
+    },
+    "4": {
+      "title": "インボイス対応",
+      "description": "適格請求書（インボイス）の要件を満たすレシート・領収書を発行。設定画面で簡単に切り替えできます。",
+      "details": {
+        "0": "登録番号（T+13桁）の自動印字",
+        "1": "税率区分・税額の明記",
+        "2": "設定画面でON/OFF切替",
+        "3": "領収書・レシート両対応"
+      }
+    },
+    "5": {
+      "title": "給与計算",
+      "description": "バック率・時給・指名バックなど、店舗独自の給与ルールに対応した自動計算。",
+      "details": {
+        "0": "店舗独自のバック率設定",
+        "1": "指名・同伴・ドリンクバック対応",
+        "2": "時給＋歩合の混合計算",
+        "3": "給与明細の自動生成"
+      }
+    },
+    "6": {
+      "title": "顧客管理",
+      "description": "来店履歴・好み・担当キャストなど、顧客情報を一元管理。接客の質を向上させます。",
+      "details": {
+        "0": "来店履歴・利用金額の自動記録",
+        "1": "顧客メモ・好みの登録",
+        "2": "担当キャストの紐付け",
+        "3": "顧客別の売上分析"
+      }
+    },
+    "7": {
+      "title": "Web管理画面",
+      "description": "外出先からスマホ・PCで売上やキャストの成績をリアルタイムに確認。いつでもどこでも店舗管理。",
+      "details": {
+        "0": "売上・指名数をリアルタイム確認",
+        "1": "メニュー・料金設定",
+        "2": "キャスト管理・シフト管理",
+        "3": "スマホ・PC・タブレット対応"
+      }
+    },
+    "8": {
+      "title": "キャストアプリ",
+      "description": "キャスト専用のiPhoneアプリで個人の売上・シフト・給与を確認。モチベーション向上に。",
+      "details": {
+        "0": "個人売上・指名数の確認",
+        "1": "シフト提出・変更",
+        "2": "出退勤打刻",
+        "3": "給与明細の閲覧"
+      }
+    },
+    "9": {
+      "title": "オフライン対応",
+      "description": "SwiftDataによるローカルファースト設計で、ネット障害時でも全機能が動作。営業を止めません。",
+      "details": {
+        "0": "ネット障害時も通常稼働",
+        "1": "データ自動同期",
+        "2": "安心の冗長性"
+      }
+    }
+  },
+  "pricing": {
+    "subtitle": "PRICING",
+    "title": "料金プラン",
+    "description": "迷わせない、ワンプラン。最初の500会計は無料予定です。",
+    "perMonth": "/月（税込）",
+    "freeStart": "リリース時は無料でスタート",
+    "freeNote": "リリース後、最初の500会計（累計）は無料で全機能をご利用いただける予定です。事前登録いただくとリリース時にご案内します。",
+    "aiTitle": "AI機能について",
+    "aiNote": "売上予測・シフト最適化・顧客分析など、AIを活用した機能を順次リリース予定です。AI機能のご利用には追加料金が発生する場合があります。"
+  },
+  "faq": {
+    "subtitle": "FAQ",
+    "title": "よくあるご質問",
+    "items": {
+      "0": {
+        "question": "導入までどのくらいの期間がかかりますか？",
+        "answer": "お申し込みから最短3営業日でご利用いただけます。初期設定もシンプルなので、ITに詳しくない方でもすぐに使い始められます。"
+      },
+      "1": {
+        "question": "データのエクスポートはできますか？",
+        "answer": "はい、売上データや顧客情報などをCSV形式でエクスポートできます。確定申告や税理士への共有、独自の分析にご活用いただけます。"
+      },
+      "2": {
+        "question": "どの端末で使えますか？",
+        "answer": "現在はiPadに対応しています。店舗での利用に最適化された操作画面をご提供しています。"
+      },
+      "3": {
+        "question": "解約はいつでもできますか？",
+        "answer": "はい、解約はいつでも可能です。最低利用期間の縛りはございません。公式LINEからご連絡いただければ、すぐにお手続きいたします。"
+      },
+      "4": {
+        "question": "無料で使えますか？",
+        "answer": "はい、累計500会計まで完全無料でご利用いただけます。クレジットカードの登録も不要で、全機能をお使いいただけます。501会計目から月額¥30,000（税込）となります。"
+      },
+      "5": {
+        "question": "店舗独自の給与体系に対応できますか？",
+        "answer": "はい、バック率や時給設定など、店舗ごとの給与ルールに合わせた柔軟な設定が可能です。ただし、すべての給与体系に対応できるとは限りませんので、詳しくはお問い合わせください。"
+      }
+    }
+  },
+  "cta": {
+    "title": "まずはお気軽にご相談ください",
+    "description1": "現在開発中です。事前登録いただくと、リリース時に優先的にご案内いたします。",
+    "description2": "ご質問・ご相談はLINEまたはフォームで受付中です。",
+    "button": "事前登録・お問い合わせ",
+    "emailLink": "メールでのお問い合わせはこちら"
+  },
+  "testimonial": {
+    "subtitle": "VOICE",
+    "title": "導入店舗の声",
+    "thankYou": "ご投稿ありがとうございます",
+    "thankYouDescription": "確認後、掲載させていただきます。",
+    "formTitle": "お客様の声を募集しています",
+    "formDescription": "導入いただいた店舗様からのフィードバックを順次掲載予定です。",
+    "storeName": "店舗名（仮名OK）",
+    "role": "役職",
+    "feedback": "ご感想・フィードバック",
+    "storeNamePlaceholder": "例: Bar Moon",
+    "rolePlaceholder": "例: オーナー",
+    "feedbackPlaceholder": "LunaPosを使ってみた感想をお聞かせください",
+    "submitError": "送信に失敗しました。もう一度お試しください。",
+    "submitting": "送信中...",
+    "submit": "送信する"
+  },
+  "newsSection": {
+    "subtitle": "NEWS",
+    "title": "お知らせ・開発アップデート",
+    "announcements": "お知らせ",
+    "devUpdates": "開発アップデート",
+    "viewAll": "一覧"
+  },
+  "roadmap": {
+    "subtitle": "ROADMAP",
+    "title": "開発ロードマップ",
+    "description": "段階的に開発を進めています。各フェーズの進捗をご覧ください。",
+    "phases": {
+      "0": {
+        "label": "フェーズ 1",
+        "status": "開発中",
+        "title": "ナイト業界特化POS",
+        "description": "キャバクラ・ガールズバー・ラウンジ・スナック・ホストに最適化されたPOSシステム。iPad上で動作し、フロア管理・会計・キャスト管理を統合。オフライン対応で営業中のダウンタイムゼロを実現。",
+        "details": {
+          "0": { "title": "フロア管理", "description": "マルチルーム対応のテーブル管理、リアルタイムの空席状況" },
+          "1": { "title": "会計・精算", "description": "セット料金・指名料・サービス料の自動計算" },
+          "2": { "title": "キャスト出退勤", "description": "写真付きキャスト一覧でワンタップ出退勤" },
+          "3": { "title": "売上レポート", "description": "日次売上、キャスト別成績を自動集計" }
+        }
+      },
+      "1": {
+        "label": "フェーズ 2",
+        "status": "設計中",
+        "title": "POSデータで変える、ナイトワーク求人",
+        "description": "LunaPosの売上データを基盤として、ナイトワークの求人・人材マッチングサービスを構築。キャストの実績ポートフォリオと店舗の経営データに基づいた、これまでにない信頼性のある求人プラットフォーム。"
+      },
+      "2": {
+        "label": "フェーズ 3",
+        "status": "計画中",
+        "title": "資金調達サポート",
+        "description": "LunaPos導入店舗の経営データをもとに、店舗の資金調達をサポート。データに裏付けされた店舗評価により、投資家と店舗を繋ぐプラットフォーム。"
+      },
+      "3": {
+        "label": "フェーズ 4",
+        "status": "構想中",
+        "title": "海外展開 — 世界標準のナイトクラブPOSへ",
+        "description": "日本のナイト業界で培ったノウハウを活かし、シンガポール・東南アジアを皮切りにグローバル展開。世界のナイトクラブ・ラウンジ・バーに対応した多言語・多通貨POSシステム。"
+      }
+    }
+  },
+  "investor": {
+    "subtitle": "INVESTOR",
+    "title": "投資・出資をご検討の方へ",
+    "description": "ナイト業界のDXを一緒に推進するパートナーを募集しています。",
+    "cards": {
+      "0": { "title": "成長市場", "description": "ナイト業界のDXはまだ黎明期。先行者として市場を開拓する大きなチャンスがあります。" },
+      "1": { "title": "導入実績", "description": "実際の店舗での導入・運用実績をもとに、プロダクトの改善と拡大を進めています。" },
+      "2": { "title": "拡張性のあるビジョン", "description": "POS → Luna Career → Luna Fund → Luna World と、段階的に事業領域を拡大する明確なロードマップ。" }
+    },
+    "ctaTitle": "LunaPos への出資をご検討の方",
+    "ctaSubtitle": "事業計画・収支見通しなどの資料をお送りします",
+    "ctaDescription": "LunaPosはナイトエンターテインメント業界に特化したPOSシステムとして、業界のインフラとなることを目指しています。事業への出資にご興味のある方は、お気軽にお問い合わせください。",
+    "ctaButton": "お問い合わせ"
+  },
+  "threeWay": {
+    "subtitle": "THREE-WAY VALUE",
+    "title": "3方良しの仕組み",
+    "description": "キャスト・送り出し店舗・受け入れ店舗、すべてにメリットがある人材流動エコシステム。",
+    "cast": {
+      "label": "キャスト側",
+      "items": {
+        "0": { "title": "実力を数字で証明できる", "description": "指名本数、売上貢献額、リピート率など" },
+        "1": { "title": "移籍交渉で有利になる", "description": "時給・待遇の根拠として提示可能" },
+        "2": { "title": "キャリアの蓄積が可視化される", "description": "長く頑張るほどポートフォリオが充実" },
+        "3": { "title": "LunaPos導入店舗で働くインセンティブ", "description": "非導入店では実績が貯まらない" }
+      }
+    },
+    "sender": {
+      "label": "送り出し店舗側（現店舗）",
+      "items": {
+        "0": { "title": "円満退職を促進", "description": "ポートフォリオ発行を退職プロセスに組み込める" },
+        "1": { "title": "紹介料収入の仕組み化", "description": "データ付き紹介 → 紹介成功報酬" },
+        "2": { "title": "キャスト定着率の向上", "description": "「ここで実績を積めば次に活きる」という動機" }
+      }
+    },
+    "receiver": {
+      "label": "受け入れ店舗側（移籍先）",
+      "items": {
+        "0": { "title": "採用リスクの低減", "description": "売上実績を事前に確認してから採用判断" },
+        "1": { "title": "適切な待遇設定", "description": "データに基づいた時給・バック率の提示が可能" },
+        "2": { "title": "体入荒らしの排除", "description": "実績のあるキャストを優先的に採用" }
+      }
+    }
+  },
+  "screenshot": {
+    "subtitle": "PREVIEW",
+    "title": "開発中の画面",
+    "description": "現在開発中のLunaPos Floorアプリの実際の画面です",
+    "items": {
+      "0": { "caption": "フロアマップ", "description": "テーブルの状態・残り時間・売上をリアルタイムに一覧表示", "alt": "LunaPos Floor - フロアマップ画面" },
+      "1": { "caption": "キャスト管理", "description": "出退勤状況・勤務時間をフォトグリッドで直感的に把握", "alt": "LunaPos Floor - キャスト管理画面" }
+    }
+  },
+  "footer": {
+    "tagline1": "ナイト業界に特化したPOSシステム。",
+    "tagline2": "日々の売上をスマートに管理。",
+    "sitemap": "サイトマップ",
+    "industries": "業種別ページ",
+    "industry": {
+      "cabaret": "キャバクラ向け",
+      "girlsBar": "ガールズバー向け",
+      "lounge": "ラウンジ向け",
+      "snack": "スナック向け",
+      "host": "ホスト向け"
+    },
+    "contactTitle": "お問い合わせ",
+    "terms": "利用規約",
+    "privacy": "プライバシーポリシー",
+    "tokushoho": "特定商取引法"
+  },
+  "floatingLine": {
+    "title": "LINE友達追加",
+    "description": "お問い合わせもこちら"
+  },
+  "common": {
+    "darkMode": "ダークモードに切り替え",
+    "lightMode": "ライトモードに切り替え",
+    "backToTop": "トップページに戻る",
+    "submitting": "送信中...",
+    "submit": "送信する",
+    "submitError": "送信に失敗しました",
+    "name": "お名前",
+    "email": "メールアドレス",
+    "phone": "電話番号",
+    "namePlaceholder": "例: 田中 太郎",
+    "emailPlaceholder": "例: tanaka@example.com",
+    "phonePlaceholder": "例: 03-1234-5678",
+    "allArticles": "すべての記事"
+  },
+  "newsTabs": {
+    "announcements": "お知らせ",
+    "devUpdates": "開発アップデート",
+    "all": "すべて",
+    "hp": "HP",
+    "app": "App",
+    "maintenance": "メンテナンス",
+    "campaign": "キャンペーン"
+  },
+  "features": {
+    "subtitle": "FEATURES",
+    "title": "機能紹介",
+    "description": "LunaPos Floor は、ナイト業界の現場で必要なすべての機能をiPadネイティブアプリで提供します。"
+  },
+  "company": {
+    "subtitle": "COMPANY",
+    "title": "運営について",
+    "founderSubtitle": "FOUNDER",
+    "founderTitle": "代表",
+    "founderBio": "外資系IT・通信・AI領域でエンジニアとしてキャリアを積む。日本やシンガポールを含む東南アジアでナイトエンタメ業界にも携わり、現場で感じた既存POSへの不満から、LunaPosを開発。",
+    "missionSubtitle": "MISSION",
+    "missionTitle": "テクノロジーで、ナイトビジネスをスマートに。",
+    "missionDescription": "ナイトエンタメ業界に本当に必要なものを、現場を知るエンジニアが作る。オーナーの業務効率化から、キャスト・スタッフの働きやすさ、お客様の体験まで、テクノロジーで変えていきます。",
+    "infoLabels": {
+      "tradeName": "屋号",
+      "location": "所在地",
+      "business": "事業内容",
+      "founded": "開業",
+      "url": "URL"
+    },
+    "infoValues": {
+      "tradeName": "LunaPos",
+      "location": "東京都世田谷区",
+      "business": "ナイト業界向けPOSシステムの開発・提供",
+      "founded": "2026年",
+      "url": "https://lunapos.jp"
+    }
+  },
+  "contact": {
+    "subtitle": "CONTACT",
+    "title": "お問い合わせ",
+    "description": "導入のご相談・資料請求など、お気軽にお問い合わせください。",
+    "companyName": "会社名・店舗名",
+    "companyPlaceholder": "例: Bar Moon",
+    "inquiryType": "お問い合わせ種別",
+    "inquiryContent": "お問い合わせ内容",
+    "inquiryPlaceholder": "お問い合わせ内容をご記入ください",
+    "inquiryTypes": {
+      "consultation": "導入相談",
+      "request": "自分の店に導入してほしい（決定権がない方）",
+      "investment": "投資・出資について",
+      "partnership": "パートナー募集について",
+      "other": "その他"
+    },
+    "success": "送信が完了しました",
+    "successDescription": "お問い合わせありがとうございます。",
+    "successFollowUp": "担当者より折り返しご連絡いたします。",
+    "emailTitle": "メール"
+  },
+  "career": {
+    "subtitle": "LUNA CAREER",
+    "title": "求人プラットフォーム構想",
+    "badge": "開発予定",
+    "intro1": "POSデータが変える、ナイトワーク求人のあり方。",
+    "intro2": "「裏付けのある求人」で、業界の信頼性を根本から変えます。",
+    "whyTitle": "なぜ LunaPos が求人をやるのか",
+    "whyDescription": "従来の求人は、店舗が自己申告で条件を掲載し、キャストは入ってみるまで本当の環境がわからない。LunaPosは、POS運用データという「事実」をベースにすることで、求人に透明性と信頼性をもたらします。",
+    "whatTitle": "具体的にできること",
+    "features": {
+      "0": { "title": "実績ベースの店舗評価", "description": "POSの売上データや勤怠実績をもとに、店舗の経営状態を可視化。「稼げる店」かどうかをデータで判断。" },
+      "1": { "title": "キャストの実績ポートフォリオ", "description": "指名数・売上貢献・勤務実績をキャスト自身のポートフォリオとして蓄積。移籍時の交渉材料に。" },
+      "2": { "title": "需要予測に基づく採用提案", "description": "売上トレンドや繁忙期データから「今このタイミングで採用すべき」を提案。" },
+      "3": { "title": "シフト〜給与まで一気通貫", "description": "採用後の勤怠管理・給与計算もLunaPosでシームレスに。" }
+    },
+    "comparisonTitle": "既存求人媒体との違い",
+    "comparisonHeaders": { "existing": "既存求人サイト", "luna": "Luna Career" },
+    "comparison": {
+      "0": { "label": "店舗情報の信頼性", "existing": "自己申告", "luna": "POS実績ベース" },
+      "1": { "label": "収入情報", "existing": "「月収○万可能」（根拠なし）", "luna": "実績データに基づく平均収入" },
+      "2": { "label": "採用後の管理", "existing": "なし（別システム）", "luna": "POS連携で一気通貫" },
+      "3": { "label": "採用タイミング", "existing": "感覚ベース", "luna": "データ予測に基づく提案" },
+      "4": { "label": "キャストの評価", "existing": "面接・体入のみ", "luna": "過去実績のポートフォリオ" }
+    },
+    "stepsTitle": "展開のステップ",
+    "stepsDescription": "Luna Careerは、LunaPos（POS）の導入店舗が増えるにつれて、段階的に機能を拡張する計画です。まずはPOSの普及を最優先に進めています。",
+    "stepsNote": "Luna Careerは開発ロードマップ上のフェーズ2として計画中です。POS機能の開発・安定化を優先しています。"
+  },
+  "fund": {
+    "subtitle": "LUNA FUND",
+    "title": "店舗投資プログラム",
+    "badge": "準備中 - 事前登録受付中",
+    "description": "LunaPos導入店舗の経営データをもとに、有望な店舗への出資・融資が可能になるプログラムを準備中です。",
+    "features": {
+      "0": { "title": "データに基づく投資判断", "description": "POS運用データから売上推移・客単価・稼働率などを可視化し、根拠ある投資判断を支援。" },
+      "1": { "title": "リスクの可視化", "description": "売上の安定性・季節変動・キャスト定着率など、投資リスクに関わる指標をデータで把握。" },
+      "2": { "title": "成長ポテンシャルの評価", "description": "過去のトレンドから将来の成長可能性を分析。伸びしろのある店舗を見つけやすく。" }
+    },
+    "investmentTypes": {
+      "store": "店舗への投資に興味がある",
+      "both": "事業と店舗の両方に興味がある",
+      "other": "その他・まずは話を聞きたい"
+    },
+    "formTitle": "事前登録",
+    "formDescription": "プログラム開始時に優先的にご案内いたします",
+    "investmentType": "ご興味のある投資タイプ",
+    "message": "メッセージ（任意）",
+    "messagePlaceholder": "ご質問やご要望がございましたらご記入ください",
+    "submitButton": "事前登録する",
+    "successTitle": "事前登録完了",
+    "successMessage": "ウェイティングリストに登録しました",
+    "successDescription": "Luna Fund の詳細が決まり次第、ご登録いただいたメールアドレスにご連絡いたします。"
+  },
+  "world": {
+    "subtitle": "LUNA WORLD",
+    "title": "海外展開プログラム",
+    "badge": "ビジョン",
+    "description": "日本のナイト業界で培ったPOSシステムを、世界のナイトクラブ・ラウンジ・バーへ。ナイトエンターテインメント業界のグローバルスタンダードを目指します。",
+    "visionTitle": "世界標準のナイトクラブPOSへ",
+    "visionDescription": "日本のナイトエンターテインメント業界は、独自の料金体系・接客文化を持つ世界でもユニークな市場です。LunaPosで培った業界特化のノウハウを、各国のナイトクラブ・ラウンジ・バーにローカライズして展開します。",
+    "roadmapTitle": "展開ロードマップ",
+    "regions": {
+      "0": { "name": "シンガポール", "description": "東南アジアのビジネスハブ。日系クラブも多く、最初の海外拠点として最適。", "status": "最初のターゲット" },
+      "1": { "name": "東南アジア", "description": "タイ・フィリピン・マレーシアなど、ナイトライフ産業が盛んな地域。", "status": "第2フェーズ" },
+      "2": { "name": "東アジア", "description": "韓国・台湾・香港など、類似の接客文化を持つ市場。", "status": "第3フェーズ" },
+      "3": { "name": "欧米", "description": "ナイトクラブ・バー市場が巨大な北米・ヨーロッパへの展開。", "status": "将来構想" }
+    },
+    "challengesTitle": "グローバル対応の取り組み",
+    "challengesDescription": "海外展開に向けて、以下の課題に取り組んでいます。",
+    "challenges": {
+      "0": { "title": "多言語対応", "description": "英語・中国語をはじめ、各国の言語に対応したUI。" },
+      "1": { "title": "各国通貨・決済対応", "description": "現地通貨での会計処理と、各国の決済手段に対応。" },
+      "2": { "title": "法規制への対応", "description": "各国のナイトエンタメ関連法規への準拠。" },
+      "3": { "title": "ローカライズ", "description": "各国の接客文化・料金体系に合わせたカスタマイズ。" }
+    }
+  },
+  "partner": {
+    "subtitle": "PARTNER PROGRAM",
+    "title": "アフィリエイトパートナー募集",
+    "description": "ナイト業界に精通したあなたの人脈を活かして、LunaPosを紹介するだけで報酬を獲得できます。",
+    "benefits": {
+      "0": { "title": "紹介報酬", "description": "LunaPosの導入が成約するたびに、紹介報酬をお受け取りいただけます。" },
+      "1": { "title": "紹介するだけでOK", "description": "導入サポートや技術的な対応はLunaPosチームが行います。" },
+      "2": { "title": "パートナー専用サポート", "description": "専用ダッシュボードで成果を確認。サポートチームがバックアップします。" }
+    },
+    "stepsTitle": "パートナーの流れ",
+    "steps": {
+      "0": { "title": "パートナー登録", "description": "下記フォームから登録" },
+      "1": { "title": "店舗を紹介", "description": "専用リンクで店舗にLunaPosを紹介" },
+      "2": { "title": "導入サポート", "description": "導入対応はLunaPosチームにお任せ" },
+      "3": { "title": "報酬受取", "description": "導入確定後に紹介報酬をお支払い" }
+    },
+    "formTitle": "パートナー登録",
+    "formDescription": "実装完了後に専用リンクをお送りします",
+    "loginLink": "ログインはこちら",
+    "password": "パスワード",
+    "passwordConfirm": "パスワード確認",
+    "passwordPlaceholder": "パスワードを入力",
+    "passwordConfirmPlaceholder": "もう一度入力",
+    "partnerType": "パートナー種別",
+    "partnerTypes": {
+      "individual": "個人（フリーランス・副業）",
+      "corporate": "法人（代理店・コンサル）",
+      "owner": "店舗オーナー（他店舗の紹介）",
+      "other": "その他"
+    },
+    "passwordMismatch": "パスワードが一致しません",
+    "passwordTooShort": "パスワードは6文字以上で入力してください",
+    "registerError": "登録に失敗しました",
+    "registering": "登録中...",
+    "register": "パートナー登録する",
+    "successTitle": "登録完了",
+    "successMessage": "パートナー登録が完了しました",
+    "redirecting": "ダッシュボードへ移動します...",
+    "toDashboard": "ダッシュボードへ"
+  },
+  "login": {
+    "subtitle": "PARTNER LOGIN",
+    "title": "パートナーログイン",
+    "cardTitle": "ログイン",
+    "cardDescription": "パートナーダッシュボードへアクセス",
+    "password": "パスワード",
+    "passwordPlaceholder": "パスワードを入力",
+    "loginError": "ログインに失敗しました",
+    "loggingIn": "ログイン中...",
+    "loginButton": "ログイン",
+    "noAccount": "アカウントをお持ちでない方は",
+    "registerLink": "パートナー登録"
+  },
+  "dashboard": {
+    "subtitle": "PARTNER DASHBOARD",
+    "greeting": "{name} さん",
+    "logout": "ログアウト",
+    "referralLink": "あなたの紹介リンク",
+    "copied": "コピー済",
+    "copy": "コピー",
+    "referralCode": "紹介コード:",
+    "newNotifications": "前回ログイン以降: 新しい通知が {count}件 あります",
+    "tabs": {
+      "overview": "概要",
+      "conversions": "成約",
+      "rewards": "報酬",
+      "settings": "設定"
+    },
+    "stats": {
+      "clicks": "クリック数",
+      "conversions": "成約数",
+      "confirmed": "確定成約",
+      "cvr": "CVR",
+      "unpaid": "未払い報酬",
+      "paid": "支払い済み"
+    },
+    "chartClicks": "クリック推移",
+    "chartConversions": "成約推移",
+    "conversionsTitle": "成約一覧",
+    "conversionsEmpty": "まだ成約はありません。紹介リンクを共有して店舗を紹介しましょう。",
+    "conversionsHeaders": { "date": "日付", "store": "店舗名", "status": "ステータス" },
+    "rewardsTitle": "報酬履歴",
+    "rewardsEmpty": "まだ報酬の記録はありません。",
+    "rewardsHeaders": { "date": "日付", "amount": "金額", "status": "ステータス", "note": "備考" },
+    "statusLabels": {
+      "pending": "審査中",
+      "confirmed": "確定",
+      "rejected": "却下",
+      "approved": "承認済",
+      "paid": "支払済"
+    }
+  },
+  "profile": {
+    "title": "プロフィール設定",
+    "name": "名前",
+    "email": "メールアドレス",
+    "phone": "電話番号",
+    "partnerType": "パートナー種別",
+    "emailReadOnly": "メールアドレスは変更できません",
+    "referralCode": "紹介コード:",
+    "createdAt": "アカウント作成日:",
+    "saveError": "保存に失敗しました",
+    "saved": "保存しました",
+    "saving": "保存中...",
+    "save": "保存"
+  },
+  "commission": {
+    "title": "報酬サマリー",
+    "csvExport": "CSV出力",
+    "csvHeaders": "日付,金額,ステータス,備考",
+    "totalPaid": "合計報酬（支払済）",
+    "thisMonth": "今月の報酬",
+    "unpaid": "未払い金額",
+    "lastPayment": "最終支払日:"
+  },
+  "clickBreakdown": {
+    "title": "ページ別クリック数",
+    "empty": "クリックデータがまだありません。"
+  },
+  "dateRange": {
+    "7d": "7日間",
+    "30d": "30日間",
+    "90d": "90日間",
+    "all": "全期間"
+  },
+  "column": {
+    "subtitle": "COLUMN",
+    "title": "コラム",
+    "description": "ナイト業界の経営に役立つ情報をお届けします",
+    "empty": "記事の準備中です。",
+    "tagEmpty": "該当する記事がありません。",
+    "backToList": "コラム一覧に戻る",
+    "tagTitle": "#{tag} の記事",
+    "tagDescription": "「{tag}」タグが付いたコラム記事の一覧です。"
+  },
+  "news": {
+    "subtitle": "NEWS",
+    "title": "お知らせ・開発アップデート",
+    "backToList": "お知らせ一覧に戻る",
+    "categories": {
+      "announcement": "お知らせ",
+      "devUpdate": "開発アップデート",
+      "maintenance": "メンテナンス",
+      "campaign": "キャンペーン"
+    }
+  },
+  "notFound": {
+    "message": "お探しのページは見つかりませんでした"
+  },
+  "legal": {
+    "terms": {
+      "subtitle": "TERMS OF SERVICE",
+      "title": "利用規約",
+      "effectiveDate": "制定日: 2026年2月23日"
+    },
+    "privacy": {
+      "subtitle": "PRIVACY POLICY",
+      "title": "プライバシーポリシー",
+      "effectiveDate": "制定日: 2026年2月23日"
+    },
+    "tokushoho": {
+      "subtitle": "LEGAL",
+      "title": "特定商取引法に基づく表記"
+    }
   }
 }

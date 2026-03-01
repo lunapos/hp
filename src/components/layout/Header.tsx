@@ -5,12 +5,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { NAV_ITEMS } from "@/lib/constants";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
+  const t = useTranslations("nav");
 
   useEffect(() => {
     document.body.style.overflow = isMenuOpen ? "hidden" : "";
@@ -43,7 +45,7 @@ export default function Header() {
                     : "text-luna-text-secondary hover:text-luna-text-primary"
                 }`}
               >
-                {item.label}
+                {t(item.key)}
               </Link>
             ))}
             <ThemeToggle />
@@ -55,7 +57,7 @@ export default function Header() {
               type="button"
               className="flex flex-col items-center justify-center gap-1.5 w-10 h-10"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              aria-label={isMenuOpen ? "メニューを閉じる" : "メニューを開く"}
+              aria-label={isMenuOpen ? t("menuClose") : t("menuOpen")}
               aria-expanded={isMenuOpen}
             >
               <span
@@ -98,7 +100,7 @@ export default function Header() {
             type="button"
             onClick={() => setIsMenuOpen(false)}
             className="p-2 rounded-lg text-luna-text-secondary hover:text-luna-gold transition-colors"
-            aria-label="メニューを閉じる"
+            aria-label={t("menuClose")}
           >
             <X className="w-5 h-5" />
           </button>
@@ -115,7 +117,7 @@ export default function Header() {
                   : "text-luna-text-secondary hover:text-luna-text-primary"
               }`}
             >
-              {item.label}
+              {t(item.key)}
             </Link>
           ))}
         </nav>

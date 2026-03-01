@@ -1,11 +1,10 @@
-import type { Metadata } from "next";
+import { getTranslations } from 'next-intl/server';
 import WorldContent from "./WorldContent";
 
-export const metadata: Metadata = {
-  title: "Luna World | 海外展開プログラム",
-  description:
-    "LunaPosを世界のナイトエンターテインメント業界へ。シンガポール・東南アジアを皮切りにグローバル展開を目指します。",
-};
+export async function generateMetadata() {
+  const t = await getTranslations('metadata.world');
+  return { title: t('title'), description: t('description') };
+}
 
 export default function WorldPage() {
   return <WorldContent />;

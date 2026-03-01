@@ -2,21 +2,25 @@
 
 import { useState } from "react";
 import { Save, CheckCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Card from "@/components/ui/Card";
 import type { Partner } from "@/types/partner";
-
-const partnerTypes = [
-  { value: "individual", label: "個人（フリーランス・副業）" },
-  { value: "corporation", label: "法人（代理店・コンサル）" },
-  { value: "owner", label: "店舗オーナー（他店舗の紹介）" },
-  { value: "other", label: "その他" },
-];
 
 interface ProfileFormProps {
   partner: Partner;
 }
 
 export default function ProfileForm({ partner }: ProfileFormProps) {
+  const t = useTranslations("profile");
+  const tPartner = useTranslations("partner");
+
+  const partnerTypes = [
+    { value: "individual", label: tPartner("partnerTypes.individual") },
+    { value: "corporation", label: tPartner("partnerTypes.corporate") },
+    { value: "owner", label: tPartner("partnerTypes.owner") },
+    { value: "other", label: tPartner("partnerTypes.other") },
+  ];
+
   const [name, setName] = useState(partner.name);
   const [phone, setPhone] = useState(partner.phone || "");
   const [partnerType, setPartnerType] = useState(partner.partner_type);
@@ -38,13 +42,13 @@ export default function ProfileForm({ partner }: ProfileFormProps) {
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || "保存に失敗しました");
+        throw new Error(data.error || t("saveError"));
       }
 
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "保存に失敗しました");
+      setError(err instanceof Error ? err.message : t("saveError"));
     } finally {
       setSaving(false);
     }
@@ -58,12 +62,12 @@ export default function ProfileForm({ partner }: ProfileFormProps) {
   return (
     <Card>
       <h3 className="text-luna-text-primary font-bold mb-6">
-        プロフィール設定
+        {t("title")}
       </h3>
 
       <div className="space-y-5 max-w-lg">
         <div>
-          <label className={labelClass}>名前</label>
+          <label className={labelClass}>{t("name")}</label>
           <input
             type="text"
             value={name}
@@ -73,7 +77,7 @@ export default function ProfileForm({ partner }: ProfileFormProps) {
         </div>
 
         <div>
-          <label className={labelClass}>メールアドレス</label>
+          <label className={labelClass}>{t("email")}</label>
           <input
             type="email"
             value={partner.email}
@@ -81,12 +85,12 @@ export default function ProfileForm({ partner }: ProfileFormProps) {
             className={`${inputClass} opacity-50 cursor-not-allowed`}
           />
           <p className="text-xs text-luna-text-secondary mt-1">
-            メールアドレスは変更できません
+            {t("emailReadOnly")}
           </p>
         </div>
 
         <div>
-          <label className={labelClass}>電話番号</label>
+          <label className={labelClass}>{t("phone")}</label>
           <input
             type="tel"
             value={phone}
@@ -97,7 +101,7 @@ export default function ProfileForm({ partner }: ProfileFormProps) {
         </div>
 
         <div>
-          <label className={labelClass}>パートナー種別</label>
+          <label className={labelClass}>{t("partnerType")}</label>
           <select
             value={partnerType}
             onChange={(e) =>
@@ -107,9 +111,9 @@ export default function ProfileForm({ partner }: ProfileFormProps) {
             }
             className={inputClass}
           >
-            {partnerTypes.map((t) => (
-              <option key={t.value} value={t.value}>
-                {t.label}
+            {partnerTypes.map((tp) => (
+              <option key={tp.value} value={tp.value}>
+                {tp.label}
               </option>
             ))}
           </select>
@@ -117,13 +121,13 @@ export default function ProfileForm({ partner }: ProfileFormProps) {
 
         <div className="pt-2 border-t border-luna-border">
           <div className="flex items-center gap-3 text-sm text-luna-text-secondary mb-1">
-            <span>紹介コード:</span>
+            <span>{t("referralCode")}</span>
             <span className="font-mono text-emerald-400">
               {partner.referral_code}
             </span>
           </div>
           <div className="text-sm text-luna-text-secondary">
-            アカウント作成日:{" "}
+            {t("createdAt")}{" "}
             {new Date(partner.created_at).toLocaleDateString("ja-JP")}
           </div>
         </div>
@@ -140,12 +144,12 @@ export default function ProfileForm({ partner }: ProfileFormProps) {
           {saved ? (
             <>
               <CheckCircle className="w-4 h-4" />
-              保存しました
+              {t("saved")}
             </>
           ) : (
             <>
               <Save className="w-4 h-4" />
-              {saving ? "保存中..." : "保存"}
+              {saving ? t("saving") : t("save")}
             </>
           )}
         </button>

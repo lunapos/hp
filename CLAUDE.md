@@ -1,21 +1,23 @@
-# LunaPos HP (Next.js)
+# LunaPos HP（Next.js）→ lunapos.jp
 
-## Standing Instructions
+> 共通ルール・ブランドカラーは親 `../CLAUDE.md` を参照。
+
+## 運用ルール
 
 - **Auto-push**: 改良の度に `git push` すること
-- **開発アップデート**: push の度に `src/data/news.ts` に開発アップデートエントリを追加すること（HP/LP/App すべて）
-- **App 更新の反映**: LunaPos App（Floor/Cast/Admin）の開発アップデートも HP の news.ts に反映すること
-- **LP 更新の反映**: LP の変更も HP の news.ts に開発アップデートとして追加すること
+- **開発ニュース**: push の度に `src/data/news.ts` に開発アップデートを追加（HP/LP/App すべて対象）
 
-## Project Structure
+## 技術スタック
 
-- **HP**: Next.js App Router (`src/app/`), Tailwind CSS v4, deployed to lunapos.jp
-- **LP**: Vite + React SPA (`/Users/ryuichiueda/works/luna/lp`), deployed to lp.lunapos.jp
-- **App**: Swift/SwiftUI native iPad/iPhone apps (`/Users/ryuichiueda/works/luna/lunapos-floor`, `lunapos-cast`, `lunapos-admin`)
+- Next.js App Router (`src/app/`)
+- Tailwind CSS v4
+- デプロイ先: lunapos.jp
 
-## Key Files
+## 主要ファイル
 
-- `src/data/news.ts` — News & development update entries (sorted by date descending)
-- `src/lib/constants.ts` — Pricing, features, nav items
-- `src/app/globals.css` — Theme CSS variables (dark/light mode)
-- `src/components/layout/Header.tsx` — Site header with theme toggle
+| ファイル | 用途 |
+|---------|------|
+| `src/data/news.ts` | 開発ニュース（日付降順） |
+| `src/lib/constants.ts` | 料金・機能・ナビ定義 |
+| `src/app/globals.css` | テーマ CSS 変数 |
+| `src/components/layout/Header.tsx` | ヘッダー・テーマ切替 |

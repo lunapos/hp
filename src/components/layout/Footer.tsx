@@ -1,8 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { NAV_ITEMS, FOOTER_NAV_ITEMS, BRAND } from "@/lib/constants";
 
-export default function Footer() {
+export default async function Footer() {
+  const tNav = await getTranslations("nav");
+  const tFooter = await getTranslations("footer");
+
   return (
     <footer className="bg-luna-bg border-t border-luna-border">
       <div className="max-w-6xl mx-auto px-4 py-12">
@@ -15,14 +19,14 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-luna-text-secondary text-sm leading-relaxed">
-              ナイト業界に特化したPOSシステム。
+              {tFooter("tagline1")}
               <br />
-              日々の売上をスマートに管理。
+              {tFooter("tagline2")}
             </p>
           </div>
 
           <div>
-            <h3 className="text-luna-text-primary font-semibold mb-4">サイトマップ</h3>
+            <h3 className="text-luna-text-primary font-semibold mb-4">{tFooter("sitemap")}</h3>
             <ul className="flex flex-col gap-2">
               {[...NAV_ITEMS, ...FOOTER_NAV_ITEMS].map(
                 (item) => (
@@ -31,7 +35,7 @@ export default function Footer() {
                       href={item.href}
                       className="text-luna-text-secondary text-sm hover:text-luna-text-primary transition-colors duration-200"
                     >
-                      {item.label}
+                      {tNav(item.key)}
                     </Link>
                   </li>
                 )
@@ -40,14 +44,14 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-luna-text-primary font-semibold mb-4">業種別ページ</h3>
+            <h3 className="text-luna-text-primary font-semibold mb-4">{tFooter("industries")}</h3>
             <ul className="flex flex-col gap-2">
               {[
-                { label: "キャバクラ向け", path: "/cabaret" },
-                { label: "ガールズバー向け", path: "/girls-bar" },
-                { label: "ラウンジ向け", path: "/lounge" },
-                { label: "スナック向け", path: "/snack" },
-                { label: "ホスト向け", path: "/host" },
+                { key: "cabaret", path: "/cabaret" },
+                { key: "girlsBar", path: "/girls-bar" },
+                { key: "lounge", path: "/lounge" },
+                { key: "snack", path: "/snack" },
+                { key: "host", path: "/host" },
               ].map((item) => (
                 <li key={item.path}>
                   <a
@@ -56,13 +60,13 @@ export default function Footer() {
                     rel="noopener noreferrer"
                     className="text-luna-text-secondary text-sm hover:text-luna-text-primary transition-colors duration-200"
                   >
-                    {item.label}
+                    {tFooter(`industry.${item.key}`)}
                   </a>
                 </li>
               ))}
             </ul>
             <div className="mt-6">
-              <h3 className="text-luna-text-primary font-semibold mb-4">お問い合わせ</h3>
+              <h3 className="text-luna-text-primary font-semibold mb-4">{tFooter("contactTitle")}</h3>
               <p className="text-luna-text-secondary text-sm">{BRAND.email}</p>
             </div>
           </div>
@@ -75,16 +79,16 @@ export default function Footer() {
             </p>
             <div className="flex items-center gap-4">
               {[
-                { label: "利用規約", href: "/legal/terms" },
-                { label: "プライバシーポリシー", href: "/legal/privacy" },
-                { label: "特定商取引法", href: "/legal/tokushoho" },
+                { key: "terms", href: "/legal/terms" },
+                { key: "privacy", href: "/legal/privacy" },
+                { key: "tokushoho", href: "/legal/tokushoho" },
               ].map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   className="text-luna-text-muted text-xs hover:text-luna-text-secondary transition-colors duration-200"
                 >
-                  {item.label}
+                  {tFooter(item.key)}
                 </Link>
               ))}
             </div>

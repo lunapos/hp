@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import Section from "@/components/layout/Section";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
@@ -33,40 +34,43 @@ const initialForm: FormState = {
   partnerType: "individual",
 };
 
-const partnerTypes = [
-  { value: "individual", label: "個人（フリーランス・副業）" },
-  { value: "corporation", label: "法人（代理店・コンサル）" },
-  { value: "owner", label: "店舗オーナー（他店舗の紹介）" },
-  { value: "other", label: "その他・まずは話を聞きたい" },
-];
-
-const benefits = [
-  {
-    icon: BadgeJapaneseYen,
-    title: "紹介報酬",
-    desc: "紹介した店舗がLunaPosを導入するたびに紹介報酬をお支払い。継続利用に応じた継続報酬も用意しています。",
-  },
-  {
-    icon: Megaphone,
-    title: "紹介するだけでOK",
-    desc: "導入サポートや技術対応はすべてLunaPosチームが対応。あなたは店舗を紹介するだけで大丈夫です。",
-  },
-  {
-    icon: HeadphonesIcon,
-    title: "パートナー専用サポート",
-    desc: "専用の担当者がつき、販促資料の提供や紹介状況の共有など、手厚くサポートします。",
-  },
-];
-
-const steps = [
-  { number: "01", title: "パートナー登録", desc: "下記フォームから登録" },
-  { number: "02", title: "店舗を紹介", desc: "専用リンクで店舗にLunaPosを紹介" },
-  { number: "03", title: "導入サポート", desc: "導入対応はLunaPosチームにお任せ" },
-  { number: "04", title: "報酬受取", desc: "導入確定後に紹介報酬をお支払い" },
-];
-
 export default function PartnerContent() {
   const router = useRouter();
+  const t = useTranslations("partner");
+  const tCommon = useTranslations("common");
+
+  const benefits = [
+    {
+      icon: BadgeJapaneseYen,
+      title: t("benefits.0.title"),
+      desc: t("benefits.0.description"),
+    },
+    {
+      icon: Megaphone,
+      title: t("benefits.1.title"),
+      desc: t("benefits.1.description"),
+    },
+    {
+      icon: HeadphonesIcon,
+      title: t("benefits.2.title"),
+      desc: t("benefits.2.description"),
+    },
+  ];
+
+  const steps = [
+    { number: "01", title: t("steps.0.title"), desc: t("steps.0.description") },
+    { number: "02", title: t("steps.1.title"), desc: t("steps.1.description") },
+    { number: "03", title: t("steps.2.title"), desc: t("steps.2.description") },
+    { number: "04", title: t("steps.3.title"), desc: t("steps.3.description") },
+  ];
+
+  const partnerTypes = [
+    { value: "individual", label: t("partnerTypes.individual") },
+    { value: "corporation", label: t("partnerTypes.corporate") },
+    { value: "owner", label: t("partnerTypes.owner") },
+    { value: "other", label: t("partnerTypes.other") },
+  ];
+
   const [form, setForm] = useState<FormState>(initialForm);
   const [status, setStatus] = useState<
     "idle" | "submitting" | "success" | "error"
@@ -88,13 +92,13 @@ export default function PartnerContent() {
 
     if (form.password !== form.confirmPassword) {
       setStatus("error");
-      setErrorMessage("パスワードが一致しません");
+      setErrorMessage(t("passwordMismatch"));
       return;
     }
 
     if (form.password.length < 6) {
       setStatus("error");
-      setErrorMessage("パスワードは6文字以上で入力してください");
+      setErrorMessage(t("passwordTooShort"));
       return;
     }
 
@@ -113,7 +117,7 @@ export default function PartnerContent() {
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || "登録に失敗しました");
+        throw new Error(data.error || t("registerError"));
       }
 
       setStatus("success");
@@ -123,7 +127,7 @@ export default function PartnerContent() {
     } catch (err) {
       setStatus("error");
       setErrorMessage(
-        err instanceof Error ? err.message : "登録に失敗しました"
+        err instanceof Error ? err.message : t("registerError")
       );
     }
   };
@@ -137,7 +141,7 @@ export default function PartnerContent() {
               PARTNER PROGRAM
             </p>
             <h1 className="text-4xl md:text-5xl font-bold text-luna-text-primary mb-4">
-              登録完了
+              {t("successTitle")}
             </h1>
             <div className="w-16 h-1 bg-emerald-400 mx-auto rounded-full" />
           </div>
@@ -147,13 +151,13 @@ export default function PartnerContent() {
             <Card className="border-emerald-400/30">
               <CheckCircle className="w-16 h-16 text-emerald-400 mx-auto mb-4" />
               <h2 className="text-2xl font-bold text-luna-text-primary mb-2">
-                パートナー登録が完了しました
+                {t("successMessage")}
               </h2>
               <p className="text-luna-text-secondary">
-                ダッシュボードへ移動します...
+                {t("redirecting")}
               </p>
               <div className="mt-6">
-                <Button href="/partner/dashboard">ダッシュボードへ</Button>
+                <Button href="/partner/dashboard">{t("toDashboard")}</Button>
               </div>
             </Card>
           </div>
@@ -171,13 +175,11 @@ export default function PartnerContent() {
             PARTNER PROGRAM
           </p>
           <h1 className="text-4xl md:text-5xl font-bold text-luna-text-primary mb-4">
-            アフィリエイトパートナー募集
+            {t("title")}
           </h1>
           <div className="w-16 h-1 bg-emerald-400 mx-auto rounded-full mb-4" />
           <p className="text-luna-text-secondary max-w-2xl mx-auto">
-            ナイト業界に精通したあなたの人脈を活かして、
-            <br className="hidden md:block" />
-            LunaPosを紹介するだけで報酬を獲得できます。
+            {t("description")}
           </p>
         </div>
       </section>
@@ -204,7 +206,7 @@ export default function PartnerContent() {
         {/* How it works */}
         <div className="mb-16">
           <h2 className="text-2xl font-bold text-luna-text-primary text-center mb-8">
-            パートナーの流れ
+            {t("stepsTitle")}
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {steps.map((step, i) => (
@@ -230,9 +232,9 @@ export default function PartnerContent() {
                   <Handshake className="w-5 h-5 text-emerald-400" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-luna-text-primary">パートナー登録</h2>
+                  <h2 className="text-xl font-bold text-luna-text-primary">{t("formTitle")}</h2>
                   <p className="text-luna-text-secondary text-xs">
-                    実装完了後に専用リンクをお送りします
+                    {t("formDescription")}
                   </p>
                 </div>
               </div>
@@ -240,14 +242,14 @@ export default function PartnerContent() {
                 href="/partner/login"
                 className="text-emerald-400 text-sm hover:underline"
               >
-                ログインはこちら
+                {t("loginLink")}
               </Link>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
                 <label className="block text-sm text-luna-text-secondary tracking-wider mb-2">
-                  お名前 <span className="text-red-400">*</span>
+                  {tCommon("name")} <span className="text-red-400">*</span>
                 </label>
                 <input
                   type="text"
@@ -256,13 +258,13 @@ export default function PartnerContent() {
                   onChange={handleChange}
                   required
                   className="w-full bg-luna-input-bg border border-luna-border rounded-xl px-4 py-3 text-luna-text-primary focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none transition-all"
-                  placeholder="例: 田中 太郎"
+                  placeholder={tCommon("namePlaceholder")}
                 />
               </div>
 
               <div>
                 <label className="block text-sm text-luna-text-secondary tracking-wider mb-2">
-                  メールアドレス <span className="text-red-400">*</span>
+                  {tCommon("email")} <span className="text-red-400">*</span>
                 </label>
                 <input
                   type="email"
@@ -271,14 +273,14 @@ export default function PartnerContent() {
                   onChange={handleChange}
                   required
                   className="w-full bg-luna-input-bg border border-luna-border rounded-xl px-4 py-3 text-luna-text-primary focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none transition-all"
-                  placeholder="例: tanaka@example.com"
+                  placeholder={tCommon("emailPlaceholder")}
                 />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
                   <label className="block text-sm text-luna-text-secondary tracking-wider mb-2">
-                    パスワード <span className="text-red-400">*</span>
+                    {t("password")} <span className="text-red-400">*</span>
                   </label>
                   <input
                     type="password"
@@ -288,12 +290,12 @@ export default function PartnerContent() {
                     required
                     minLength={6}
                     className="w-full bg-luna-input-bg border border-luna-border rounded-xl px-4 py-3 text-luna-text-primary focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none transition-all"
-                    placeholder="パスワードを入力"
+                    placeholder={t("passwordPlaceholder")}
                   />
                 </div>
                 <div>
                   <label className="block text-sm text-luna-text-secondary tracking-wider mb-2">
-                    パスワード確認 <span className="text-red-400">*</span>
+                    {t("passwordConfirm")} <span className="text-red-400">*</span>
                   </label>
                   <input
                     type="password"
@@ -303,7 +305,7 @@ export default function PartnerContent() {
                     required
                     minLength={6}
                     className="w-full bg-luna-input-bg border border-luna-border rounded-xl px-4 py-3 text-luna-text-primary focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none transition-all"
-                    placeholder="もう一度入力"
+                    placeholder={t("passwordConfirmPlaceholder")}
                   />
                 </div>
               </div>
@@ -311,7 +313,7 @@ export default function PartnerContent() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
                   <label className="block text-sm text-luna-text-secondary tracking-wider mb-2">
-                    電話番号
+                    {tCommon("phone")}
                   </label>
                   <input
                     type="tel"
@@ -319,12 +321,12 @@ export default function PartnerContent() {
                     value={form.phone}
                     onChange={handleChange}
                     className="w-full bg-luna-input-bg border border-luna-border rounded-xl px-4 py-3 text-luna-text-primary focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none transition-all"
-                    placeholder="例: 090-1234-5678"
+                    placeholder={tCommon("phonePlaceholder")}
                   />
                 </div>
                 <div>
                   <label className="block text-sm text-luna-text-secondary tracking-wider mb-2">
-                    パートナー種別
+                    {t("partnerType")}
                   </label>
                   <select
                     name="partnerType"
@@ -355,10 +357,10 @@ export default function PartnerContent() {
                 }`}
               >
                 {status === "submitting" ? (
-                  "登録中..."
+                  t("registering")
                 ) : (
                   <>
-                    パートナー登録する
+                    {t("register")}
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}

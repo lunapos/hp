@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, Megaphone, Code } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import Section from "@/components/layout/Section";
 import SectionHeading from "@/components/ui/SectionHeading";
 import ProjectBadge from "@/components/ui/ProjectBadge";
@@ -25,13 +26,14 @@ function NewsCard({ item }: { item: NewsItem }) {
   );
 }
 
-export default function NewsSection() {
+export default async function NewsSection() {
+  const t = await getTranslations("newsSection");
   const announcements = getNewsByCategory("お知らせ", 3);
   const updates = getNewsByCategory("開発アップデート", 3);
 
   return (
     <Section>
-      <SectionHeading subtitle="NEWS" title="お知らせ・開発アップデート" />
+      <SectionHeading subtitle={t("subtitle")} title={t("title")} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
         {/* お知らせ */}
@@ -39,13 +41,13 @@ export default function NewsSection() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <Megaphone className="w-5 h-5 text-blue-400" />
-              <h3 className="text-luna-text-primary font-semibold">お知らせ</h3>
+              <h3 className="text-luna-text-primary font-semibold">{t("announcements")}</h3>
             </div>
             <Link
               href="/news?tab=announcements"
               className="inline-flex items-center gap-1 text-luna-gold hover:text-luna-gold-light transition-colors duration-200 text-xs font-medium"
             >
-              一覧
+              {t("viewAll")}
               <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
@@ -62,14 +64,14 @@ export default function NewsSection() {
             <div className="flex items-center gap-2">
               <Code className="w-5 h-5 text-emerald-400" />
               <h3 className="text-luna-text-primary font-semibold">
-                開発アップデート
+                {t("devUpdates")}
               </h3>
             </div>
             <Link
               href="/news"
               className="inline-flex items-center gap-1 text-luna-gold hover:text-luna-gold-light transition-colors duration-200 text-xs font-medium"
             >
-              一覧
+              {t("viewAll")}
               <ArrowRight className="w-3 h-3" />
             </Link>
           </div>

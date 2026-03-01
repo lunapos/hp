@@ -1,7 +1,10 @@
 import Image from "next/image";
 import { Tablet, WifiOff, Crown } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
-export default function HeroSection() {
+export default async function HeroSection() {
+  const t = await getTranslations("hero");
+
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
       {/* Background decorations */}
@@ -15,7 +18,7 @@ export default function HeroSection() {
           <div className="flex-1 text-center lg:text-left">
             <div className="inline-flex items-center gap-2 bg-luna-gold/10 border border-luna-gold/30 rounded-full px-4 py-1.5 mb-4 animate-fade-in">
               <span className="text-luna-gold text-sm font-medium tracking-wider">
-                Coming Soon - 順次公開予定
+                {t("badge")}
               </span>
             </div>
             <br />
@@ -30,15 +33,15 @@ export default function HeroSection() {
               className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6 animate-slide-up"
               style={{ textShadow: "0 2px 16px rgba(0,0,0,0.6)" }}
             >
-              ナイト業界のための、
+              {t("title1")}
               <br />
-              <span className="text-luna-gold drop-shadow-lg">次世代POS</span>システム
+              <span className="text-luna-gold drop-shadow-lg">{t("title2")}</span>{t("title3")}
             </h1>
 
             <p className="text-lg text-luna-text-secondary leading-relaxed mb-8 max-w-xl animate-slide-up animation-delay-100 brightness-125">
-              フロア管理・会計・出退勤をiPad1台で。
+              {t("description1")}
               <br />
-              オフライン対応で安心の店舗運営を。
+              {t("description2")}
             </p>
 
             <div className="animate-slide-up animation-delay-200" />
@@ -50,7 +53,7 @@ export default function HeroSection() {
               <div className="rounded-2xl overflow-hidden border-2 border-luna-border shadow-2xl animate-float">
                 <Image
                   src="/screenshots/floor-map.png"
-                  alt="LunaPos Floor - フロアマップ画面"
+                  alt={t("imageAlt")}
                   width={1024}
                   height={768}
                   className="w-full h-auto"
@@ -63,20 +66,20 @@ export default function HeroSection() {
                 <div className="flex items-center gap-1.5 text-xs">
                   <WifiOff className="w-3.5 h-3.5 text-luna-gold" />
                   <span className="text-luna-gold-light">
-                    オフライン対応
+                    {t("floatingOffline")}
                   </span>
                 </div>
               </div>
               <div className="absolute -bottom-4 -left-4 bg-luna-surface border border-luna-gold/30 rounded-xl px-3 py-2 shadow-lg">
                 <div className="flex items-center gap-1.5 text-xs">
                   <Tablet className="w-3.5 h-3.5 text-luna-gold" />
-                  <span className="text-luna-gold-light">iPad ネイティブ</span>
+                  <span className="text-luna-gold-light">{t("floatingNative")}</span>
                 </div>
               </div>
               <div className="absolute top-1/2 -right-6 bg-luna-surface border border-luna-gold/30 rounded-xl px-3 py-2 shadow-lg hidden lg:block">
                 <div className="flex items-center gap-1.5 text-xs">
                   <Crown className="w-3.5 h-3.5 text-luna-gold" />
-                  <span className="text-luna-gold-light">業界特化</span>
+                  <span className="text-luna-gold-light">{t("floatingSpecialized")}</span>
                 </div>
               </div>
             </div>
