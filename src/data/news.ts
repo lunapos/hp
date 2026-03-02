@@ -23,30 +23,6 @@ export interface NewsItem {
 export const newsItems: NewsItem[] = [
   // --- 2026-03-02 ---
   {
-    slug: "admin-cast-deploy",
-    date: "2026-03-02",
-    title: "管理画面・キャスト画面を公開しました",
-    summary:
-      "オーナー向け管理画面（admin.lunapos.jp）とキャスト専用画面（cast.lunapos.jp）をVercelにデプロイしました。",
-    category: "お知らせ",
-    content: [
-      "LunaPosのWeb画面2つを公開しました。",
-      "",
-      "## オーナー管理画面（admin.lunapos.jp）",
-      "・売上レポートの確認",
-      "・キャスト・テーブル・メニュー管理",
-      "・CSVエクスポート機能",
-      "",
-      "## キャスト専用画面（cast.lunapos.jp）",
-      "・ログイン・ダッシュボード",
-      "・シフト管理（提出・確認）",
-      "・個人売上・指名実績の確認",
-      "・ポートフォリオ・実績証明書",
-      "",
-      "どちらもFloor（iPadアプリ）と同じSupabaseデータベースを共有し、リアルタイムでデータが連動します。",
-    ].join("\n"),
-  },
-  {
     slug: "admin-v0-4-0",
     date: "2026-03-02",
     title: "v0.4.0 Admin: キャスト管理・メニュー管理・店舗設定",
