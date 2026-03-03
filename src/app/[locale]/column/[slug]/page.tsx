@@ -22,6 +22,7 @@ export async function generateMetadata({
   return {
     title: article.title,
     description: article.description,
+    ...(locale !== "ja" && { robots: { index: false, follow: true } }),
   };
 }
 
