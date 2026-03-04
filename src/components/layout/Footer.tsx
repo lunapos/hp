@@ -80,12 +80,12 @@ export default async function Footer() {
         </div>
 
         <div className="mt-8 pt-6 border-t border-luna-border">
-          <p className="text-xs text-luna-text-muted mb-2">zh運営サイト</p>
+          <p className="text-xs text-luna-text-muted mb-2">zh グループ</p>
           <div className="flex flex-wrap gap-x-5 gap-y-1">
             {[
               { name: "Wattly", url: "https://wattly.jp" },
               { name: "Casinohub", url: "https://casinohub.jp" },
-              { name: "Roomly", url: "https://roomly.jp" },
+              { name: "Roomly", url: "https://hp.roomly.jp" },
             ].map((s) => (
               <a
                 key={s.url}
