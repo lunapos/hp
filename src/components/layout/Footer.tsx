@@ -79,7 +79,28 @@ export default async function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-luna-border">
+        <div className="mt-8 pt-6 border-t border-luna-border">
+          <p className="text-xs text-luna-text-muted mb-2">zh運営サイト</p>
+          <div className="flex flex-wrap gap-x-5 gap-y-1">
+            {[
+              { name: "Wattly", url: "https://wattly.jp" },
+              { name: "Casinohub", url: "https://casinohub.jp" },
+              { name: "Roomly", url: "https://roomly.jp" },
+            ].map((s) => (
+              <a
+                key={s.url}
+                href={s.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-luna-text-muted hover:text-luna-text-secondary transition-colors duration-200"
+              >
+                {s.name}
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-6 pt-6 border-t border-luna-border">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-luna-text-muted text-sm">
               &copy; 2026 {BRAND.name}. All rights reserved.
