@@ -4,8 +4,8 @@ import Section from "@/components/layout/Section";
 import SectionHeading from "@/components/ui/SectionHeading";
 
 const SCREENSHOT_SRCS = [
-  "/screenshots/floor-map.png",
-  "/screenshots/cast-management.png",
+  "/screenshots/floor-map.webp",
+  "/screenshots/cast-management.webp",
 ];
 
 export default async function ScreenshotSection() {
@@ -28,7 +28,10 @@ export default async function ScreenshotSection() {
                 alt={t(`items.${i}.alt`)}
                 width={1024}
                 height={768}
+                quality={80}
+                sizes="(max-width: 768px) 100vw, 512px"
                 className="w-full h-auto"
+                loading="lazy"
               />
             </div>
             <div className="mt-4 text-center">

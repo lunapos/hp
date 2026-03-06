@@ -9,8 +9,8 @@ export default async function HeroSection() {
     <section className="relative min-h-screen flex items-center overflow-hidden">
       {/* Background decorations */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(20,20,48,0.8)_0%,_rgba(10,10,24,1)_70%)]" />
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-luna-gold/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-luna-gold/3 rounded-full blur-3xl" />
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-luna-gold/5 rounded-full blur-3xl will-change-transform" />
+      <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-luna-gold/3 rounded-full blur-3xl will-change-transform" />
 
       <div className="relative max-w-6xl mx-auto px-4 py-20 w-full">
         <div className="flex flex-col lg:flex-row items-center gap-12">
@@ -52,10 +52,12 @@ export default async function HeroSection() {
             <div className="relative w-full max-w-lg">
               <div className="rounded-2xl overflow-hidden border-2 border-luna-border shadow-2xl animate-float">
                 <Image
-                  src="/screenshots/floor-map.png"
+                  src="/screenshots/floor-map.webp"
                   alt={t("imageAlt")}
                   width={1024}
                   height={768}
+                  quality={80}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 512px"
                   className="w-full h-auto"
                   priority
                 />

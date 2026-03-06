@@ -83,8 +83,17 @@ body {
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(var(--luna-accent-rgb), 0.2); }
-  50% { box-shadow: 0 0 40px rgba(var(--luna-accent-rgb), 0.4); }
+  0%, 100% { box-shadow: 0 0 16px rgba(var(--luna-accent-rgb), 0.15); }
+  50% { box-shadow: 0 0 28px rgba(var(--luna-accent-rgb), 0.3); }
+}
+
+/* GPU アクセラレーション */
+.animate-float, .animate-fade-in, .animate-slide-up,
+.animate-slide-in-left, .animate-slide-in-right {
+  will-change: transform, opacity;
+}
+.animate-pulse-glow {
+  will-change: box-shadow;
 }
 
 body {
