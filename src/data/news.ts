@@ -21,6 +21,31 @@ export interface NewsItem {
 }
 
 export const newsItems: NewsItem[] = [
+  // --- 2026-03-06 ---
+  {
+    slug: "hp-v0-15-0-performance",
+    date: "2026-03-06",
+    title: "v0.15.0 HP: パフォーマンス改善",
+    summary:
+      "画像WebP化（85%削減）、セクション遅延ロード、アニメーションGPUアクセラレーションで表示速度を改善。",
+    category: "開発アップデート",
+    project: "HP",
+    content: [
+      "公式サイト（lunapos.jp）の表示速度を改善しました。",
+      "",
+      "## 画像最適化",
+      "・スクリーンショット画像をWebPに変換（1.07MB → 157KB、約85%削減）",
+      "・quality / sizes 属性追加でレスポンシブ最適化",
+      "",
+      "## 遅延ロード",
+      "・トップページ下部の5セクションを dynamic import で遅延ロード",
+      "・初期表示に必要なリソースだけを先に読み込む構成に変更",
+      "",
+      "## アニメーション最適化",
+      "・will-change プロパティで GPU アクセラレーションを有効化",
+      "・pulse-glow アニメーションの負荷軽減",
+    ].join("\n"),
+  },
   // --- 2026-03-02 ---
   {
     slug: "admin-v0-4-0",
