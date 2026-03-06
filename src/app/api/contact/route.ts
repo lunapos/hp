@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { Resend } from "resend";
 import { createClient } from "@/lib/supabase/server";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
 const ALLOWED_ORIGINS = [
   "https://lp.lunapos.jp",
@@ -98,6 +99,26 @@ export async function POST(request: NextRequest) {
         { error: "メール送信に失敗しました" },
         { status: 500, headers }
       );
+    }
+
+    // inquiries insert（失敗してもメール送信の成功は返す）
+    try {
+      const supabaseDirect = createSupabaseClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      );
+      await supabaseDirect.from("inquiries").insert({
+        project: "luna",
+        type: "contact",
+        name: body.name,
+        email: body.email,
+        company: body.companyName,
+        phone: body.phone || null,
+        message: body.message || null,
+        metadata: { inquiryType: body.inquiryType, source: sourceLabel },
+      });
+    } catch {
+      console.error("inquiries insert失敗（メール送信は成功）");
     }
 
     // Track referral conversion if ref_code cookie exists

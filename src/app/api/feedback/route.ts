@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
 interface FeedbackBody {
   storeName: string;
@@ -48,6 +49,25 @@ export async function POST(request: NextRequest) {
         { error: "メール送信に失敗しました" },
         { status: 500 }
       );
+    }
+
+    // inquiries insert（失敗してもメール送信の成功は返す）
+    try {
+      const supabase = createSupabaseClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      );
+      await supabase.from("inquiries").insert({
+        project: "luna",
+        type: "feedback",
+        name: null,
+        email: null,
+        company: body.storeName,
+        message: body.message,
+        metadata: { role: body.role },
+      });
+    } catch {
+      console.error("inquiries insert失敗（メール送信は成功）");
     }
 
     return NextResponse.json({ success: true });
