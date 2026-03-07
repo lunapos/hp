@@ -1,127 +1,203 @@
+// ========================================
+// Luna Admin 型定義（Supabase DB対応）
+// ========================================
+
 export type TableStatus = 'empty' | 'occupied' | 'waiting_checkout'
-
-export interface Room {
-  id: string
-  name: string
-}
-
-export interface Table {
-  id: string
-  name: string
-  capacity: number
-  status: TableStatus
-  position: { x: number; y: number }
-  visitId?: string
-  roomId: string
-}
-
-export interface Cast {
-  id: string
-  stageName: string
-  realName: string
-  isWorking: boolean
-  clockInTime?: string
-  clockOutTime?: string
-  photo?: string
-}
-
-export interface Customer {
-  id: string
-  name: string
-  phone?: string
-  visitCount: number
-  totalSpend: number
-  notes?: string
-  rank: 'new' | 'repeat' | 'vip'
-  favoriteCastId?: string
-}
-
 export type MenuCategory = 'drink' | 'bottle' | 'food' | 'ladies_drink' | 'other'
+export type NominationType = 'none' | 'in_store' | 'main'
+export type PaymentMethod = 'cash' | 'credit' | 'electronic' | 'tab'
+export type CustomerRank = 'new' | 'repeat' | 'vip'
 
-export interface MenuItem {
+// --- Supabase Row型 ---
+
+export interface StoreRow {
   id: string
+  name: string
+  service_rate: number
+  tax_rate: number
+  douhan_fee: number
+  nomination_fee_main: number
+  nomination_fee_in_store: number
+  invoice_registration_number: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface RoomRow {
+  id: string
+  tenant_id: string
+  name: string
+  sort_order: number
+  created_at: string
+  updated_at: string
+}
+
+export interface CastRow {
+  id: string
+  tenant_id: string
+  stage_name: string
+  real_name: string
+  photo_url: string | null
+  drop_off_location: string | null
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}
+
+export interface MenuItemRow {
+  id: string
+  tenant_id: string
   name: string
   price: number
   category: MenuCategory
-  isActive: boolean
+  is_active: boolean
+  sort_order: number
+  created_at: string
+  updated_at: string
 }
 
-export interface OrderItem {
+export interface SetPlanRow {
   id: string
-  menuItemId: string
-  menuItemName: string
+  tenant_id: string
+  name: string
+  duration_minutes: number
   price: number
-  quantity: number
-  isExpense?: boolean  // 建て替え: サービス料・消費税なし
-  castId?: string
-  note?: string
+  is_active: boolean
+  created_at: string
+  updated_at: string
 }
 
-export type NominationType = 'none' | 'in_store' | 'main'
-
-export interface CastNomination {
-  castId: string
-  nominationType: NominationType
-}
-
-export interface Visit {
+export interface FloorTableRow {
   id: string
-  tableId: string
-  customerId?: string
-  customerName?: string
-  guestCount: number
-  nominations: CastNomination[]   // 複数指名対応
-  douhanCastId?: string           // 同伴キャストのID
-  checkInTime: string
-  checkOutTime?: string
-  orderItems: OrderItem[]
-  setMinutes: number
-  isCheckedOut: boolean
+  tenant_id: string
+  room_id: string
+  name: string
+  capacity: number
+  status: TableStatus
+  position_x: number
+  position_y: number
+  visit_id: string | null
+  created_at: string
+  updated_at: string
 }
 
-export type PaymentMethod = 'cash' | 'credit' | 'electronic' | 'tab'
-
-export interface Payment {
+export interface VisitRow {
   id: string
-  visitId: string
-  tableId: string
-  customerName?: string
+  tenant_id: string
+  table_id: string
+  customer_id: string | null
+  customer_name: string | null
+  guest_count: number
+  douhan_cast_id: string | null
+  douhan_qty: number
+  check_in_time: string
+  check_out_time: string | null
+  set_minutes: number
+  extension_minutes: number
+  set_price_override: number | null
+  douhan_fee_override: number | null
+  is_checked_out: boolean
+  created_at: string
+  updated_at: string
+}
+
+export interface NominationRow {
+  id: string
+  tenant_id: string
+  visit_id: string
+  cast_id: string
+  nomination_type: NominationType
+  qty: number
+  fee_override: number | null
+  created_at: string
+  updated_at: string
+}
+
+export interface PaymentRow {
+  id: string
+  tenant_id: string
+  visit_id: string
+  table_id: string
+  customer_name: string | null
   subtotal: number
-  expenseTotal: number    // 建て替え合計（サービス料・消費税なし）
-  nominationFee: number
-  serviceFee: number
+  expense_total: number
+  nomination_fee: number
+  service_fee: number
   tax: number
   discount: number
   total: number
-  paymentMethod: PaymentMethod
-  paidAt: string
-  items: OrderItem[]
+  payment_method: PaymentMethod
+  paid_at: string
+  created_at: string
+  updated_at: string
 }
 
-export interface ShiftEntry {
-  castId: string
-  date: string      // YYYY-MM-DD
-  startTime: string  // HH:mm
-  endTime: string    // HH:mm
-}
-
-export interface SetPlan {
+export interface CastShiftRow {
   id: string
-  name: string
-  durationMinutes: number
-  price: number
-  isActive: boolean
+  tenant_id: string
+  cast_id: string
+  clock_in: string
+  clock_out: string | null
+  scheduled_clock_in: string | null
+  scheduled_clock_out: string | null
+  created_at: string
+  updated_at: string
 }
 
-export interface AppState {
-  isLoggedIn: boolean
-  rooms: Room[]
-  tables: Table[]
-  casts: Cast[]
-  customers: Customer[]
-  menuItems: MenuItem[]
-  visits: Visit[]
-  payments: Payment[]
-  setPlans: SetPlan[]
-  currentVisitId?: string
+export interface CustomerRow {
+  id: string
+  tenant_id: string
+  name: string
+  phone: string | null
+  visit_count: number
+  total_spend: number
+  notes: string | null
+  rank: CustomerRank
+  favorite_cast_id: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface OrderItemRow {
+  id: string
+  tenant_id: string
+  visit_id: string
+  menu_item_id: string
+  menu_item_name: string
+  price: number
+  quantity: number
+  is_expense: boolean
+  cast_id: string | null
+  note: string | null
+  created_at: string
+  updated_at: string
+}
+
+// --- UI表示用型 ---
+
+export interface DailySummary {
+  date: string
+  totalSales: number
+  visitCount: number
+  guestCount: number
+  avgSpend: number
+  cashTotal: number
+  cardTotal: number
+  electronicTotal: number
+  tabTotal: number
+  nominationCount: number
+}
+
+export interface CastRanking {
+  castId: string
+  stageName: string
+  photoUrl: string | null
+  nominations: number
+  sales: number
+  drinkCount: number
+}
+
+export interface HourlyData {
+  hour: number
+  count: number
 }
