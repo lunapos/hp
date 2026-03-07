@@ -6,6 +6,7 @@ import { getAllSlugs, getArticle, getAllArticles } from "@/lib/media";
 import { Calendar, ArrowLeft, Tag, ChevronLeft, ChevronRight } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ArticleJsonLd, BreadcrumbJsonLd } from "@/components/seo/JsonLd";
+import Comments from "@/components/Comments";
 
 export async function generateStaticParams() {
   return getAllSlugs().map((slug) => ({ slug }));
@@ -138,6 +139,11 @@ export default async function MediaArticlePage({
             </Link>
           ) : <div className="flex-1" />}
         </nav>
+
+        {/* コメント */}
+        <div className="max-w-3xl mx-auto">
+          <Comments project="luna" articleSlug={slug} />
+        </div>
 
         <div className="max-w-3xl mx-auto mt-6 pt-6 border-t border-luna-border">
           <Link
