@@ -1,6 +1,7 @@
 {
   "permissions": {
     "allow": [
+      "Bash(*)",
       "Bash(npm create:*)",
       "Bash(npx tailwindcss:*)",
       "Bash(printf:*)",
@@ -14,7 +15,9 @@
       "Bash(xcodegen generate:*)",
       "Bash(xcodebuild:*)",
       "Bash(xcrun simctl list:*)",
-      "Bash(swift build:*)"
+      "Bash(swift build:*)",
+      "WebSearch",
+      "WebFetch"
     ],
     "additionalDirectories": [
       "/Users/ryuichiueda/works/luna-admin/src",

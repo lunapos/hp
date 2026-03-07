@@ -11,6 +11,7 @@
 		1BD129FC73535AB8AEEF44E2 /* SupabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E92DF18BD5E475940BE4F6 /* SupabaseService.swift */; };
 		22BBE7F8B385550A7F862BFB /* PriceCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6EBC683C4AD966F2311D21 /* PriceCalculator.swift */; };
 		2A3CA3F0B1F8CA75CE3C9F97 /* StoreSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC2D9D03138FBB4845858FF1 /* StoreSettings.swift */; };
+		2E93CBA0E00F0FBC657CA386 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4451DD65A7D6F5D6B5E3E1 /* NetworkMonitor.swift */; };
 		3A9133DF0DBAE9405CC59482 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 653CE9A18CB2F2C2C25DBF03 /* Supabase */; };
 		3B8D457B416CC19753F5586B /* PriceCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88037A9F7DE3BA7CC2A4D0FC /* PriceCalculatorTests.swift */; };
 		42AEB1E90125086623C35F04 /* LunaPOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDEE41A0AD2C6F08B9078B3 /* LunaPOSApp.swift */; };
@@ -19,15 +20,19 @@
 		7CCFEFCE85FC0EA41D7772B9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C562CE23A872F25EFA0505 /* ContentView.swift */; };
 		9084AAE4110490DE72609DEF /* FloorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59C6A324BB3ED30B7B3E01F /* FloorView.swift */; };
 		947E2636BEA85BC8AF2B3DCB /* ErrorBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB55562F18EA56A696AB7D0D /* ErrorBanner.swift */; };
+		9EFD4C738120D23F9DDE86E4 /* ReceiptData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7251352CBC98DAEA6B227840 /* ReceiptData.swift */; };
 		A694EDE6D85A1C2153DF4674 /* AdminView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16DB6AA729C4459743D1269F /* AdminView.swift */; };
 		ADD2F18395EAF5033160533C /* TableDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B71B64CEE6CA395A0DDE73B /* TableDetailView.swift */; };
 		B29EA66E0C7712EDF1D336E3 /* CastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD757EC82BD2C42045D48D54 /* CastView.swift */; };
 		C334D6940A367F333DFBB5E9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2B3E7B0690E1D6BB57C16A58 /* Assets.xcassets */; };
+		C8FAC888546B1E414CFA5FAF /* SupabaseServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBC72CA18982E186EFF8826 /* SupabaseServiceTests.swift */; };
 		CF2927CADD6EDF3432B38539 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480C9A283E767FACA6761FBA /* Theme.swift */; };
 		D3FD52FD3C8304B3471248E9 /* AppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D04493AC941E96B28680899 /* AppViewModel.swift */; };
 		D536E01FCA61964F7BCDFF85 /* DTOs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894AF9F6CB1B8AB24932A558 /* DTOs.swift */; };
 		E5BDAFF079601A26291609B5 /* CheckoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C512060A2178FC4053F857 /* CheckoutView.swift */; };
+		E8DBE60F51BC32ABF37F53DE /* SyncEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF3135CA1B1C0736CC81846 /* SyncEngineTests.swift */; };
 		FBF8DC17A87C04005305234F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F9DF5D7016B0EC3494A2FBC /* Constants.swift */; };
+		FFF58FFF04900EFFA1373460 /* RealtimeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7628E1B7E08407B8B6B209B9 /* RealtimeManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,6 +46,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0EBC72CA18982E186EFF8826 /* SupabaseServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseServiceTests.swift; sourceTree = "<group>"; };
 		0F9DF5D7016B0EC3494A2FBC /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		16DB6AA729C4459743D1269F /* AdminView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminView.swift; sourceTree = "<group>"; };
 		1FDEE41A0AD2C6F08B9078B3 /* LunaPOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LunaPOSApp.swift; sourceTree = "<group>"; };
@@ -53,9 +59,13 @@
 		48E92DF18BD5E475940BE4F6 /* SupabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseService.swift; sourceTree = "<group>"; };
 		4B71B64CEE6CA395A0DDE73B /* TableDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableDetailView.swift; sourceTree = "<group>"; };
 		4D04493AC941E96B28680899 /* AppViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppViewModel.swift; sourceTree = "<group>"; };
+		4F4451DD65A7D6F5D6B5E3E1 /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		5A541F2FC51A1074BEC24B13 /* LunaPOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = LunaPOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7251352CBC98DAEA6B227840 /* ReceiptData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptData.swift; sourceTree = "<group>"; };
+		7628E1B7E08407B8B6B209B9 /* RealtimeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealtimeManager.swift; sourceTree = "<group>"; };
 		88037A9F7DE3BA7CC2A4D0FC /* PriceCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceCalculatorTests.swift; sourceTree = "<group>"; };
 		894AF9F6CB1B8AB24932A558 /* DTOs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTOs.swift; sourceTree = "<group>"; };
+		9AF3135CA1B1C0736CC81846 /* SyncEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncEngineTests.swift; sourceTree = "<group>"; };
 		A0B4FBD69062C7D494559475 /* SyncEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncEngine.swift; sourceTree = "<group>"; };
 		AB55562F18EA56A696AB7D0D /* ErrorBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorBanner.swift; sourceTree = "<group>"; };
 		BD757EC82BD2C42045D48D54 /* CastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CastView.swift; sourceTree = "<group>"; };
@@ -109,6 +119,8 @@
 		3B7306709065026B24F3EE94 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				4F4451DD65A7D6F5D6B5E3E1 /* NetworkMonitor.swift */,
+				7628E1B7E08407B8B6B209B9 /* RealtimeManager.swift */,
 				48E92DF18BD5E475940BE4F6 /* SupabaseService.swift */,
 				A0B4FBD69062C7D494559475 /* SyncEngine.swift */,
 			);
@@ -137,6 +149,7 @@
 			children = (
 				894AF9F6CB1B8AB24932A558 /* DTOs.swift */,
 				396A69E5923C15D88F489236 /* Models.swift */,
+				7251352CBC98DAEA6B227840 /* ReceiptData.swift */,
 				FC2D9D03138FBB4845858FF1 /* StoreSettings.swift */,
 			);
 			path = Models;
@@ -181,6 +194,8 @@
 			isa = PBXGroup;
 			children = (
 				88037A9F7DE3BA7CC2A4D0FC /* PriceCalculatorTests.swift */,
+				0EBC72CA18982E186EFF8826 /* SupabaseServiceTests.swift */,
+				9AF3135CA1B1C0736CC81846 /* SyncEngineTests.swift */,
 			);
 			path = LunaPOSTests;
 			sourceTree = "<group>";
@@ -286,7 +301,10 @@
 				42AEB1E90125086623C35F04 /* LunaPOSApp.swift in Sources */,
 				19FC3D67A981ECA37C5AA598 /* MockData.swift in Sources */,
 				76D4B95BC3FB4DB03933C1C2 /* Models.swift in Sources */,
+				2E93CBA0E00F0FBC657CA386 /* NetworkMonitor.swift in Sources */,
 				22BBE7F8B385550A7F862BFB /* PriceCalculator.swift in Sources */,
+				FFF58FFF04900EFFA1373460 /* RealtimeManager.swift in Sources */,
+				9EFD4C738120D23F9DDE86E4 /* ReceiptData.swift in Sources */,
 				2A3CA3F0B1F8CA75CE3C9F97 /* StoreSettings.swift in Sources */,
 				1BD129FC73535AB8AEEF44E2 /* SupabaseService.swift in Sources */,
 				4B7E68E2E2194674E3716DE8 /* SyncEngine.swift in Sources */,
@@ -300,6 +318,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				3B8D457B416CC19753F5586B /* PriceCalculatorTests.swift in Sources */,
+				C8FAC888546B1E414CFA5FAF /* SupabaseServiceTests.swift in Sources */,
+				E8DBE60F51BC32ABF37F53DE /* SyncEngineTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,6 +1,7 @@
 {
   "permissions": {
     "allow": [
+      "Bash(*)",
       "Bash(done)",
       "Bash(find:*)",
       "Bash(git init:*)",
@@ -13,7 +14,9 @@
       "Bash(git status -u)",
       "Bash(git mv \"リリース前/nightlife-credit-scoring.md\" \"リリース済み/2026-02-26/nightlife-credit-scoring.md\")",
       "Bash(git rm --cached \"メディア文作成\")",
-      "Bash(wc -l /Users/ryuichiueda/works/luna/lunapos-floor/LunaPOS/LunaPOS/Views/*.swift)"
+      "Bash(wc -l /Users/ryuichiueda/works/luna/lunapos-floor/LunaPOS/LunaPOS/Views/*.swift)",
+      "WebSearch",
+      "WebFetch"
     ]
   },
   "hooks": {
