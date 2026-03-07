@@ -24,6 +24,7 @@ export async function generateMetadata({
   return {
     title: t('tagTitle', { tag: decoded }),
     description: t('tagDescription', { tag: decoded }),
+    robots: { index: false, follow: true },
   };
 }
 

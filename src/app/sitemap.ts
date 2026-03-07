@@ -28,6 +28,16 @@ function withAlternates(path: string, lastModified: Date, opts: { changeFrequenc
   }));
 }
 
+/** jaのみのエントリ（en/zh は noindex のためサイトマップに含めない） */
+function jaOnly(path: string, lastModified: Date, opts: { changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"]; priority: number }) {
+  return [{
+    url: `${baseUrl}${path}`,
+    lastModified,
+    changeFrequency: opts.changeFrequency,
+    priority: opts.priority,
+  }];
+}
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
@@ -38,37 +48,26 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/contact", changeFrequency: "yearly", priority: 0.7 },
     { path: "/news", changeFrequency: "weekly", priority: 0.8 },
     { path: "/column", changeFrequency: "weekly", priority: 0.8 },
+    { path: "/career", changeFrequency: "monthly", priority: 0.6 },
+    { path: "/fund", changeFrequency: "monthly", priority: 0.5 },
+    { path: "/investor", changeFrequency: "monthly", priority: 0.5 },
+    { path: "/partner", changeFrequency: "monthly", priority: 0.5 },
+    { path: "/roadmap", changeFrequency: "monthly", priority: 0.5 },
+    { path: "/world", changeFrequency: "monthly", priority: 0.5 },
   ];
 
   const staticPages = staticPaths.flatMap(({ path, ...opts }) =>
     withAlternates(path, now, opts)
   );
 
-  // コラム: 各ロケールで記事があるもののみ
+  // コラム: ja のみ（en/zh は noindex なのでサイトマップに含めない）
   const jaArticles = getAllArticles("ja");
   const mediaPages = jaArticles.flatMap((article) =>
-    withAlternates(`/column/${article.slug}`, new Date(article.date), {
+    jaOnly(`/column/${article.slug}`, new Date(article.date), {
       changeFrequency: "monthly",
       priority: 0.7,
     })
   );
-
-  // en/zh のみにある記事（ja にないスラッグ）
-  const jaSlugs = new Set(jaArticles.map((a) => a.slug));
-  for (const locale of locales.filter((l) => l !== defaultLocale)) {
-    const localArticles = getAllArticles(locale);
-    for (const article of localArticles) {
-      if (!jaSlugs.has(article.slug)) {
-        mediaPages.push(
-          ...withAlternates(`/column/${article.slug}`, new Date(article.date), {
-            changeFrequency: "monthly",
-            priority: 0.7,
-          })
-        );
-        jaSlugs.add(article.slug); // 重複防止
-      }
-    }
-  }
 
   const newsPages = newsItems.flatMap((item) =>
     withAlternates(`/news/${item.slug}`, new Date(item.date), {
