@@ -5,7 +5,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { getAllSlugs, getArticle, getAllArticles } from "@/lib/media";
 import { Calendar, ArrowLeft, Tag, ChevronLeft, ChevronRight } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { ArticleJsonLd } from "@/components/seo/JsonLd";
+import { ArticleJsonLd, BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 
 export async function generateStaticParams() {
   return getAllSlugs().map((slug) => ({ slug }));
@@ -64,6 +64,7 @@ export default async function MediaArticlePage({
         slug={slug}
         tags={article.tags}
       />
+      <BreadcrumbJsonLd title={article.title} slug={slug} />
       <section className="pt-20 pb-8 px-4">
         <div className="max-w-3xl mx-auto">
           <Link

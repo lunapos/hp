@@ -73,3 +73,42 @@ export function ArticleJsonLd({
     />
   );
 }
+
+interface BreadcrumbJsonLdProps {
+  title: string;
+  slug: string;
+}
+
+export function BreadcrumbJsonLd({ title, slug }: BreadcrumbJsonLdProps) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "トップ",
+        item: BASE_URL,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "コラム",
+        item: `${BASE_URL}/column`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: title,
+        item: `${BASE_URL}/column/${slug}`,
+      },
+    ],
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+    />
+  );
+}
