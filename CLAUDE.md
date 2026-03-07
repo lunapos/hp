@@ -5,7 +5,7 @@
 ## 運用ルール
 
 - **Auto-push**: 改良の度に `git push` すること
-- **開発ニュース**: push の度に `src/data/news.ts` に開発アップデートを追加（HP/LP/App すべて対象）
+- **開発ニュース（自動更新必須）**: 全プロジェクト（Floor/Admin/Cast/HP/LP/記事）で機能追加・変更を push するたびに `src/data/news.ts` に開発アップデートを追加して push する。別途指示がなくても自動で行うこと
 
 ## 技術スタック
 
