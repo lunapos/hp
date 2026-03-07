@@ -311,6 +311,11 @@
     "submitting": "发送中...",
     "submit": "提交"
   },
+  "columnSection": {
+    "subtitle": "COLUMN",
+    "title": "专栏・知识",
+    "viewAll": "查看所有专栏"
+  },
   "newsSection": {
     "subtitle": "NEWS",
     "title": "公告・开发动态",
@@ -500,7 +505,7 @@
     },
     "success": "发送成功",
     "successDescription": "感谢您的咨询。",
-    "successFollowUp": "我们的负责人将尽快与您联系。",
+    "successFollowUp": "确认内容后，我们将通过邮件回复您。",
     "emailTitle": "电子邮件"
   },
   "career": {

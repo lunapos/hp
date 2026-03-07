@@ -311,6 +311,11 @@
     "submitting": "Submitting...",
     "submit": "Submit"
   },
+  "columnSection": {
+    "subtitle": "COLUMN",
+    "title": "Column & Knowledge",
+    "viewAll": "View all columns"
+  },
   "newsSection": {
     "subtitle": "NEWS",
     "title": "News & Development Updates",
@@ -500,7 +505,7 @@
     },
     "success": "Message sent",
     "successDescription": "Thank you for reaching out.",
-    "successFollowUp": "A member of our team will be in touch soon.",
+    "successFollowUp": "We'll review your message and respond via email.",
     "emailTitle": "Email"
   },
   "career": {
@@ -584,16 +589,14 @@
     "title": "Affiliate Partner Program",
     "description": "Use your nightlife industry connections to introduce LunaPos to venues and earn referral rewards.",
     "benefits": {
-      "0": { "title": "Referral Rewards", "description": "Earn a referral fee every time a venue you introduce adopts LunaPos." },
-      "1": { "title": "Just Make the Introduction", "description": "The LunaPos team handles all implementation support and technical matters." },
-      "2": { "title": "Dedicated Partner Support", "description": "Track your results through a dedicated dashboard. Our support team has your back." }
+      "0": { "title": "10% Referral Reward", "description": "Earn 10% of the monthly subscription fee from each referred venue, for as long as they remain a customer." },
+      "1": { "title": "Just Share Your Link", "description": "Simply share your referral link. Venues can sign up and get started on their own." }
     },
     "stepsTitle": "How Partnering Works",
     "steps": {
       "0": { "title": "Register as a Partner", "description": "Sign up via the form below" },
       "1": { "title": "Refer a Venue", "description": "Introduce LunaPos to venues using your unique referral link" },
-      "2": { "title": "We Handle Implementation", "description": "Leave all implementation support to the LunaPos team" },
-      "3": { "title": "Receive Your Reward", "description": "Referral fee paid once the venue's adoption is confirmed" }
+      "2": { "title": "Receive Your Reward", "description": "Earn 10% of the monthly fee from each referred venue" }
     },
     "formTitle": "Partner Registration",
     "formDescription": "We'll send you your unique referral link once setup is complete",

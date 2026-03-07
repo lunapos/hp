@@ -5,6 +5,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { getAllSlugs, getArticle, getAllArticles } from "@/lib/media";
 import { Calendar, ArrowLeft, Tag, ChevronLeft, ChevronRight } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { ArticleJsonLd } from "@/components/seo/JsonLd";
 
 export async function generateStaticParams() {
   return getAllSlugs().map((slug) => ({ slug }));
@@ -22,6 +23,16 @@ export async function generateMetadata({
   return {
     title: article.title,
     description: article.description,
+    alternates: {
+      canonical: `https://lunapos.jp/column/${slug}`,
+    },
+    openGraph: {
+      title: article.title,
+      description: article.description,
+      url: `https://lunapos.jp/column/${slug}`,
+      type: "article",
+      publishedTime: article.date,
+    },
     ...(locale !== "ja" && { robots: { index: false, follow: true } }),
   };
 }
@@ -46,6 +57,13 @@ export default async function MediaArticlePage({
 
   return (
     <>
+      <ArticleJsonLd
+        title={article.title}
+        description={article.description}
+        date={article.date}
+        slug={slug}
+        tags={article.tags}
+      />
       <section className="pt-20 pb-8 px-4">
         <div className="max-w-3xl mx-auto">
           <Link

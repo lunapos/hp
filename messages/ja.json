@@ -311,6 +311,11 @@
     "submitting": "送信中...",
     "submit": "送信する"
   },
+  "columnSection": {
+    "subtitle": "COLUMN",
+    "title": "コラム・ナレッジ",
+    "viewAll": "コラム一覧を見る"
+  },
   "newsSection": {
     "subtitle": "NEWS",
     "title": "お知らせ・開発アップデート",
@@ -500,7 +505,7 @@
     },
     "success": "送信が完了しました",
     "successDescription": "お問い合わせありがとうございます。",
-    "successFollowUp": "担当者より折り返しご連絡いたします。",
+    "successFollowUp": "内容を確認のうえ、メールにてご返信いたします。",
     "emailTitle": "メール"
   },
   "career": {
@@ -584,16 +589,14 @@
     "title": "アフィリエイトパートナー募集",
     "description": "ナイト業界に精通したあなたの人脈を活かして、LunaPosを紹介するだけで報酬を獲得できます。",
     "benefits": {
-      "0": { "title": "紹介報酬", "description": "LunaPosの導入が成約するたびに、紹介報酬をお受け取りいただけます。" },
-      "1": { "title": "紹介するだけでOK", "description": "導入サポートや技術的な対応はLunaPosチームが行います。" },
-      "2": { "title": "パートナー専用サポート", "description": "専用ダッシュボードで成果を確認。サポートチームがバックアップします。" }
+      "0": { "title": "紹介報酬10%", "description": "紹介した店舗の月額利用料の10%を、利用が続く限り毎月お受け取りいただけます。" },
+      "1": { "title": "紹介するだけでOK", "description": "専用リンクを共有するだけ。店舗はセルフサーブで導入できます。" }
     },
     "stepsTitle": "パートナーの流れ",
     "steps": {
       "0": { "title": "パートナー登録", "description": "下記フォームから登録" },
       "1": { "title": "店舗を紹介", "description": "専用リンクで店舗にLunaPosを紹介" },
-      "2": { "title": "導入サポート", "description": "導入対応はLunaPosチームにお任せ" },
-      "3": { "title": "報酬受取", "description": "導入確定後に紹介報酬をお支払い" }
+      "2": { "title": "報酬受取", "description": "紹介店舗の有料契約後、月額の10%を毎月お支払い" }
     },
     "formTitle": "パートナー登録",
     "formDescription": "実装完了後に専用リンクをお送りします",

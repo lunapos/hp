@@ -54,6 +54,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/partner", changeFrequency: "monthly", priority: 0.5 },
     { path: "/roadmap", changeFrequency: "monthly", priority: 0.5 },
     { path: "/world", changeFrequency: "monthly", priority: 0.5 },
+    { path: "/legal/privacy", changeFrequency: "yearly", priority: 0.3 },
+    { path: "/legal/terms", changeFrequency: "yearly", priority: 0.3 },
+    { path: "/legal/tokushoho", changeFrequency: "yearly", priority: 0.3 },
   ];
 
   const staticPages = staticPaths.flatMap(({ path, ...opts }) =>
