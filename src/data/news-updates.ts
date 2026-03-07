@@ -2,6 +2,25 @@
 import type { NewsItem } from "./news-types";
 
 export const updateItems: NewsItem[] = [
+  // --- 2026-03-08 ---
+  {
+    slug: "column-kurofuku-career-store-choice",
+    date: "2026-03-08",
+    title: "記事公開: 黒服が成り上がるには「どの店で働くか」が全て",
+    summary:
+      "黒服の年収・キャリアパスのリアルと、店選びの5つの基準を解説する記事を公開しました。",
+    category: "コンテンツ",
+    project: "メディア",
+    content: [
+      "黒服・ボーイ向けキャリア記事を公開しました。",
+      "",
+      "・ポジション別の月収・年収の目安",
+      "・「上が詰まっている店」で起きる問題",
+      "・拡大グループで働くメリット",
+      "・店選びで見るべき5つのポイント",
+      "・Luna Pos Fundとの関連",
+    ],
+  },
   // --- 2026-03-07 ---
   {
     slug: "floor-phase1-complete",
