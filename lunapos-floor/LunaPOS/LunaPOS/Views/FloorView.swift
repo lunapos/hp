@@ -343,6 +343,11 @@ struct FloorView: View {
             roomTabsBar
             floorContent
         }
+        .overlay(alignment: .top) {
+            // フロア画面上部にエラー・オフラインバナーを表示
+            ErrorBanner(syncEngine: vm.syncEngine)
+                .padding(.top, 4)
+        }
         .sheet(item: $openingTable) { table in
             OpenTableSheet(table: table) { name, count, _, _ in
                 vm.openTable(

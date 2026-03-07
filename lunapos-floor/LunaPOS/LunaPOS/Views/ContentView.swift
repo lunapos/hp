@@ -59,26 +59,11 @@ struct ContentView: View {
     private var mainFloorView: some View {
         VStack(spacing: 0) {
             customHeaderBar
-            // 同期エラーバナー
-            if let error = vm.syncEngine.lastSyncError {
-                HStack(spacing: 8) {
-                    Image(systemName: "exclamationmark.triangle.fill")
-                        .foregroundStyle(.orange)
-                    Text(error)
-                        .font(.caption)
-                        .foregroundStyle(.white)
-                    Spacer()
-                    Button {
-                        vm.syncEngine.clearError()
-                    } label: {
-                        Image(systemName: "xmark")
-                            .font(.caption2)
-                            .foregroundStyle(.lunaMuted)
-                    }
+            // 同期エラー・オフラインバナー
+            ErrorBanner(syncEngine: vm.syncEngine) {
+                Task {
+                    await vm.syncEngine.loadInitialData(into: vm)
                 }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
-                .background(Color.orange.opacity(0.15))
             }
             FloorView(
                 selectedTableId: $selectedTableId,

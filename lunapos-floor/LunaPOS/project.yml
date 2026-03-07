@@ -32,3 +32,16 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.luna.pos
         INFOPLIST_KEY_CFBundleDisplayName: Luna POS
         GENERATE_INFOPLIST_FILE: true
+        ENABLE_TESTABILITY: true
+
+  LunaPOSTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - LunaPOSTests
+    dependencies:
+      - target: LunaPOS
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.luna.pos.tests
+        GENERATE_INFOPLIST_FILE: true
