@@ -2,28 +2,6 @@ export const newsTranslationsEn: Record<
   string,
   { title: string; summary: string; category: string; content?: string }
 > = {
-  "admin-cast-deploy": {
-    title: "Admin & Cast Web Apps Now Live",
-    summary:
-      "Owner admin panel (admin.lunapos.jp) and cast-only screen (cast.lunapos.jp) are now deployed on Vercel.",
-    category: "Announcement",
-    content: [
-      "Two new LunaPos web interfaces are now live.",
-      "",
-      "## Owner Admin Panel (admin.lunapos.jp)",
-      "- Sales report dashboard",
-      "- Cast, table, and menu management",
-      "- CSV export functionality",
-      "",
-      "## Cast Screen (cast.lunapos.jp)",
-      "- Login and dashboard",
-      "- Shift management (submit & confirm)",
-      "- Personal sales and nomination stats",
-      "- Portfolio and performance certificates",
-      "",
-      "Both share the same Supabase database as the Floor iPad app for real-time data sync.",
-    ].join("\n"),
-  },
   "admin-v0-4-0": {
     title: "v0.4.0 Admin: Cast Management, Menu Management, Store Settings",
     summary:

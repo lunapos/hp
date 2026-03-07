@@ -2,28 +2,6 @@ export const newsTranslationsZh: Record<
   string,
   { title: string; summary: string; category: string; content?: string }
 > = {
-  "admin-cast-deploy": {
-    title: "管理后台・花名册画面已上线",
-    summary:
-      "店主管理后台（admin.lunapos.jp）和花名册专属画面（cast.lunapos.jp）已部署至Vercel。",
-    category: "公告",
-    content: [
-      "LunaPos 两个新的Web界面已正式上线。",
-      "",
-      "## 店主管理后台（admin.lunapos.jp）",
-      "・销售报表查看",
-      "・花名册、桌台、菜单管理",
-      "・CSV导出功能",
-      "",
-      "## 花名册专属画面（cast.lunapos.jp）",
-      "・登录・仪表盘",
-      "・排班管理（提交・确认）",
-      "・个人销售额・指名实绩查看",
-      "・作品集・业绩证明书",
-      "",
-      "两者与Floor（iPad应用）共享同一Supabase数据库，数据实时同步。",
-    ].join("\n"),
-  },
   "admin-v0-4-0": {
     title: "v0.4.0 Admin：花名册管理・菜单管理・店铺设置",
     summary:

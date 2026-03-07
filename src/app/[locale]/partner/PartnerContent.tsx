@@ -10,7 +10,6 @@ import {
   Handshake,
   BadgeJapaneseYen,
   Megaphone,
-  HeadphonesIcon,
   CheckCircle,
   ArrowRight,
 } from "lucide-react";
@@ -49,18 +48,12 @@ export default function PartnerContent() {
       title: t("benefits.1.title"),
       desc: t("benefits.1.description"),
     },
-    {
-      icon: HeadphonesIcon,
-      title: t("benefits.2.title"),
-      desc: t("benefits.2.description"),
-    },
   ];
 
   const steps = [
     { number: "01", title: t("steps.0.title"), desc: t("steps.0.description") },
     { number: "02", title: t("steps.1.title"), desc: t("steps.1.description") },
     { number: "03", title: t("steps.2.title"), desc: t("steps.2.description") },
-    { number: "04", title: t("steps.3.title"), desc: t("steps.3.description") },
   ];
 
   const partnerTypes = [
@@ -185,7 +178,7 @@ export default function PartnerContent() {
 
       {/* Benefits */}
       <Section>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto mb-16">
           {benefits.map((benefit, i) => {
             const Icon = benefit.icon;
             return (
@@ -207,7 +200,7 @@ export default function PartnerContent() {
           <h2 className="text-2xl font-bold text-luna-text-primary text-center mb-8">
             {t("stepsTitle")}
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             {steps.map((step, i) => (
               <div key={i} className="text-center">
                 <div className="text-3xl font-bold text-emerald-400/30 mb-2">
