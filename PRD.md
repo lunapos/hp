@@ -18,69 +18,69 @@
 ### 1.1 SupabaseService 書き込みメソッド完成
 
 #### 1.1.1 upsertVisit()
-- [ ] `SupabaseService.swift` に `upsertVisit(visit: Visit) async throws` を実装
-- [ ] SwiftDataのVisitエンティティからSupabase用のDTO（Dictionary or Codable struct）へ変換するマッパーを作成
-- [ ] `tenant_id` を必ず付与する（JWTから取得、ハードコード禁止）
-- [ ] `visit_id`（UUID）が既存なら更新、なければ挿入（upsert on conflict）
-- [ ] 必須フィールドのバリデーション: `table_id`, `started_at` が nil の場合は早期リターン + エラーログ
-- [ ] `updated_at` を現在時刻で自動付与
-- [ ] 戻り値で成功/失敗を呼び出し元に返す（Result型 or throws）
-- [ ] 失敗時に SwiftData 側の `needsSync` フラグを true のまま維持
+- [x] `SupabaseService.swift` に `upsertVisit(visit: Visit) async throws` を実装
+- [x] SwiftDataのVisitエンティティからSupabase用のDTO（Dictionary or Codable struct）へ変換するマッパーを作成
+- [x] `tenant_id` を必ず付与する（JWTから取得、ハードコード禁止）
+- [x] `visit_id`（UUID）が既存なら更新、なければ挿入（upsert on conflict）
+- [x] 必須フィールドのバリデーション: `table_id`, `started_at` が nil の場合は早期リターン + エラーログ
+- [x] `updated_at` を現在時刻で自動付与
+- [x] 戻り値で成功/失敗を呼び出し元に返す（Result型 or throws）
+- [x] 失敗時に SwiftData 側の `needsSync` フラグを true のまま維持
 - **検証**: ビルド成功 + `upsertVisit` が型安全にコンパイル通過
 
 #### 1.1.2 upsertNominations()
-- [ ] `upsertNominations(nominations: [Nomination], visitId: UUID) async throws` を実装
-- [ ] 1回の来店に複数指名（本指名 + 場内指名）があるため、配列で受け取りバルクupsert
-- [ ] 各指名に `nomination_type`（main / in_store）を正しくマッピング
-- [ ] `cast_id` の存在チェック（削除済みキャストへの指名を防ぐ）
-- [ ] 指名の削除対応: Visit に紐づく既存指名を取得し、ローカルにないものは Supabase 側も削除（差分同期）
-- [ ] 空配列が渡された場合は何もせずリターン（不要なAPIコール防止）
+- [x] `upsertNominations(nominations: [Nomination], visitId: UUID) async throws` を実装
+- [x] 1回の来店に複数指名（本指名 + 場内指名）があるため、配列で受け取りバルクupsert
+- [x] 各指名に `nomination_type`（main / in_store）を正しくマッピング
+- [x] `cast_id` の存在チェック（削除済みキャストへの指名を防ぐ）
+- [x] 指名の削除対応: Visit に紐づく既存指名を取得し、ローカルにないものは Supabase 側も削除（差分同期）
+- [x] 空配列が渡された場合は何もせずリターン（不要なAPIコール防止）
 - **検証**: ビルド成功 + バルクupsertが型安全にコンパイル通過
 
 #### 1.1.3 upsertOrderItems()
-- [ ] `upsertOrderItems(items: [OrderItem], visitId: UUID) async throws` を実装
-- [ ] 各アイテムに `menu_item_id`, `quantity`, `unit_price`, `subtotal` を含める
-- [ ] `subtotal` はクライアント側で計算済みの値を送信（サーバー側再計算しない）
-- [ ] 数量0以下のアイテムはフィルタして送信しない
-- [ ] 既存注文の差分同期: 追加・数量変更・削除を正しく反映
-- [ ] 建て替えアイテム（`is_carryover: true`）のフラグを正しく送信
+- [x] `upsertOrderItems(items: [OrderItem], visitId: UUID) async throws` を実装
+- [x] 各アイテムに `menu_item_id`, `quantity`, `unit_price`, `subtotal` を含める
+- [x] `subtotal` はクライアント側で計算済みの値を送信（サーバー側再計算しない）
+- [x] 数量0以下のアイテムはフィルタして送信しない
+- [x] 既存注文の差分同期: 追加・数量変更・削除を正しく反映
+- [x] 建て替えアイテム（`is_carryover: true`）のフラグを正しく送信
 - **検証**: ビルド成功
 
 #### 1.1.4 upsertPayment()
-- [ ] `upsertPayment(payment: Payment) async throws` を実装
-- [ ] 金額フィールド: `subtotal`, `tax_amount`, `service_charge`, `discount_amount`, `total_amount` を全て送信
-- [ ] 支払方法: `payment_method`（cash / card / mixed）を正しくマッピング
-- [ ] カード・現金混合払いの場合: `cash_amount`, `card_amount` を個別に記録
-- [ ] 会計ステータス: `status`（completed / cancelled / refunded）を送信
-- [ ] 会計取消時: ステータスを `cancelled` に更新（物理削除しない）
-- [ ] `payment_items` スナップショット: 会計時点の明細を `payment_items` テーブルに同時保存
-- [ ] payment_items には会計時点の単価・数量・税額を固定値として保存（後からメニュー価格が変わっても影響しない）
+- [x] `upsertPayment(payment: Payment) async throws` を実装
+- [x] 金額フィールド: `subtotal`, `tax_amount`, `service_charge`, `discount_amount`, `total_amount` を全て送信
+- [x] 支払方法: `payment_method`（cash / card / mixed）を正しくマッピング
+- [x] カード・現金混合払いの場合: `cash_amount`, `card_amount` を個別に記録
+- [x] 会計ステータス: `status`（completed / cancelled / refunded）を送信
+- [x] 会計取消時: ステータスを `cancelled` に更新（物理削除しない）
+- [x] `payment_items` スナップショット: 会計時点の明細を `payment_items` テーブルに同時保存
+- [x] payment_items には会計時点の単価・数量・税額を固定値として保存（後からメニュー価格が変わっても影響しない）
 - **検証**: ビルド成功 + Payment と PaymentItems の両テーブルへの書き込みが型安全
 
 #### 1.1.5 upsertCashWithdrawal()
-- [ ] `upsertCashWithdrawal(withdrawal: CashWithdrawal) async throws` を実装
-- [ ] 出金理由: `reason`（free text）を記録
-- [ ] 出金金額: `amount` が0以下の場合はバリデーションエラー
-- [ ] 出金者: `withdrawn_by`（スタッフ名 or ID）を記録
-- [ ] `register_session_id` と紐づけて、どのレジセッション中の出金かを追跡可能にする
+- [x] `upsertCashWithdrawal(withdrawal: CashWithdrawal) async throws` を実装
+- [x] 出金理由: `reason`（free text）を記録
+- [x] 出金金額: `amount` が0以下の場合はバリデーションエラー
+- [x] 出金者: `withdrawn_by`（スタッフ名 or ID）を記録
+- [x] `register_session_id` と紐づけて、どのレジセッション中の出金かを追跡可能にする
 - **検証**: ビルド成功
 
 #### 1.1.6 共通エラーハンドリング
-- [ ] `SupabaseError` enum を作成（networkError / authError / validationError / serverError / unknown）
-- [ ] 全メソッドで `do-catch` を統一し、`SupabaseError` に変換して throw
-- [ ] エラー発生時にログ出力（`os_log` or `Logger`）: メソッド名・エラー種別・対象レコードIDを含める
-- [ ] ネットワークエラーの場合は `needsSync = true` を維持してオフライン同期に委ねる
-- [ ] 認証エラー（401/403）の場合はトークンリフレッシュを試行し、失敗したら再ログインを促すフラグを立てる
-- [ ] レート制限（429）の場合は指数バックオフで自動リトライ（最大3回、1s→2s→4s）
+- [x] `SupabaseError` enum を作成（networkError / authError / validationError / serverError / unknown）
+- [x] 全メソッドで `do-catch` を統一し、`SupabaseError` に変換して throw
+- [x] エラー発生時にログ出力（`os_log` or `Logger`）: メソッド名・エラー種別・対象レコードIDを含める
+- [x] ネットワークエラーの場合は `needsSync = true` を維持してオフライン同期に委ねる
+- [x] 認証エラー（401/403）の場合はトークンリフレッシュを試行し、失敗したら再ログインを促すフラグを立てる
+- [x] レート制限（429）の場合は指数バックオフで自動リトライ（最大3回、1s→2s→4s）
 - **検証**: ビルド成功 + `SupabaseError` enum が全ケースをカバー
 
 #### 1.1.7 SupabaseService ユニットテスト
-- [ ] `SupabaseServiceTests.swift` を作成
-- [ ] 各upsertメソッドの正常系テスト（モックSupabaseクライアントを使用）
-- [ ] バリデーションエラー時の挙動テスト（必須フィールド欠損）
-- [ ] 空配列入力時のテスト（不要なAPIコールが発生しないこと）
-- [ ] エラーハンドリングテスト（ネットワークエラー → needsSync維持）
-- [ ] DTOマッピングテスト（SwiftData → Supabase変換が正しいこと）
+- [x] `SupabaseServiceTests.swift` を作成
+- [x] 各upsertメソッドの正常系テスト（モックSupabaseクライアントを使用）
+- [x] バリデーションエラー時の挙動テスト（必須フィールド欠損）
+- [x] 空配列入力時のテスト（不要なAPIコールが発生しないこと）
+- [x] エラーハンドリングテスト（ネットワークエラー → needsSync維持）
+- [x] DTOマッピングテスト（SwiftData → Supabase変換が正しいこと）
 - **検証**: `swift test` で SupabaseServiceTests が全PASS
 
 ---
@@ -88,57 +88,57 @@
 ### 1.2 SyncEngine オフライン同期
 
 #### 1.2.1 SwiftData エンティティ拡張
-- [ ] 全エンティティ（Visit, Nomination, OrderItem, Payment, CashWithdrawal）に `needsSync: Bool` プロパティ追加（デフォルト: true）
-- [ ] 全エンティティに `lastSyncedAt: Date?` プロパティ追加
-- [ ] 全エンティティに `syncRetryCount: Int` プロパティ追加（デフォルト: 0）
-- [ ] SwiftData マイグレーション: 既存データに `needsSync = true` をデフォルト付与
-- [ ] `syncRetryCount >= 3` のレコードは `syncFailed` として扱い、手動介入を促す
+- [x] 全エンティティ（Visit, Nomination, OrderItem, Payment, CashWithdrawal）に `needsSync: Bool` プロパティ追加（デフォルト: true）
+- [x] 全エンティティに `lastSyncedAt: Date?` プロパティ追加
+- [x] 全エンティティに `syncRetryCount: Int` プロパティ追加（デフォルト: 0）
+- [x] SwiftData マイグレーション: 既存データに `needsSync = true` をデフォルト付与
+- [x] `syncRetryCount >= 3` のレコードは `syncFailed` として扱い、手動介入を促す
 - **検証**: ビルド成功 + 全エンティティに3プロパティが存在
 
 #### 1.2.2 ネットワーク監視
-- [ ] `NetworkMonitor` クラスを作成（`NWPathMonitor` ラッパー）
-- [ ] `isConnected: Bool` を `@Published` プロパティとして公開
-- [ ] `connectionType: ConnectionType`（wifi / cellular / unknown）を公開
-- [ ] ネットワーク復旧時に `NotificationCenter` で `.networkRestored` を発火
-- [ ] アプリ起動時に自動で監視開始、`deinit` で停止
-- [ ] メインスレッドで状態更新（`DispatchQueue.main`）
+- [x] `NetworkMonitor` クラスを作成（`NWPathMonitor` ラッパー）
+- [x] `isConnected: Bool` を `@Published` プロパティとして公開
+- [x] `connectionType: ConnectionType`（wifi / cellular / unknown）を公開
+- [x] ネットワーク復旧時に `NotificationCenter` で `.networkRestored` を発火
+- [x] アプリ起動時に自動で監視開始、`deinit` で停止
+- [x] メインスレッドで状態更新（`DispatchQueue.main`）
 - **検証**: ビルド成功 + NetworkMonitor が compile error なし
 
 #### 1.2.3 SyncEngine 本体
-- [ ] `SyncEngine` クラスを作成（シングルトン or 環境オブジェクト）
-- [ ] `.networkRestored` 通知を受信したら同期開始
-- [ ] アプリフォアグラウンド復帰時にも同期を試行
-- [ ] 同期順序: Visit → Nomination → OrderItem → Payment → CashWithdrawal（外部キー依存順）
-- [ ] `needsSync == true` のレコードを `created_at` 昇順で取得（古い順に同期）
-- [ ] 1レコードずつ同期し、成功したら即座に `needsSync = false` + `lastSyncedAt = now` に更新
-- [ ] 同期中の進捗を `@Published syncProgress: (completed: Int, total: Int)` で公開
-- [ ] 同期中にアプリがバックグラウンドに移行した場合: `BGTaskScheduler` で継続（最大30秒）
+- [x] `SyncEngine` クラスを作成（シングルトン or 環境オブジェクト）
+- [x] `.networkRestored` 通知を受信したら同期開始
+- [x] アプリフォアグラウンド復帰時にも同期を試行
+- [x] 同期順序: Visit → Nomination → OrderItem → Payment → CashWithdrawal（外部キー依存順）
+- [x] `needsSync == true` のレコードを `created_at` 昇順で取得（古い順に同期）
+- [x] 1レコードずつ同期し、成功したら即座に `needsSync = false` + `lastSyncedAt = now` に更新
+- [x] 同期中の進捗を `@Published syncProgress: (completed: Int, total: Int)` で公開
+- [x] 同期中にアプリがバックグラウンドに移行した場合: `BGTaskScheduler` で継続（最大30秒）
 - **検証**: ビルド成功 + SyncEngine のコンパイル通過
 
 #### 1.2.4 リトライ機構
-- [ ] 同期失敗時に `syncRetryCount += 1`
-- [ ] リトライ間隔: 指数バックオフ（1回目: 5秒後、2回目: 30秒後、3回目: 5分後）
-- [ ] `syncRetryCount >= 3` のレコードは同期対象から除外し、`syncFailed` フラグを立てる
-- [ ] `syncFailed` レコードが存在する場合、UIに「同期失敗あり」を通知
-- [ ] 手動リトライ時は `syncRetryCount` をリセットして再試行
+- [x] 同期失敗時に `syncRetryCount += 1`
+- [x] リトライ間隔: 指数バックオフ（1回目: 5秒後、2回目: 30秒後、3回目: 5分後）
+- [x] `syncRetryCount >= 3` のレコードは同期対象から除外し、`syncFailed` フラグを立てる
+- [x] `syncFailed` レコードが存在する場合、UIに「同期失敗あり」を通知
+- [x] 手動リトライ時は `syncRetryCount` をリセットして再試行
 - **検証**: ビルド成功
 
 #### 1.2.5 競合解決
-- [ ] サーバー側の `updated_at` とローカルの `updated_at` を比較
-- [ ] ローカルが新しい場合: ローカルで上書き（Last Write Wins）
-- [ ] サーバーが新しい場合: サーバーのデータを取得してローカルを更新
-- [ ] 競合発生時にログ出力（どちらが採用されたかを記録）
-- [ ] 会計データ（Payment）は競合時にサーバー優先（金銭データの安全性確保）
+- [x] サーバー側の `updated_at` とローカルの `updated_at` を比較
+- [x] ローカルが新しい場合: ローカルで上書き（Last Write Wins）
+- [x] サーバーが新しい場合: サーバーのデータを取得してローカルを更新
+- [x] 競合発生時にログ出力（どちらが採用されたかを記録）
+- [x] 会計データ（Payment）は競合時にサーバー優先（金銭データの安全性確保）
 - **検証**: ビルド成功
 
 #### 1.2.6 SyncEngine ユニットテスト
-- [ ] `SyncEngineTests.swift` を作成
-- [ ] 正常同期テスト: needsSync=true のレコードが同期後に false になること
-- [ ] 同期順序テスト: 外部キー依存順（Visit→Nomination→...）で同期されること
-- [ ] リトライテスト: 失敗→retryCount増加→3回でsyncFailed
-- [ ] ネットワーク切断テスト: isConnected=false 時に同期が実行されないこと
-- [ ] 競合解決テスト: updated_at 比較ロジックの検証
-- [ ] 空データテスト: needsSync=true のレコードが0件の場合に何も起きないこと
+- [x] `SyncEngineTests.swift` を作成
+- [x] 正常同期テスト: needsSync=true のレコードが同期後に false になること
+- [x] 同期順序テスト: 外部キー依存順（Visit→Nomination→...）で同期されること
+- [x] リトライテスト: 失敗→retryCount増加→3回でsyncFailed
+- [x] ネットワーク切断テスト: isConnected=false 時に同期が実行されないこと
+- [x] 競合解決テスト: updated_at 比較ロジックの検証
+- [x] 空データテスト: needsSync=true のレコードが0件の場合に何も起きないこと
 - **検証**: `swift test` で SyncEngineTests が全PASS
 
 ---
@@ -146,57 +146,57 @@
 ### 1.3 PriceCalculator エッジケース修正
 
 #### 1.3.1 料金体系の設定値取得
-- [ ] `PriceCalculator` が `StoreSettings` から税率・サービス料率・指名料・同伴料を取得するように変更
-- [ ] ハードコードされた料金値を全て洗い出して置換（grep で確認）
-- [ ] `StoreSettings` が未取得（nil）の場合はデフォルト値にフォールバック（税率10%、サービス料40%）
-- [ ] フォールバック時にログ警告を出力
+- [x] `PriceCalculator` が `StoreSettings` から税率・サービス料率・指名料・同伴料を取得するように変更
+- [x] ハードコードされた料金値を全て洗い出して置換（grep で確認）
+- [x] `StoreSettings` が未取得（nil）の場合はデフォルト値にフォールバック（税率10%、サービス料40%）
+- [x] フォールバック時にログ警告を出力
 - **検証**: `swift test` PASS + ハードコード料金値がソースコードに残っていないこと（grep確認）
 
 #### 1.3.2 指名料計算
-- [ ] 本指名（nomination_fee_main）の加算が正しい
-- [ ] 場内指名（nomination_fee_in_store）の加算が正しい
-- [ ] 本指名 + 場内指名の同時発生時: 両方を加算
-- [ ] 同一キャストへの重複指名を防ぐバリデーション
-- [ ] 指名なし（0人）の場合: 指名料0円
-- [ ] 指名料にサービス料がかかるかどうかのフラグ対応（店舗設定で切替可能）
+- [x] 本指名（nomination_fee_main）の加算が正しい
+- [x] 場内指名（nomination_fee_in_store）の加算が正しい
+- [x] 本指名 + 場内指名の同時発生時: 両方を加算
+- [x] 同一キャストへの重複指名を防ぐバリデーション
+- [x] 指名なし（0人）の場合: 指名料0円
+- [x] 指名料にサービス料がかかるかどうかのフラグ対応（店舗設定で切替可能）
 - **検証**: `swift test` PASS
 
 #### 1.3.3 同伴料計算
-- [ ] 同伴0人: 加算なし
-- [ ] 同伴1人: douhan_fee × 1
-- [ ] 同伴複数人: douhan_fee × 人数
-- [ ] 同伴料にサービス料がかかるかどうかのフラグ対応
+- [x] 同伴0人: 加算なし
+- [x] 同伴1人: douhan_fee × 1
+- [x] 同伴複数人: douhan_fee × 人数
+- [x] 同伴料にサービス料がかかるかどうかのフラグ対応
 - **検証**: `swift test` PASS
 
 #### 1.3.4 延長料金計算
-- [ ] 30分単位の延長: 延長料金 × 延長回数
-- [ ] 延長0回: 加算なし
-- [ ] 延長料金が未設定（nil/0）の場合: セット料金の時間按分で自動計算
-- [ ] 延長回数の上限チェック（店舗設定の最大延長回数）
+- [x] 30分単位の延長: 延長料金 × 延長回数
+- [x] 延長0回: 加算なし
+- [x] 延長料金が未設定（nil/0）の場合: セット料金の時間按分で自動計算
+- [x] 延長回数の上限チェック（店舗設定の最大延長回数）
 - **検証**: `swift test` PASS
 
 #### 1.3.5 割引計算
-- [ ] 金額割引: 指定金額をそのまま減算
-- [ ] パーセント割引: 小計に対する割合で減算
-- [ ] 割引後の金額が0円未満にならないガード（`max(0, amount - discount)`）
-- [ ] 割引は税・サービス料計算前に適用（税前割引）
-- [ ] 複数割引の同時適用: 金額割引 → パーセント割引の順に適用
-- [ ] 割引理由（`discount_reason`）を記録
+- [x] 金額割引: 指定金額をそのまま減算
+- [x] パーセント割引: 小計に対する割合で減算
+- [x] 割引後の金額が0円未満にならないガード（`max(0, amount - discount)`）
+- [x] 割引は税・サービス料計算前に適用（税前割引）
+- [x] 複数割引の同時適用: 金額割引 → パーセント割引の順に適用
+- [x] 割引理由（`discount_reason`）を記録
 - **検証**: `swift test` PASS
 
 #### 1.3.6 税・サービス料計算
-- [ ] サービス料 = (セット料金 + 指名料 + 同伴料 + 延長料金 + ドリンク等 - 割引) × service_rate
-- [ ] 消費税 = (上記小計 + サービス料) × tax_rate
-- [ ] 建て替えアイテム（`is_carryover: true`）はサービス料・税の計算対象外
-- [ ] 端数処理: 切り捨て（`floor`）で統一
-- [ ] 税率0%、サービス料0%でも正常動作（テスト用店舗）
-- [ ] 金額がInt上限を超えないオーバーフローチェック
+- [x] サービス料 = (セット料金 + 指名料 + 同伴料 + 延長料金 + ドリンク等 - 割引) × service_rate
+- [x] 消費税 = (上記小計 + サービス料) × tax_rate
+- [x] 建て替えアイテム（`is_carryover: true`）はサービス料・税の計算対象外
+- [x] 端数処理: 切り捨て（`floor`）で統一
+- [x] 税率0%、サービス料0%でも正常動作（テスト用店舗）
+- [x] 金額がInt上限を超えないオーバーフローチェック
 - **検証**: `swift test` PASS
 
 #### 1.3.7 手動上書き対応
-- [ ] オーナーが最終金額を手動で上書きした場合のフラグ `isManualOverride: Bool`
-- [ ] 手動上書き時: 税・サービス料を逆算して内訳を再計算
-- [ ] 手動上書き後に注文を追加した場合: 上書きを解除して再計算するか確認ダイアログ
+- [x] オーナーが最終金額を手動で上書きした場合のフラグ `isManualOverride: Bool`
+- [x] 手動上書き時: 税・サービス料を逆算して内訳を再計算
+- [x] 手動上書き後に注文を追加した場合: 上書きを解除して再計算するか確認ダイアログ
 - **検証**: `swift test` PASS
 
 ---
@@ -204,60 +204,60 @@
 ### 1.4 PriceCalculator ユニットテスト作成
 
 #### 1.4.1 テスト基盤
-- [ ] `PriceCalculatorTests.swift` を作成
-- [ ] テスト用の `StoreSettings` ファクトリメソッドを作成（デフォルト: 税率10%、サービス料40%）
-- [ ] テスト用の `Visit` ファクトリメソッドを作成（各パラメータを個別に変更可能）
-- [ ] 金額比較ヘルパー: 端数処理込みで期待値と一致するかチェック
+- [x] `PriceCalculatorTests.swift` を作成
+- [x] テスト用の `StoreSettings` ファクトリメソッドを作成（デフォルト: 税率10%、サービス料40%）
+- [x] テスト用の `Visit` ファクトリメソッドを作成（各パラメータを個別に変更可能）
+- [x] 金額比較ヘルパー: 端数処理込みで期待値と一致するかチェック
 - **検証**: テストファイルがコンパイル通過
 
 #### 1.4.2 基本セット料金テスト
-- [ ] 60分セット: 基本料金のみ（指名なし・同伴なし・延長なし・割引なし）→ 税・サービス料込みの合計が正しい
-- [ ] 90分セット: 同上
-- [ ] 120分セット: 同上
-- [ ] セット料金0円: クラッシュせず合計0円
-- [ ] セット料金が非常に高額（100万円）: オーバーフローしない
+- [x] 60分セット: 基本料金のみ（指名なし・同伴なし・延長なし・割引なし）→ 税・サービス料込みの合計が正しい
+- [x] 90分セット: 同上
+- [x] 120分セット: 同上
+- [x] セット料金0円: クラッシュせず合計0円
+- [x] セット料金が非常に高額（100万円）: オーバーフローしない
 - **検証**: `swift test` PASS
 
 #### 1.4.3 指名料テスト
-- [ ] 本指名1人: セット料金 + 本指名料 + 税 + サービス料
-- [ ] 場内指名1人: セット料金 + 場内指名料 + 税 + サービス料
-- [ ] 本指名 + 場内指名同時: 両方加算
-- [ ] 指名なし: 指名料0円
+- [x] 本指名1人: セット料金 + 本指名料 + 税 + サービス料
+- [x] 場内指名1人: セット料金 + 場内指名料 + 税 + サービス料
+- [x] 本指名 + 場内指名同時: 両方加算
+- [x] 指名なし: 指名料0円
 - **検証**: `swift test` PASS
 
 #### 1.4.4 同伴料テスト
-- [ ] 同伴0人: 加算なし
-- [ ] 同伴1人: douhan_fee 加算
-- [ ] 同伴3人: douhan_fee × 3
+- [x] 同伴0人: 加算なし
+- [x] 同伴1人: douhan_fee 加算
+- [x] 同伴3人: douhan_fee × 3
 - **検証**: `swift test` PASS
 
 #### 1.4.5 延長テスト
-- [ ] 延長1回（30分）
-- [ ] 延長2回（60分）
-- [ ] 延長3回（90分）
-- [ ] 延長0回: 加算なし
+- [x] 延長1回（30分）
+- [x] 延長2回（60分）
+- [x] 延長3回（90分）
+- [x] 延長0回: 加算なし
 - **検証**: `swift test` PASS
 
 #### 1.4.6 割引テスト
-- [ ] 金額割引: 1000円引き
-- [ ] パーセント割引: 10%引き
-- [ ] 割引で合計がマイナスにならない（割引額 > 小計）→ 0円
-- [ ] 金額割引 + パーセント割引の同時適用
-- [ ] 割引0円: 影響なし
+- [x] 金額割引: 1000円引き
+- [x] パーセント割引: 10%引き
+- [x] 割引で合計がマイナスにならない（割引額 > 小計）→ 0円
+- [x] 金額割引 + パーセント割引の同時適用
+- [x] 割引0円: 影響なし
 - **検証**: `swift test` PASS
 
 #### 1.4.7 建て替えアイテムテスト
-- [ ] 建て替えアイテム1個: サービス料・税の対象外で合計に加算
-- [ ] 建て替えアイテム複数: 合計が正しい
-- [ ] 通常アイテム + 建て替えアイテム混在: それぞれ正しく計算
+- [x] 建て替えアイテム1個: サービス料・税の対象外で合計に加算
+- [x] 建て替えアイテム複数: 合計が正しい
+- [x] 通常アイテム + 建て替えアイテム混在: それぞれ正しく計算
 - **検証**: `swift test` PASS
 
 #### 1.4.8 複合テスト
-- [ ] 全要素同時: 60分セット + 本指名 + 同伴1人 + 延長1回 + ドリンク3杯 + 建て替え1個 + 1000円割引 → 合計が期待値と一致
-- [ ] 最小構成: セット料金のみ、他全て0/なし
-- [ ] 最大構成: 全パラメータを最大値に設定してオーバーフローしないこと
-- [ ] 税率0%・サービス料0%: 素の合計が正しい
-- [ ] 手動上書きテスト: 上書き後の内訳逆算が正しい
+- [x] 全要素同時: 60分セット + 本指名 + 同伴1人 + 延長1回 + ドリンク3杯 + 建て替え1個 + 1000円割引 → 合計が期待値と一致
+- [x] 最小構成: セット料金のみ、他全て0/なし
+- [x] 最大構成: 全パラメータを最大値に設定してオーバーフローしないこと
+- [x] 税率0%・サービス料0%: 素の合計が正しい
+- [x] 手動上書きテスト: 上書き後の内訳逆算が正しい
 - **検証**: `swift test` で全テスト PASS
 
 ---
@@ -265,36 +265,36 @@
 ### 1.5 エラーハンドリングUI
 
 #### 1.5.1 ネットワークステータスバッジ
-- [ ] `NetworkStatusBadge` SwiftUI View を作成
-- [ ] `NetworkMonitor.isConnected == false` の時に画面上部に「オフライン」バッジを常時表示
-- [ ] バッジの色: 赤背景 + 白文字
-- [ ] ネットワーク復旧時にバッジが自動で消える（アニメーション付き: 0.3秒フェードアウト）
-- [ ] バッジは SafeArea の外に表示（コンテンツを押し下げない）
+- [x] `NetworkStatusBadge` SwiftUI View を作成
+- [x] `NetworkMonitor.isConnected == false` の時に画面上部に「オフライン」バッジを常時表示
+- [x] バッジの色: 赤背景 + 白文字
+- [x] ネットワーク復旧時にバッジが自動で消える（アニメーション付き: 0.3秒フェードアウト）
+- [x] バッジは SafeArea の外に表示（コンテンツを押し下げない）
 - **検証**: ビルド成功 + `NetworkStatusBadge` View が存在
 
 #### 1.5.2 同期ステータスバナー
-- [ ] `SyncStatusBanner` SwiftUI View を作成
-- [ ] 同期中: 「同期中... (3/10)」+ プログレスバー表示
-- [ ] 同期失敗: 「同期に失敗したデータがあります」+ リトライボタン
-- [ ] 同期完了: バナー非表示（自動で消える）
-- [ ] リトライボタンタップで `SyncEngine.retryFailed()` を呼び出し
-- [ ] `syncFailed` レコード数をバッジで表示
-- [ ] FloorView の上部に配置（NavigationBar の直下）
+- [x] `SyncStatusBanner` SwiftUI View を作成
+- [x] 同期中: 「同期中... (3/10)」+ プログレスバー表示
+- [x] 同期失敗: 「同期に失敗したデータがあります」+ リトライボタン
+- [x] 同期完了: バナー非表示（自動で消える）
+- [x] リトライボタンタップで `SyncEngine.retryFailed()` を呼び出し
+- [x] `syncFailed` レコード数をバッジで表示
+- [x] FloorView の上部に配置（NavigationBar の直下）
 - **検証**: ビルド成功 + `SyncStatusBanner` View が存在
 
 #### 1.5.3 DB書き込みエラーアラート
-- [ ] SwiftData 書き込み失敗時に `Alert` ダイアログを表示
-- [ ] アラート内容: 「データの保存に失敗しました。もう一度お試しください。」
-- [ ] リトライボタン + キャンセルボタン
-- [ ] エラーが連続3回発生した場合: 「サポートにお問い合わせください」メッセージに切り替え
-- [ ] アラート表示中も他の操作をブロックしない（モーダルではなくバナー型も検討）
+- [x] SwiftData 書き込み失敗時に `Alert` ダイアログを表示
+- [x] アラート内容: 「データの保存に失敗しました。もう一度お試しください。」
+- [x] リトライボタン + キャンセルボタン
+- [x] エラーが連続3回発生した場合: 「サポートにお問い合わせください」メッセージに切り替え
+- [x] アラート表示中も他の操作をブロックしない（モーダルではなくバナー型も検討）
 - **検証**: ビルド成功
 
 #### 1.5.4 エラー状態の統合管理
-- [ ] `ErrorState` ObservableObject を作成
-- [ ] `networkStatus`, `syncStatus`, `lastError` を一元管理
-- [ ] FloorView, PaymentView 等の各画面で `@EnvironmentObject` として注入
-- [ ] エラー状態のリセット処理（画面遷移時に古いエラーをクリア）
+- [x] `ErrorState` ObservableObject を作成
+- [x] `networkStatus`, `syncStatus`, `lastError` を一元管理
+- [x] FloorView, PaymentView 等の各画面で `@EnvironmentObject` として注入
+- [x] エラー状態のリセット処理（画面遷移時に古いエラーをクリア）
 - **検証**: ビルド成功
 
 ---
@@ -302,56 +302,56 @@
 ### 1.6 βテスト用データ投入スクリプト
 
 #### 1.6.1 テナント・店舗データ
-- [ ] `seed_beta.sql` を `supabase/` ディレクトリに作成
-- [ ] 新宿アップスのテナントレコード（`tenant_id` は固定UUID）
-- [ ] 店舗設定: 営業時間 20:00〜01:00、税率10%、サービス料40%
-- [ ] 指名料: 本指名 ¥5,000、場内指名 ¥2,000
-- [ ] 同伴料: ¥3,000
-- [ ] インボイス登録番号: テスト用ダミー値
+- [x] `seed_beta.sql` を `supabase/` ディレクトリに作成
+- [x] 新宿アップスのテナントレコード（`tenant_id` は固定UUID）
+- [x] 店舗設定: 営業時間 20:00〜01:00、税率10%、サービス料40%
+- [x] 指名料: 本指名 ¥5,000、場内指名 ¥2,000
+- [x] 同伴料: ¥3,000
+- [x] インボイス登録番号: テスト用ダミー値
 - **検証**: `psql` で実行エラーなし
 
 #### 1.6.2 キャストデータ
-- [ ] テストキャスト5名分（名前・源氏名・プロフィール画像URL・ステータス）
-- [ ] 各キャストに異なるランク（レギュラー / 準レギュラー / ニュー）を設定
-- [ ] 出勤シフトデータ: 今週分の出勤予定を各キャストに設定
-- [ ] キャストごとの指名バック率を設定（テスト用）
+- [x] テストキャスト5名分（名前・源氏名・プロフィール画像URL・ステータス）
+- [x] 各キャストに異なるランク（レギュラー / 準レギュラー / ニュー）を設定
+- [x] 出勤シフトデータ: 今週分の出勤予定を各キャストに設定
+- [x] キャストごとの指名バック率を設定（テスト用）
 - **検証**: `psql` で実行エラーなし + 5レコード挿入確認
 
 #### 1.6.3 メニューデータ
-- [ ] ドリンクメニュー5品（ビール ¥800、ハイボール ¥700、カクテル ¥900、ソフトドリンク ¥500、シャンパン ¥5,000）
-- [ ] ボトルメニュー5品（焼酎 ¥3,000〜ドンペリ ¥50,000 まで幅広く）
-- [ ] フードメニュー5品（枝豆 ¥500〜盛り合わせ ¥2,000）
-- [ ] 各メニューにカテゴリ・表示順・提供可否フラグを設定
-- [ ] 建て替え用アイテム（タクシー代・花束等）を2品追加
+- [x] ドリンクメニュー5品（ビール ¥800、ハイボール ¥700、カクテル ¥900、ソフトドリンク ¥500、シャンパン ¥5,000）
+- [x] ボトルメニュー5品（焼酎 ¥3,000〜ドンペリ ¥50,000 まで幅広く）
+- [x] フードメニュー5品（枝豆 ¥500〜盛り合わせ ¥2,000）
+- [x] 各メニューにカテゴリ・表示順・提供可否フラグを設定
+- [x] 建て替え用アイテム（タクシー代・花束等）を2品追加
 - **検証**: `psql` で実行エラーなし + 17レコード挿入確認
 
 #### 1.6.4 テーブル・ルームデータ
-- [ ] テーブル8卓分（VIP 2卓 + レギュラー 6卓）
-- [ ] 各テーブルに定員数・表示位置（x, y座標）を設定
-- [ ] ルーム2室分（メインフロア + VIPルーム）
-- [ ] テーブルとルームの紐づけ
+- [x] テーブル8卓分（VIP 2卓 + レギュラー 6卓）
+- [x] 各テーブルに定員数・表示位置（x, y座標）を設定
+- [x] ルーム2室分（メインフロア + VIPルーム）
+- [x] テーブルとルームの紐づけ
 - **検証**: `psql` で実行エラーなし
 
 #### 1.6.5 セットプランデータ
-- [ ] 60分プラン: ¥5,000（基本）
-- [ ] 90分プラン: ¥7,000
-- [ ] 120分プラン: ¥9,000
-- [ ] 延長料金: 30分あたり ¥3,000
-- [ ] 各プランに含まれるドリンク杯数（あれば）を設定
+- [x] 60分プラン: ¥5,000（基本）
+- [x] 90分プラン: ¥7,000
+- [x] 120分プラン: ¥9,000
+- [x] 延長料金: 30分あたり ¥3,000
+- [x] 各プランに含まれるドリンク杯数（あれば）を設定
 - **検証**: `psql` で実行エラーなし
 
 #### 1.6.6 テスト用来店・会計データ
-- [ ] 過去1週間分のダミー来店データ10件
-- [ ] 各来店に指名・注文・会計データを紐づけ
-- [ ] 支払方法を混在させる（現金5件・カード3件・混合2件）
-- [ ] 割引適用ありの会計を2件含める
-- [ ] 管理画面・キャスト画面の表示確認に使えるデータ量にする
+- [x] 過去1週間分のダミー来店データ10件
+- [x] 各来店に指名・注文・会計データを紐づけ
+- [x] 支払方法を混在させる（現金5件・カード3件・混合2件）
+- [x] 割引適用ありの会計を2件含める
+- [x] 管理画面・キャスト画面の表示確認に使えるデータ量にする
 - **検証**: `psql` で実行エラーなし + 関連テーブル全てにデータが入っていること
 
 #### 1.6.7 seed スクリプトの冪等性
-- [ ] `INSERT ... ON CONFLICT DO NOTHING` または `DO UPDATE` で重複実行してもエラーにならない
-- [ ] スクリプト冒頭にコメントで実行方法を記載
-- [ ] テスト環境リセット用の `reset_beta.sql`（全テストデータ削除）も作成
+- [x] `INSERT ... ON CONFLICT DO NOTHING` または `DO UPDATE` で重複実行してもエラーにならない
+- [x] スクリプト冒頭にコメントで実行方法を記載
+- [x] テスト環境リセット用の `reset_beta.sql`（全テストデータ削除）も作成
 - **検証**: `seed_beta.sql` を2回連続実行してエラーなし
 
 ---
