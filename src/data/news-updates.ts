@@ -2,6 +2,18 @@
 import type { NewsItem } from "./news-types";
 
 export const updateItems: NewsItem[] = [
+  // --- 2026-03-09 ---
+  {
+    slug: "column-cast-sales-line",
+    date: "2026-03-09",
+    title: "記事公開: 営業LINEの「日記」、お客さんはどう見てる？",
+    summary:
+      "営業LINEの日記を受け手目線で掘り下げた記事を公開しました。日記が効く人・逆効果な人の違い、ふるいの構造を解説。",
+    category: "お知らせ",
+    project: "HP",
+    content:
+      "キャスト向け記事を公開しました。\n\n・日記LINEを受け取ったお客さんのホンネ\n・推し活感覚のお客さんには日記が刺さる\n・日記は知らないうちにお客さんをふるいにかけている\n・送る側にとっての「安全装置」としての日記",
+  },
   // --- 2026-03-08 ---
   {
     slug: "column-kurofuku-career-store-choice",
