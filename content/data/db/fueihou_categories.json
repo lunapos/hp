@@ -1,0 +1,130 @@
+[
+  {
+    "id": "fuzoku_1gou",
+    "category_name": "風俗営業1号",
+    "description": "接待を伴う飲食店営業",
+    "settai_required": true,
+    "permit_type": "風俗営業許可",
+    "permit_review_period_days": 55,
+    "operating_hours_close_h": 0,
+    "operating_hours_extended_close_h": 1,
+    "operating_hours_extended_note": "都道府県の条例で延長地域あり（例: 東京都歌舞伎町は午前1時まで）",
+    "location_restrictions": {
+      "permitted_zones": ["商業地域", "近隣商業地域"],
+      "protection_distance_meters_range": "50〜100",
+      "protection_facilities": ["学校", "病院", "児童福祉施設"]
+    },
+    "applicable_business_types": ["キャバクラ", "ラウンジ", "高級クラブ", "スナック（接待あり）"],
+    "age_restriction_employee_min": 18,
+    "age_restriction_customer_min": 18,
+    "structural_requirements": {
+      "lighting_min_lux": 5,
+      "room_area_standard": "一定以上",
+      "room_visibility": "見通しが著しく困難でないこと"
+    },
+    "manager_requirement": true,
+    "name_lending_prohibited": true,
+    "fire_prevention_manager_threshold": 30,
+    "fire_prevention_manager_notification_type": "届出",
+    "fire_prevention_manager_note": "収容人数30人以上で防火管理者の届出が必要",
+    "source_article": "cabaret-fueihou-basics.mdx, nightlife-business-types.mdx, cabaret-opening-steps.mdx",
+    "last_verified": "2026-03-08"
+  },
+  {
+    "id": "inshoku_eigyou",
+    "category_name": "飲食店営業許可",
+    "description": "接待を伴わない飲食店営業",
+    "settai_required": false,
+    "permit_type": "飲食店営業許可（保健所）",
+    "permit_review_period_days": null,
+    "operating_hours_close_h": null,
+    "operating_hours_note": "営業時間の制限なし。深夜営業は届出が必要",
+    "midnight_liquor_notification_required": true,
+    "midnight_liquor_notification_type": "届出",
+    "midnight_liquor_notification_review_days": 0,
+    "midnight_liquor_notification_note": "深夜酒類提供飲食店営業の届出。届出制のため審査待ちなし",
+    "applicable_business_types": ["ガールズバー", "スナック（接待なし）"],
+    "food_hygiene_manager_required": true,
+    "source_article": "nightlife-business-types.mdx, cabaret-opening-steps.mdx",
+    "last_verified": "2026-03-08"
+  },
+  {
+    "id": "fueihou_2025_revision",
+    "category_name": "2025年6月 風営法改正",
+    "description": "罰則強化・不当営業行為の新規制",
+    "penalties": {
+      "unlicensed_individual_before": "2年以下の懲役 or 200万円以下の罰金",
+      "unlicensed_individual_after": "5年以下の拘禁刑 or 1,000万円以下の罰金",
+      "unlicensed_corporate_before": "200万円以下の罰金",
+      "unlicensed_corporate_after": "最大3億円の罰金"
+    },
+    "new_provisions": {
+      "article_18_3": "客の判断力を著しく損なわせて高額な飲食をさせる行為の禁止",
+      "prohibited_examples": [
+        "恋愛感情につけ込んで支払能力を超える飲食をさせる",
+        "料金について虚偽の説明をする",
+        "注文していないドリンクを勝手に提供して請求する",
+        "威迫して高額な売掛金の支払いを迫る"
+      ]
+    },
+    "advertising_regulation": "警察庁通達で接待飲食営業全般の広告表現が規制対象（SNS・ポータルサイト含む）",
+    "settai_judgment": "店舗の構造ではなく実際の営業行為で判断",
+    "administrative_action_types": [
+      {"order": 1, "name": "指示処分", "description": "改善を求める命令（イエローカード）"},
+      {"order": 2, "name": "営業停止処分", "description": "最長6ヶ月の営業停止"},
+      {"order": 3, "name": "許可取り消し", "description": "風俗営業許可の取り消し"}
+    ],
+    "scout_back_prohibition": {
+      "target": "性風俗店（ソープ・ヘルス・デリヘル等）",
+      "cabaret_status": "現時点では適用対象外だが拡大の可能性あり",
+      "penalty": "6か月以下の拘禁刑 or 100万円以下の罰金、またはその両方"
+    },
+    "source_article": "cabaret-fueihou-basics.mdx, nightlife-scout-legal-guide.mdx",
+    "last_verified": "2026-03-08"
+  },
+  {
+    "id": "scout_legal_framework",
+    "category_name": "スカウト関連法規",
+    "description": "スカウト行為に関する3つの法律",
+    "laws": [
+      {
+        "law": "職業安定法",
+        "violation": "無許可での有料職業紹介（あっせん）",
+        "penalty": "1年以下の懲役、または100万円以下の罰金",
+        "harmful_work_penalty": "1年以上10年以下の懲役、または20万円以上300万円以下の罰金",
+        "legal_requirements": [
+          "厚生労働大臣の許可",
+          "職業紹介責任者（実務経験3年以上＋講習修了）",
+          "事務所（面談スペース等）",
+          "基準資産額500万円以上",
+          "性風俗への紹介をしていないこと"
+        ]
+      },
+      {
+        "law": "風営法（2025年改正）",
+        "violation": "性風俗店がスカウトバックを支払う行為",
+        "penalty": "6か月以下の拘禁刑 or 100万円以下の罰金、またはその両方"
+      },
+      {
+        "law": "迷惑防止条例",
+        "violation": "路上での勧誘行為",
+        "penalty_example": "東京都: 50万円以下の罰金または拘留"
+      }
+    ],
+    "source_article": "nightlife-scout-legal-guide.mdx",
+    "last_verified": "2026-03-08"
+  },
+  {
+    "id": "fuzoku_permit_transfer",
+    "category_name": "風俗営業許可の譲渡",
+    "description": "風俗営業許可は原則として譲渡できない",
+    "transferable": false,
+    "new_permit_review_period_days": 55,
+    "operational_during_review": false,
+    "stock_transfer_possible": null,
+    "stock_transfer_possible_note": "法人の株式譲渡で許可を維持できるケースもあるが要法的確認",
+    "notes": "許可は「人」に対して与えられる。店を売却しても新オーナーに自動引き継ぎされない。新たに申請が必要（審査期間中は営業不可）。法人の株式譲渡で許可を維持できるケースもあるが要法的確認",
+    "source_article": "cabaret-selling-business.mdx",
+    "last_verified": "2026-03-08"
+  }
+]
