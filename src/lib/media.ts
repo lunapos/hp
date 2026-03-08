@@ -23,6 +23,13 @@ export interface Article extends ArticleMeta {
   content: string;
 }
 
+// 公開済みかどうか（dateが今日以前ならtrue）
+function isPublished(date: string): boolean {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return new Date(date) <= today;
+}
+
 export function getAllArticles(locale = "ja"): ArticleMeta[] {
   const dir = contentDir(locale);
   if (!fs.existsSync(dir)) return getAllArticles("ja"); // フォールバック
@@ -47,6 +54,7 @@ export function getAllArticles(locale = "ja"): ArticleMeta[] {
         thumbnail: data.thumbnail,
       } as ArticleMeta;
     })
+    .filter((a) => isPublished(a.date))
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   return articles;
@@ -68,6 +76,9 @@ export function getArticle(slug: string, locale = "ja"): Article | null {
   const fileContent = fs.readFileSync(filePath, "utf-8");
   const { data, content } = matter(fileContent);
 
+  // 未公開記事はnullを返す
+  if (!isPublished(data.date || "")) return null;
+
   return {
     slug,
     title: data.title || "",
@@ -81,12 +92,8 @@ export function getArticle(slug: string, locale = "ja"): Article | null {
 }
 
 export function getAllSlugs(locale = "ja"): string[] {
-  // slug は全言語共通（ja ベース）
-  if (!fs.existsSync(BASE_DIR)) return [];
-  return fs
-    .readdirSync(BASE_DIR)
-    .filter((f) => f.endsWith(".mdx"))
-    .map((f) => f.replace(/\.mdx$/, ""));
+  // slug は全言語共通（ja ベース）、公開済みのみ
+  return getAllArticles(locale).map((a) => a.slug);
 }
 
 export function getAllTags(locale = "ja"): string[] {
