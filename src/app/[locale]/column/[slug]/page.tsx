@@ -33,6 +33,7 @@ export async function generateMetadata({
       url: `https://lunapos.jp/column/${slug}`,
       type: "article",
       publishedTime: article.date,
+      modifiedTime: article.lastModified || article.date,
     },
     ...(locale !== "ja" && { robots: { index: false, follow: true } }),
   };
@@ -62,6 +63,7 @@ export default async function MediaArticlePage({
         title={article.title}
         description={article.description}
         date={article.date}
+        lastModified={article.lastModified}
         slug={slug}
         tags={article.tags}
       />
@@ -83,6 +85,9 @@ export default async function MediaArticlePage({
             <span className="text-xs text-luna-text-secondary flex items-center gap-1">
               <Calendar className="w-3 h-3" />
               {article.date.slice(0, 10)}
+              {article.lastModified && article.lastModified !== article.date && (
+                <>（更新: {article.lastModified.slice(0, 10)}）</>
+              )}
             </span>
           </div>
 

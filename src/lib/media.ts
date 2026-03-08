@@ -14,6 +14,7 @@ export interface ArticleMeta {
   title: string;
   description: string;
   date: string;
+  lastModified?: string;
   category: string;
   tags: string[];
   thumbnail?: string;
@@ -49,6 +50,7 @@ export function getAllArticles(locale = "ja"): ArticleMeta[] {
         title: data.title || "",
         description: data.description || "",
         date: data.date || "",
+        lastModified: data.lastModified || undefined,
         category: data.category || "",
         tags: data.tags || [],
         thumbnail: data.thumbnail,
@@ -84,6 +86,7 @@ export function getArticle(slug: string, locale = "ja"): Article | null {
     title: data.title || "",
     description: data.description || "",
     date: data.date || "",
+    lastModified: data.lastModified || undefined,
     category: data.category || "",
     tags: data.tags || [],
     thumbnail: data.thumbnail,

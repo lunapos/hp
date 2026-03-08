@@ -30,6 +30,7 @@ interface ArticleJsonLdProps {
   title: string;
   description: string;
   date: string;
+  lastModified?: string;
   slug: string;
   tags?: string[];
 }
@@ -38,6 +39,7 @@ export function ArticleJsonLd({
   title,
   description,
   date,
+  lastModified,
   slug,
   tags,
 }: ArticleJsonLdProps) {
@@ -47,7 +49,7 @@ export function ArticleJsonLd({
     headline: title,
     description,
     datePublished: date,
-    dateModified: date,
+    dateModified: lastModified || date,
     url: `${BASE_URL}/column/${slug}`,
     mainEntityOfPage: {
       "@type": "WebPage",
