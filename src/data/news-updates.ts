@@ -4,6 +4,17 @@ import type { NewsItem } from "./news-types";
 export const updateItems: NewsItem[] = [
   // --- 2026-03-11 ---
   {
+    slug: "lp-canonical-seo-fix",
+    date: "2026-03-11",
+    title: "LP: canonicalタグ追加（重複コンテンツ対策）",
+    summary:
+      "LP全ページにcanonicalタグを追加し、HP（lunapos.jp）を正規ページとして指定。GSCの重複コンテンツ警告に対応。",
+    category: "開発アップデート",
+    project: "LP",
+    content:
+      "GSCで「重複しています。ユーザーにより、正規ページとして選択されていません」と報告されていたLP側ページに対し、canonicalタグを追加しました。\n\n全LPページ（/cabaret, /girls-bar, /snack, /host, /lounge）のcanonicalをhttps://lunapos.jpに設定し、HP側が正規ページとして認識されるようにしました。",
+  },
+  {
     slug: "seo-404-redirects-fix",
     date: "2026-03-11",
     title: "HP: 404エラー修正・リダイレクト設定",
