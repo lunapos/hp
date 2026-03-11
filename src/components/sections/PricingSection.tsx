@@ -25,7 +25,7 @@ export default function PricingSection() {
               <span className="text-5xl font-black text-luna-text-primary">
                 {PRICING_PLAN.price}
               </span>
-              <span className="text-luna-text-secondary text-lg">{t("perMonth")}</span>
+              <span className="text-luna-text-secondary text-lg">/{t("perMonth")}</span>
             </div>
           </div>
 

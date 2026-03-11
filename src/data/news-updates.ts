@@ -2,6 +2,25 @@
 import type { NewsItem } from "./news-types";
 
 export const updateItems: NewsItem[] = [
+  // --- 2026-03-11 ---
+  {
+    slug: "seo-404-redirects-fix",
+    date: "2026-03-11",
+    title: "HP: 404エラー修正・リダイレクト設定",
+    summary:
+      "Google Search Consoleで検出された404エラー5件に対応。リダイレクト設定と翻訳ファイルの修正を実施。",
+    category: "開発アップデート",
+    project: "HP",
+    content: [
+      "GSCで検出された404ページへの対応を実施しました。",
+      "",
+      "## 対応内容",
+      "・/media/* → /column/* への301リダイレクト（メディア→コラムリネーム対応）",
+      "・/column/opening-cabaret-in-japan → /column/cabaret-opening-steps へのリダイレクト",
+      "・/pricing → /#pricing へのリダイレクト（独立ページなし→トップページセクションへ）",
+      "・翻訳ファイルの料金表記から先頭の「/」を除去（GoogleにURLと誤認されていた）",
+    ],
+  },
   // --- 2026-03-07 ---
   {
     slug: "floor-phase1-complete",

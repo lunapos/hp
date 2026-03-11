@@ -248,7 +248,7 @@
     "subtitle": "PRICING",
     "title": "Pricing Plans",
     "description": "One straightforward plan. Your first 500 transactions are free.",
-    "perMonth": "/month (tax included)",
+    "perMonth": "month (tax included)",
     "freeNote": "Your first 500 cumulative transactions are completely free with all features. No credit card required. See FAQ for details.",
     "aiTitle": "Setup Support",
     "aiNote": "We're exploring features like AI-powered menu auto-registration from photos to make initial setup even easier."
