@@ -7,6 +7,9 @@ import { Calendar, ArrowLeft, Tag, ChevronLeft, ChevronRight } from "lucide-reac
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ArticleJsonLd, BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 import Comments from "@/components/Comments";
+import { BarChartMDX, LineChartMDX, PieChartMDX } from "@/components/charts";
+
+const mdxComponents = { BarChart: BarChartMDX, LineChart: LineChartMDX, PieChart: PieChartMDX };
 
 export async function generateStaticParams() {
   return getAllSlugs().map((slug) => ({ slug }));
@@ -114,7 +117,7 @@ export default async function MediaArticlePage({
 
       <section className="pb-20 px-4">
         <article className="max-w-3xl mx-auto prose prose-invert prose-luna">
-          <MDXRemote source={article.content} />
+          <MDXRemote source={article.content} components={mdxComponents} />
         </article>
 
         {/* 前後の記事ナビゲーション */}
