@@ -123,3 +123,10 @@ body {
 .prose-luna li { margin-bottom: 0.5rem; line-height: 1.8; }
 .prose-luna a { color: var(--luna-gold); text-decoration: underline; text-underline-offset: 2px; }
 .prose-luna a:hover { color: var(--luna-gold-light); }
+.prose-luna table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; font-size: 0.9rem; }
+.prose-luna thead { border-bottom: 2px solid var(--luna-gold-dark); }
+.prose-luna th { color: var(--luna-gold-light); font-weight: 700; text-align: left; padding: 0.625rem 0.75rem; }
+.prose-luna td { color: var(--luna-text-secondary); padding: 0.625rem 0.75rem; border-bottom: 1px solid var(--luna-border); }
+.prose-luna tbody tr:hover { background-color: rgba(var(--luna-accent-rgb), 0.05); }
+.prose-luna hr { border-color: var(--luna-border); margin-top: 2rem; margin-bottom: 2rem; }
+.prose-luna blockquote { border-left: 3px solid var(--luna-gold-dark); padding-left: 1rem; color: var(--luna-text-muted); font-style: italic; }
