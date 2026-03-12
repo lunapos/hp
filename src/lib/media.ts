@@ -25,9 +25,11 @@ export interface Article extends ArticleMeta {
 }
 
 // 公開済みかどうか（dateが今日以前ならtrue）
+// Vercelビルド環境はUTCのため、当日末(23:59:59)と比較して
+// 時刻部分(T12:00:00等)に関係なく当日の記事を公開する
 function isPublished(date: string): boolean {
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  today.setHours(23, 59, 59, 999);
   return new Date(date) <= today;
 }
 
