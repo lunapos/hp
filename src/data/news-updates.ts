@@ -2,6 +2,18 @@
 import type { NewsItem } from "./news-types";
 
 export const updateItems: NewsItem[] = [
+  // --- 2026-03-17 ---
+  {
+    slug: "column-history-of-nightlife-worldwide",
+    date: "2026-03-17",
+    title: "コラム: 世界の「夜の接客業」2500年史",
+    summary:
+      "古代ギリシャの饗宴からパリのキャバレー、禁酒法時代のアメリカ、現代アジアのKTVまで。世界中で続いてきた「夜の接客業」の歴史を俯瞰する記事を公開しました。",
+    category: "開発アップデート",
+    project: "HP",
+    content:
+      "新しいコラム記事「世界の『夜の接客業』2500年史」を公開しました。日本版の歴史記事（水商売の歴史）と対になる世界編です。",
+  },
   // --- 2026-03-16 ---
   {
     slug: "column-owner-indispensable-trap",
