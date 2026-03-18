@@ -4,6 +4,22 @@ import type { NewsItem } from "./news-types";
 export const updateItems: NewsItem[] = [
   // --- 2026-03-18 ---
   {
+    slug: "floor-dropoff-improvement",
+    date: "2026-03-18",
+    title: "Floor: キャスト送り先機能の改善",
+    summary:
+      "キャストの送り先表示を最寄り駅ベースに変更。キャスト詳細パネルから駅名を入力・保存できるようになりました。",
+    category: "開発アップデート",
+    project: "Floor",
+    content: [
+      "キャストの送り先管理を改善しました。",
+      "",
+      "・送り先を最寄り駅ベースの入力に変更",
+      "・キャスト詳細パネルから駅名を入力して保存",
+      "・未入力時はプレースホルダーで「最寄り駅」と表示",
+    ].join("\n"),
+  },
+  {
     slug: "floor-sales-calc-improvement",
     date: "2026-03-18",
     title: "Floor: 売上計算ロジック改善",
