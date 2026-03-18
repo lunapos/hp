@@ -270,6 +270,28 @@ struct VisitRow: Codable, Sendable {
         case isCheckedOut = "is_checked_out"
     }
 
+    func toModel(nominations: [CastNomination], orderItems: [OrderItem], nominationFeeOverrides: [String: Int]) -> Visit {
+        Visit(
+            id: id.uuidString,
+            tableId: tableId.uuidString,
+            customerId: customerId?.uuidString,
+            customerName: customerName,
+            guestCount: guestCount,
+            nominations: nominations,
+            douhanCastId: douhanCastId?.uuidString,
+            douhanQty: douhanQty,
+            checkInTime: checkInTime,
+            checkOutTime: checkOutTime,
+            orderItems: orderItems,
+            setMinutes: setMinutes,
+            extensionMinutes: extensionMinutes,
+            setPriceOverride: setPriceOverride,
+            nominationFeeOverrides: nominationFeeOverrides,
+            douhanFeeOverride: douhanFeeOverride,
+            isCheckedOut: isCheckedOut
+        )
+    }
+
     static func from(_ model: Visit, tenantId: UUID) -> VisitRow {
         VisitRow(
             id: UUID(uuidString: model.id) ?? UUID(),
@@ -309,6 +331,14 @@ struct NominationRow: Codable, Sendable {
         case feeOverride = "fee_override"
     }
 
+    func toModel() -> CastNomination {
+        CastNomination(
+            castId: castId.uuidString,
+            nominationType: NominationType(rawValue: nominationType) ?? .none,
+            qty: qty
+        )
+    }
+
     static func from(_ model: CastNomination, visitId: String, tenantId: UUID, feeOverride: Int?) -> NominationRow {
         NominationRow(
             id: UUID(),
@@ -342,6 +372,19 @@ struct OrderItemRow: Codable, Sendable {
         case menuItemName = "menu_item_name"
         case isExpense = "is_expense"
         case castId = "cast_id"
+    }
+
+    func toModel() -> OrderItem {
+        OrderItem(
+            id: id.uuidString,
+            menuItemId: menuItemId,
+            menuItemName: menuItemName,
+            price: price,
+            quantity: quantity,
+            isExpense: isExpense,
+            castId: castId?.uuidString,
+            note: note
+        )
     }
 
     static func from(_ model: OrderItem, visitId: String, tenantId: UUID) -> OrderItemRow {
@@ -387,6 +430,25 @@ struct PaymentRow: Codable, Sendable {
         case serviceFee = "service_fee"
         case paymentMethod = "payment_method"
         case paidAt = "paid_at"
+    }
+
+    func toModel(items: [OrderItem]) -> Payment {
+        Payment(
+            id: id.uuidString,
+            visitId: visitId.uuidString,
+            tableId: tableId.uuidString,
+            customerName: customerName,
+            subtotal: subtotal,
+            expenseTotal: expenseTotal,
+            nominationFee: nominationFee,
+            serviceFee: serviceFee,
+            tax: tax,
+            discount: discount,
+            total: total,
+            paymentMethod: PaymentMethod(rawValue: paymentMethod) ?? .cash,
+            paidAt: paidAt,
+            items: items
+        )
     }
 
     static func from(_ model: Payment, tenantId: UUID) -> PaymentRow {

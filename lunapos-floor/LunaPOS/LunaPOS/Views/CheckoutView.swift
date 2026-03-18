@@ -8,8 +8,11 @@ struct CheckoutView: View {
 
     @State private var paymentMethod: PaymentMethod = .cash
     @State private var discountInput = ""
+    @State private var receivedInput = "" // 預かり金額（現金時）
     @State private var completed = false
     @State private var completedTotal = 0
+    @State private var completedChange = 0 // お釣り（現金時）
+    @State private var showTabWarning = false // ツケ時の顧客未選択警告
 
     private var table: FloorTable? { vm.tables.first(where: { $0.id == tableId }) }
     private var visit: Visit? { table?.visitId.flatMap { vid in vm.visits.first(where: { $0.id == vid }) } }
@@ -51,6 +54,18 @@ struct CheckoutView: View {
                 .font(.title2.bold())
                 .foregroundStyle(.lunaGoldDark)
 
+            // 現金の場合はお釣りを表示
+            if completedChange > 0 {
+                VStack(spacing: 4) {
+                    Text("お釣り")
+                        .font(.caption)
+                        .foregroundStyle(.lunaMuted)
+                    Text(completedChange.yenFormatted)
+                        .font(.title3.bold())
+                        .foregroundStyle(.white)
+                }
+            }
+
             Text("フロアに戻ります...")
                 .font(.caption)
                 .foregroundStyle(.lunaMuted)
@@ -81,167 +96,32 @@ struct CheckoutView: View {
         ScrollView {
             VStack(spacing: 12) {
                 // Visit info
-                GroupBox {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Label("ご利用内容", systemImage: "info.circle")
-                            .font(.caption.bold())
-                            .foregroundStyle(.lunaMuted)
-                            .tracking(2)
-
-                        infoRow("入店", visit.checkInTime.hhMM)
-                        infoRow("セット", "\(visit.setMinutes)分 × \(visit.guestCount)名")
-
-                        ForEach(visit.nominations.indices, id: \.self) { i in
-                            let n = visit.nominations[i]
-                            if let c = vm.casts.first(where: { $0.id == n.castId }) {
-                                let typeLabel = n.nominationType == .main ? "本指名" : n.nominationType == .inStore ? "場内指名" : ""
-                                infoRow("指名\(visit.nominations.count > 1 ? " (\(i+1))" : "")", "\(c.stageName) \(typeLabel)")
-                            }
-                        }
-
-                        if let dId = visit.douhanCastId, let dc = vm.casts.first(where: { $0.id == dId }) {
-                            infoRow("同伴", dc.stageName)
-                        }
-                    }
-                }
+                visitInfoSection(visit: visit)
 
                 // Order items
-                GroupBox {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Label("注文明細", systemImage: "list.bullet")
-                            .font(.caption.bold())
-                            .foregroundStyle(.lunaMuted)
-                            .tracking(2)
-
-                        let setPlan = vm.setPlans.first(where: { $0.durationMinutes == visit.setMinutes })
-                        detailRow("\(setPlan?.name ?? "セット (\(visit.setMinutes)分)") × \(visit.guestCount)名", breakdown.setPrice.yenFormatted)
-
-                        ForEach(visit.nominations.indices, id: \.self) { i in
-                            let n = visit.nominations[i]
-                            if n.nominationType != .none {
-                                let fee = n.nominationType == .main ? vm.storeSettings.nominationFeeMain : vm.storeSettings.nominationFeeInStore
-                                let c = vm.casts.first(where: { $0.id == n.castId })
-                                detailRow("\(c?.stageName ?? "") \(n.nominationType == .main ? "本指名料" : "場内指名料")", fee.yenFormatted)
-                            }
-                        }
-
-                        if breakdown.douhanFee > 0 {
-                            let dc = vm.casts.first(where: { $0.id == visit.douhanCastId })
-                            detailRow("同伴料 (\(dc?.stageName ?? ""))", breakdown.douhanFee.yenFormatted)
-                        }
-
-                        if !regularItems.isEmpty {
-                            Divider()
-                            ForEach(regularItems) { item in
-                                detailRow("\(item.menuItemName) × \(item.quantity)", (item.price * item.quantity).yenFormatted, muted: true)
-                            }
-                        }
-
-                        if !expenseItems.isEmpty {
-                            Divider().overlay(Color.orange.opacity(0.3))
-                            HStack(spacing: 4) {
-                                Image(systemName: "receipt").font(.system(size: 10))
-                                Text("建て替え（サービス料・消費税なし）").font(.caption)
-                            }
-                            .foregroundStyle(.orange)
-
-                            ForEach(expenseItems) { item in
-                                detailRow("\(item.menuItemName) × \(item.quantity)", (item.price * item.quantity).yenFormatted, color: .orange)
-                            }
-                        }
-                    }
-                }
+                orderItemsSection(visit: visit, breakdown: breakdown, regularItems: regularItems, expenseItems: expenseItems)
 
                 // Fee breakdown
-                GroupBox {
-                    VStack(spacing: 8) {
-                        detailRow("小計", breakdown.subtotal.yenFormatted, muted: true)
-                        detailRow("サービス料 (40%)", "+\(breakdown.serviceFee.yenFormatted)", muted: true)
-                        detailRow("消費税 (10%)", "+\(breakdown.tax.yenFormatted)", muted: true)
-
-                        if breakdown.expenseTotal > 0 {
-                            detailRow("建て替え計", breakdown.expenseTotal.yenFormatted, color: .orange)
-                        }
-
-                        Divider()
-
-                        HStack {
-                            Text("割引").font(.subheadline).foregroundStyle(.lunaMuted)
-                            Spacer()
-                            HStack(spacing: 4) {
-                                Text("¥").foregroundStyle(.lunaMuted)
-                                TextField("0", text: $discountInput)
-                                    .keyboardType(.numberPad)
-                                    .multilineTextAlignment(.trailing)
-                                    .frame(width: 100)
-                                    .textFieldStyle(.roundedBorder)
-                            }
-                        }
-
-                        if discount > 0 {
-                            detailRow("割引額", "− \(discount.yenFormatted)", color: .red)
-                        }
-
-                        Divider()
-
-                        HStack {
-                            Text("合計").font(.title3.bold()).foregroundStyle(.lunaGoldDark).tracking(2)
-                            Spacer()
-                            Text(total.yenFormatted).font(.title2.bold()).foregroundStyle(.lunaGoldDark)
-                        }
-                    }
-                }
+                feeBreakdownSection(breakdown: breakdown, discount: discount, total: total)
 
                 // Payment method
-                GroupBox {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Label("お支払い方法", systemImage: "creditcard")
-                            .font(.caption.bold())
-                            .foregroundStyle(.lunaMuted)
-                            .tracking(2)
+                paymentMethodSection
 
-                        HStack(spacing: 8) {
-                            ForEach(PaymentMethod.allCases, id: \.self) { method in
-                                Button {
-                                    paymentMethod = method
-                                } label: {
-                                    VStack(spacing: 6) {
-                                        Image(systemName: method.icon).font(.title3)
-                                        Text(method.label).font(.caption.bold()).tracking(1)
-                                    }
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 12)
-                                    .background(paymentMethod == method ? Color.lunaDark : Color.lunaCard)
-                                    .foregroundStyle(paymentMethod == method ? .lunaGold : .lunaMuted)
-                                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(paymentMethod == method ? Color.lunaDark : Color.lunaBorder))
-                                }
-                                .buttonStyle(.plain)
-                            }
-                        }
-                    }
+                // 現金選択時: 預かり金額入力
+                if paymentMethod == .cash {
+                    cashReceivedSection(total: total)
+                }
+
+                // ツケ警告
+                if showTabWarning {
+                    tabWarningBanner
                 }
             }
             .padding()
         }
         .background(Color.lunaBg)
         .safeAreaInset(edge: .bottom) {
-            Button {
-                handleCheckout(table: table, visit: visit, total: total, discount: discount, breakdown: breakdown)
-            } label: {
-                HStack(spacing: 12) {
-                    Image(systemName: "creditcard")
-                    Text("\(total.yenFormatted) で会計する")
-                        .tracking(2)
-                }
-                .font(.headline)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 16)
-            }
-            .buttonStyle(.borderedProminent)
-            .tint(.lunaDark)
-            .padding()
-            .background(.lunaCard)
+            checkoutButton(table: table, visit: visit, total: total, discount: discount, breakdown: breakdown)
         }
         .toolbar {
             ToolbarItem(placement: .principal) {
@@ -266,6 +146,266 @@ struct CheckoutView: View {
         .toolbarBackground(Color.lunaDark, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
         .toolbarColorScheme(.dark, for: .navigationBar)
+    }
+
+    // MARK: - Visit Info Section
+
+    private func visitInfoSection(visit: Visit) -> some View {
+        GroupBox {
+            VStack(alignment: .leading, spacing: 8) {
+                Label("ご利用内容", systemImage: "info.circle")
+                    .font(.caption.bold())
+                    .foregroundStyle(.lunaMuted)
+                    .tracking(2)
+
+                infoRow("入店", visit.checkInTime.hhMM)
+                infoRow("セット", "\(visit.setMinutes)分 × \(visit.guestCount)名")
+
+                ForEach(visit.nominations.indices, id: \.self) { i in
+                    let n = visit.nominations[i]
+                    if let c = vm.casts.first(where: { $0.id == n.castId }) {
+                        let typeLabel = n.nominationType == .main ? "本指名" : n.nominationType == .inStore ? "場内指名" : ""
+                        infoRow("指名\(visit.nominations.count > 1 ? " (\(i+1))" : "")", "\(c.stageName) \(typeLabel)")
+                    }
+                }
+
+                if let dId = visit.douhanCastId, let dc = vm.casts.first(where: { $0.id == dId }) {
+                    infoRow("同伴", dc.stageName)
+                }
+            }
+        }
+    }
+
+    // MARK: - Order Items Section
+
+    private func orderItemsSection(visit: Visit, breakdown: PriceCalculator.Breakdown, regularItems: [OrderItem], expenseItems: [OrderItem]) -> some View {
+        GroupBox {
+            VStack(alignment: .leading, spacing: 8) {
+                Label("注文明細", systemImage: "list.bullet")
+                    .font(.caption.bold())
+                    .foregroundStyle(.lunaMuted)
+                    .tracking(2)
+
+                let setPlan = vm.setPlans.first(where: { $0.durationMinutes == visit.setMinutes })
+                detailRow("\(setPlan?.name ?? "セット (\(visit.setMinutes)分)") × \(visit.guestCount)名", breakdown.setPrice.yenFormatted)
+
+                ForEach(visit.nominations.indices, id: \.self) { i in
+                    let n = visit.nominations[i]
+                    if n.nominationType != .none {
+                        let fee = n.nominationType == .main ? vm.storeSettings.nominationFeeMain : vm.storeSettings.nominationFeeInStore
+                        let c = vm.casts.first(where: { $0.id == n.castId })
+                        detailRow("\(c?.stageName ?? "") \(n.nominationType == .main ? "本指名料" : "場内指名料")", fee.yenFormatted)
+                    }
+                }
+
+                if breakdown.douhanFee > 0 {
+                    let dc = vm.casts.first(where: { $0.id == visit.douhanCastId })
+                    detailRow("同伴料 (\(dc?.stageName ?? ""))", breakdown.douhanFee.yenFormatted)
+                }
+
+                if !regularItems.isEmpty {
+                    Divider()
+                    ForEach(regularItems) { item in
+                        detailRow("\(item.menuItemName) × \(item.quantity)", (item.price * item.quantity).yenFormatted, muted: true)
+                    }
+                }
+
+                if !expenseItems.isEmpty {
+                    Divider().overlay(Color.orange.opacity(0.3))
+                    HStack(spacing: 4) {
+                        Image(systemName: "receipt").font(.system(size: 10))
+                        Text("建て替え（サービス料・消費税なし）").font(.caption)
+                    }
+                    .foregroundStyle(.orange)
+
+                    ForEach(expenseItems) { item in
+                        detailRow("\(item.menuItemName) × \(item.quantity)", (item.price * item.quantity).yenFormatted, color: .orange)
+                    }
+                }
+            }
+        }
+    }
+
+    // MARK: - Fee Breakdown Section
+
+    private func feeBreakdownSection(breakdown: PriceCalculator.Breakdown, discount: Int, total: Int) -> some View {
+        GroupBox {
+            VStack(spacing: 8) {
+                detailRow("小計", breakdown.subtotal.yenFormatted, muted: true)
+                detailRow("サービス料 (40%)", "+\(breakdown.serviceFee.yenFormatted)", muted: true)
+                detailRow("消費税 (10%)", "+\(breakdown.tax.yenFormatted)", muted: true)
+
+                if breakdown.expenseTotal > 0 {
+                    detailRow("建て替え計", breakdown.expenseTotal.yenFormatted, color: .orange)
+                }
+
+                Divider()
+
+                HStack {
+                    Text("割引").font(.subheadline).foregroundStyle(.lunaMuted)
+                    Spacer()
+                    HStack(spacing: 4) {
+                        Text("¥").foregroundStyle(.lunaMuted)
+                        TextField("0", text: $discountInput)
+                            .keyboardType(.numberPad)
+                            .multilineTextAlignment(.trailing)
+                            .frame(width: 100)
+                            .textFieldStyle(.roundedBorder)
+                    }
+                }
+
+                if discount > 0 {
+                    detailRow("割引額", "− \(discount.yenFormatted)", color: .red)
+                }
+
+                Divider()
+
+                HStack {
+                    Text("合計").font(.title3.bold()).foregroundStyle(.lunaGoldDark).tracking(2)
+                    Spacer()
+                    Text(total.yenFormatted).font(.title2.bold()).foregroundStyle(.lunaGoldDark)
+                }
+            }
+        }
+    }
+
+    // MARK: - Payment Method Section
+
+    private var paymentMethodSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Label("お支払い方法", systemImage: "creditcard")
+                .font(.caption.bold())
+                .foregroundStyle(.lunaMuted)
+                .tracking(2)
+
+            HStack(spacing: 8) {
+                ForEach(PaymentMethod.allCases, id: \.self) { method in
+                    Button {
+                        paymentMethod = method
+                        showTabWarning = false
+                        receivedInput = ""
+                    } label: {
+                        VStack(spacing: 4) {
+                            Image(systemName: method.icon).font(.title3)
+                            Text(method.label).font(.caption2.bold()).tracking(1)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 14)
+                        .background(paymentMethod == method ? Color.lunaDark : Color.lunaCard)
+                        .foregroundStyle(paymentMethod == method ? .lunaGold : .lunaMuted)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .overlay(RoundedRectangle(cornerRadius: 12).stroke(paymentMethod == method ? Color.lunaDark : Color.lunaBorder))
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+        }
+        .padding()
+        .background(Color.lunaCard.opacity(0.3))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+
+    // MARK: - Cash Received Section
+
+    private func cashReceivedSection(total: Int) -> some View {
+        let received = Int(receivedInput) ?? 0
+        let change = received - total
+
+        return GroupBox {
+            VStack(spacing: 8) {
+                HStack {
+                    Text("お預かり").font(.subheadline).foregroundStyle(.lunaMuted)
+                    Spacer()
+                    HStack(spacing: 4) {
+                        Text("¥").foregroundStyle(.lunaMuted)
+                        TextField("0", text: $receivedInput)
+                            .keyboardType(.numberPad)
+                            .multilineTextAlignment(.trailing)
+                            .frame(width: 120)
+                            .textFieldStyle(.roundedBorder)
+                    }
+                }
+
+                if received > 0 {
+                    Divider()
+                    HStack {
+                        Text("お釣り").font(.subheadline.bold()).foregroundStyle(change >= 0 ? .lunaGold : .red)
+                        Spacer()
+                        Text(change >= 0 ? change.yenFormatted : "不足 \(abs(change).yenFormatted)")
+                            .font(.subheadline.bold())
+                            .foregroundStyle(change >= 0 ? .lunaGold : .red)
+                    }
+                }
+            }
+        }
+    }
+
+    // MARK: - Tab Warning Banner
+
+    private var tabWarningBanner: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .foregroundStyle(.orange)
+            Text("ツケ払いには顧客の登録が必要です")
+                .font(.subheadline)
+                .foregroundStyle(.orange)
+        }
+        .frame(maxWidth: .infinity)
+        .padding()
+        .background(Color.orange.opacity(0.15))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+
+    // MARK: - Checkout Button
+
+    private func checkoutButton(table: FloorTable, visit: Visit, total: Int, discount: Int, breakdown: PriceCalculator.Breakdown) -> some View {
+        let received = Int(receivedInput) ?? 0
+        let change = received > 0 ? received - total : 0
+        // 現金で預かり入力済みだが不足の場合は無効
+        let cashInsufficient = paymentMethod == .cash && received > 0 && received < total
+
+        return VStack(spacing: 0) {
+            // 現金で預かり入力済みの場合、お釣りをボタン上に表示
+            if paymentMethod == .cash && received >= total && received > 0 {
+                HStack {
+                    Text("お預かり \(received.yenFormatted)")
+                        .font(.caption)
+                        .foregroundStyle(.lunaMuted)
+                    Spacer()
+                    Text("お釣り \(change.yenFormatted)")
+                        .font(.caption.bold())
+                        .foregroundStyle(.lunaGold)
+                }
+                .padding(.horizontal)
+                .padding(.top, 8)
+                .padding(.bottom, 4)
+            }
+
+            Button {
+                // ツケで顧客未登録の場合は警告
+                if paymentMethod == .tab && visit.customerId == nil {
+                    showTabWarning = true
+                    return
+                }
+                completedChange = paymentMethod == .cash && received >= total ? change : 0
+                handleCheckout(table: table, visit: visit, total: total, discount: discount, breakdown: breakdown)
+            } label: {
+                HStack(spacing: 12) {
+                    Image(systemName: paymentMethod == .cash ? "yensign" : "creditcard")
+                    Text("\(total.yenFormatted) で会計する")
+                        .tracking(2)
+                }
+                .font(.headline)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 16)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(cashInsufficient ? .gray : .lunaDark)
+            .disabled(cashInsufficient)
+            .padding(.horizontal)
+            .padding(.bottom)
+        }
+        .background(.lunaCard)
     }
 
     // MARK: - Helpers

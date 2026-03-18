@@ -203,7 +203,7 @@ final class SyncEngine: @unchecked Sendable {
         // ここでは個別sync呼び出しで既にSupabaseに送信済みのケースが主。
         // バッチ同期は将来のオフライン復帰用に基盤を用意。
 
-        for (entityId, _) in pending {
+        for (_, _) in pending {
             completed += 1
             syncProgress = (completed, pending.count)
         }
@@ -237,33 +237,124 @@ final class SyncEngine: @unchecked Sendable {
             vm.setPlans = s.map { $0.toModel() }
             vm.customers = cu.map { $0.toModel() }
             vm.isLoadedFromSupabase = true
+
+            // 営業データ（visits/payments）を取得
+            await loadBusinessData(into: vm)
         } catch {
             logger.error("[SyncEngine] 初期データ同期失敗: \(error)")
             setSyncError("初期データの同期に失敗しました。ローカルデータで動作します。")
         }
     }
 
+    /// 営業データ（visits/payments）をSupabaseから取得してローカルにマージ
+    @MainActor
+    private func loadBusinessData(into vm: AppViewModel) async {
+        do {
+            let businessStart = vm.businessDayStart
+
+            // visits + payments を並列取得
+            async let visitRows = supabase.fetchTodayVisits(since: businessStart)
+            async let paymentRows = supabase.fetchTodayPayments(since: businessStart)
+
+            let (vRows, pRows) = try await (visitRows, paymentRows)
+
+            guard !vRows.isEmpty || !pRows.isEmpty else { return }
+
+            // nominations + orderItems を取得
+            let visitIds = vRows.map { $0.id }
+            async let nominationRows = supabase.fetchNominations(visitIds: visitIds)
+            async let orderItemRows = supabase.fetchOrderItems(visitIds: visitIds)
+
+            let (nRows, oRows) = try await (nominationRows, orderItemRows)
+
+            // visit_id -> nominations / orderItems のマップ
+            let nomsByVisit = Dictionary(grouping: nRows, by: \.visitId)
+            let ordersByVisit = Dictionary(grouping: oRows, by: \.visitId)
+
+            // VisitRow -> Visit に変換
+            let serverVisits = vRows.map { row in
+                let noms = (nomsByVisit[row.id] ?? []).map { $0.toModel() }
+                let orders = (ordersByVisit[row.id] ?? []).map { $0.toModel() }
+                let feeOverrides = Dictionary(
+                    uniqueKeysWithValues: (nomsByVisit[row.id] ?? [])
+                        .compactMap { n -> (String, Int)? in
+                            guard let fee = n.feeOverride else { return nil }
+                            return (n.castId.uuidString, fee)
+                        }
+                )
+                return row.toModel(nominations: noms, orderItems: orders, nominationFeeOverrides: feeOverrides)
+            }
+
+            // payment_items を取得
+            let paymentIds = pRows.map { $0.id }
+            let piRows = try await supabase.fetchPaymentItems(paymentIds: paymentIds)
+            let itemsByPayment = Dictionary(grouping: piRows, by: \.paymentId)
+
+            let serverPayments = pRows.map { row in
+                let items = (itemsByPayment[row.id] ?? []).map { pi in
+                    OrderItem(
+                        id: pi.id.uuidString,
+                        menuItemId: pi.menuItemId,
+                        menuItemName: pi.menuItemName,
+                        price: pi.price,
+                        quantity: pi.quantity,
+                        isExpense: pi.isExpense,
+                        castId: pi.castId?.uuidString,
+                        note: pi.note
+                    )
+                }
+                return row.toModel(items: items)
+            }
+
+            // ローカルにないデータだけマージ（ローカルが先行書き込みなので既存は上書きしない）
+            let existingVisitIds = Set(vm.visits.map(\.id))
+            for visit in serverVisits where !existingVisitIds.contains(visit.id) {
+                vm.visits.append(visit)
+            }
+
+            let existingPaymentIds = Set(vm.payments.map(\.id))
+            for payment in serverPayments where !existingPaymentIds.contains(payment.id) {
+                vm.payments.append(payment)
+            }
+
+            logger.info("[SyncEngine] 営業データ同期完了: visits=\(serverVisits.count) payments=\(serverPayments.count)")
+        } catch {
+            logger.error("[SyncEngine] 営業データ同期失敗: \(error)")
+        }
+    }
+
     // MARK: - Write Sync (ローカル → Supabase)（1.2.3, 1.2.5）
 
     func syncVisit(_ visit: Visit) {
-        guard let tenantId = supabase.tenantId else { return }
+        guard let tenantId = supabase.tenantId else {
+            logger.warning("[syncVisit] tenantId が nil — スキップ")
+            return
+        }
         markNeedsSync(visit.id)
 
-        guard isOnline else { return }
+        guard isOnline else {
+            logger.info("[syncVisit] オフライン — 後で同期 visit_id=\(visit.id)")
+            return
+        }
+
+        // デバッグ: 同期対象のvisitデータをログ出力
+        logger.info("[syncVisit] 開始 visit_id=\(visit.id) table_id=\(visit.tableId) tenant_id=\(tenantId) guests=\(visit.guestCount) checked_out=\(visit.isCheckedOut)")
+
         Task {
             do {
                 // 競合解決（1.2.5）
                 if let serverDate = try? await supabase.fetchServerUpdatedAt(table: "visits", id: UUID(uuidString: visit.id) ?? UUID()) {
-                    // サーバーの方が新しい場合はスキップ（Last Write Wins）
                     if serverDate > Date() {
-                        logger.info("[SyncEngine] 競合検出: サーバーが新しいためスキップ visit_id=\(visit.id)")
+                        logger.info("[syncVisit] 競合検出: サーバーが新しいためスキップ visit_id=\(visit.id)")
                         markSynced(visit.id)
                         return
                     }
                 }
 
                 let row = VisitRow.from(visit, tenantId: tenantId)
+                logger.info("[syncVisit] VisitRow作成: id=\(row.id) tableId=\(row.tableId) tenantId=\(row.tenantId)")
                 try await supabase.upsertVisit(row)
+                logger.info("[syncVisit] upsertVisit成功")
 
                 // Nominations
                 let nominationRows = visit.nominations.map { nom in
@@ -275,16 +366,27 @@ final class SyncEngine: @unchecked Sendable {
                     )
                 }
                 try await supabase.upsertNominations(nominationRows, visitId: UUID(uuidString: visit.id)!)
+                logger.info("[syncVisit] upsertNominations成功 count=\(nominationRows.count)")
 
                 // Order items
                 let orderRows = visit.orderItems.map {
                     OrderItemRow.from($0, visitId: visit.id, tenantId: tenantId)
                 }
                 try await supabase.upsertOrderItems(orderRows, visitId: UUID(uuidString: visit.id)!)
+                logger.info("[syncVisit] upsertOrderItems成功 count=\(orderRows.count)")
 
                 markSynced(visit.id)
+                logger.info("[syncVisit] 完了 visit_id=\(visit.id)")
+
+                // visit同期成功後、テーブルのvisit_id/statusもSupabaseに反映
+                try? await supabase.client.from("floor_tables")
+                    .update(["status": visit.isCheckedOut ? "empty" : "occupied",
+                             "visit_id": visit.isCheckedOut ? nil : visit.id] as [String: String?])
+                    .eq("id", value: visit.tableId)
+                    .execute()
+                logger.info("[syncVisit] テーブル状態更新 table_id=\(visit.tableId)")
             } catch {
-                logger.error("[SyncEngine] Visit sync failed: \(error)")
+                logger.error("[syncVisit] 失敗 visit_id=\(visit.id) table_id=\(visit.tableId) error=\(error)")
                 markSyncFailed(visit.id)
                 setSyncError("来店データの同期に失敗しました")
             }
@@ -298,11 +400,19 @@ final class SyncEngine: @unchecked Sendable {
         guard isOnline else { return }
         Task {
             do {
-                let row = FloorTableRow.from(table, tenantId: tenantId)
+                // visit_idはvisit同期後に更新されるため、テーブル同期ではnullで送る
+                // （visitがまだSupabaseに存在しないとFK違反になる）
+                var row = FloorTableRow.from(table, tenantId: tenantId)
+                row = FloorTableRow(
+                    id: row.id, tenantId: row.tenantId, roomId: row.roomId,
+                    name: row.name, capacity: row.capacity,
+                    status: row.status, positionX: row.positionX, positionY: row.positionY,
+                    visitId: nil
+                )
                 try await supabase.upsertFloorTable(row)
                 markSynced(table.id)
             } catch {
-                logger.error("[SyncEngine] Table sync failed: \(error)")
+                logger.error("[syncFloorTable] 失敗 table_id=\(table.id) error=\(error)")
                 markSyncFailed(table.id)
                 setSyncError("テーブルの同期に失敗しました")
             }

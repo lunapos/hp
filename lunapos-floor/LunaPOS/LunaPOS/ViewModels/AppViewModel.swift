@@ -61,9 +61,11 @@ final class AppViewModel {
         guard let data = UserDefaults.standard.data(forKey: storageKey),
               let state = try? JSONDecoder().decode(OperationalState.self, from: data)
         else {
+            // 保存データなし → 空の状態で開始（モックデータは入れない）
+            // Supabase認証済みの場合、モックのvisit/paymentを入れるとFK違反になるため
             return OperationalState(
-                visits: MockData.defaultState.visits,
-                payments: MockData.defaultState.payments,
+                visits: [],
+                payments: [],
                 registerStartAmount: 0,
                 cashWithdrawals: []
             )
@@ -86,6 +88,8 @@ final class AppViewModel {
     // MARK: - Table
 
     func openTable(tableId: String, customerName: String?, guestCount: Int, nominations: [CastNomination], douhanCastId: String?) {
+        // 既にvisitがあるテーブルには二重で卓を立てない
+        if let table = tables.first(where: { $0.id == tableId }), table.visitId != nil { return }
         let visit = Visit(
             tableId: tableId,
             customerName: customerName,
@@ -162,12 +166,14 @@ final class AppViewModel {
                 visits[idx].guestCount = newCount
             }
 
-            // 延長アイテムの数量も連動
-            for itemIdx in visits[idx].orderItems.indices {
-                if visits[idx].orderItems[itemIdx].menuItemId.hasPrefix("ext_") {
-                    visits[idx].orderItems[itemIdx].quantity = newCount
-                }
-            }
+            // 延長アイテムの数量は変更しない（追加時の人数を保持）
+        }
+        save()
+    }
+
+    func updateCustomerName(visitId: String, name: String?) {
+        if let idx = visits.firstIndex(where: { $0.id == visitId }) {
+            visits[idx].customerName = name
         }
         save()
     }
@@ -358,6 +364,13 @@ final class AppViewModel {
         save()
     }
 
+    func updateCastDropOff(castId: String, dropOff: String?) {
+        if let idx = casts.firstIndex(where: { $0.id == castId }) {
+            casts[idx].dropOffLocation = dropOff
+        }
+        save()
+    }
+
     // MARK: - Menu
 
     func addMenuItem(name: String, price: Int, category: MenuCategory) {
@@ -431,14 +444,22 @@ final class AppViewModel {
         payments.reduce(0) { $0 + $1.total }
     }
 
+    /// 営業日の開始時刻（当日12:00〜翌日12:00を1営業日とする）
+    var businessDayStart: Date {
+        let cal = Calendar.current
+        let now = Date()
+        let noon = cal.date(bySettingHour: 12, minute: 0, second: 0, of: now)!
+        return now >= noon ? noon : cal.date(byAdding: .day, value: -1, to: noon)!
+    }
+
     var todayPayments: [Payment] {
-        let todayStart = Calendar.current.startOfDay(for: Date())
-        return payments.filter { $0.paidAt >= todayStart }
+        let start = businessDayStart
+        return payments.filter { $0.paidAt >= start }
     }
 
     var todayVisits: [Visit] {
-        let todayStart = Calendar.current.startOfDay(for: Date())
-        return visits.filter { $0.checkInTime >= todayStart }
+        let start = businessDayStart
+        return visits.filter { $0.checkInTime >= start }
     }
 
     var workingCasts: [Cast] {
@@ -446,17 +467,19 @@ final class AppViewModel {
     }
 
     func castNominations(castId: String) -> Int {
-        let todayStart = Calendar.current.startOfDay(for: Date())
+        let start = businessDayStart
         return visits.filter { v in
-            v.checkInTime >= todayStart &&
+            v.checkInTime >= start &&
             v.nominations.contains(where: { $0.castId == castId && $0.nominationType != .none })
         }.count
     }
 
     func castSales(castId: String) -> Int {
-        return todayPayments.filter { p in
-            guard let visit = visits.first(where: { $0.id == p.visitId }) else { return false }
-            return visit.nominations.contains(where: { $0.castId == castId })
-        }.reduce(0) { $0 + $1.total }
+        return todayPayments.compactMap { p -> Int? in
+            guard let visit = visits.first(where: { $0.id == p.visitId }) else { return nil }
+            let mainNominations = visit.nominations.filter { $0.nominationType == .main }
+            guard mainNominations.contains(where: { $0.castId == castId }) else { return nil }
+            return p.total / mainNominations.count
+        }.reduce(0, +)
     }
 }
