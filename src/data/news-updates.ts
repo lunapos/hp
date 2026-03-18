@@ -53,6 +53,22 @@ export const updateItems: NewsItem[] = [
       "・決済は外部端末で処理するため、POS側は記録のみ（業界標準の運用）",
     ].join("\n"),
   },
+  // --- 2026-03-16 ---
+  {
+    slug: "floor-order-list-display-fix",
+    date: "2026-03-16",
+    title: "Floor: オーダー一覧の表示を修正",
+    summary:
+      "オーダー入力画面のオーダー一覧表示を修正し、注文内容がより見やすくなりました。",
+    category: "開発アップデート",
+    project: "Floor",
+    content: [
+      "オーダー入力画面のオーダー一覧表示を修正しました。",
+      "",
+      "・注文明細の表示レイアウトを改善",
+      "・各アイテムの情報が正しく表示されるように修正",
+    ].join("\n"),
+  },
   // --- 2026-03-14 ---
   {
     slug: "floor-device-auth-multitenant",
