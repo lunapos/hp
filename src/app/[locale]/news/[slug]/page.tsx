@@ -63,6 +63,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: item.title,
     description: item.summary,
+    alternates: {
+      canonical: `https://lunapos.jp/news/${slug}`,
+    },
+    openGraph: {
+      title: item.title,
+      description: item.summary,
+      url: `https://lunapos.jp/news/${slug}`,
+      type: "article",
+    },
   };
 }
 

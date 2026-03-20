@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getTranslations } from 'next-intl/server';
 import { getAllArticles, getAllTags } from "@/lib/media";
 import Section from "@/components/layout/Section";
@@ -8,9 +9,21 @@ import { Pagination } from "@/components/ui/Pagination";
 
 const ARTICLES_PER_PAGE = 6;
 
-export async function generateMetadata() {
+export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('metadata.column');
-  return { title: t('title'), description: t('description') };
+  return {
+    title: t('title'),
+    description: t('description'),
+    alternates: {
+      canonical: "https://lunapos.jp/column",
+    },
+    openGraph: {
+      title: t('title'),
+      description: t('description'),
+      url: "https://lunapos.jp/column",
+      type: "website",
+    },
+  };
 }
 
 export default async function MediaPage({

@@ -1,12 +1,25 @@
+import type { Metadata } from "next";
 import { getTranslations } from 'next-intl/server';
 import Section from "@/components/layout/Section";
 import SectionHeading from "@/components/ui/SectionHeading";
 import NewsTabs from "@/components/ui/NewsTabs";
 import { getLocalizedNewsItems } from "@/data/news";
 
-export async function generateMetadata() {
+export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('metadata.news');
-  return { title: t('title'), description: t('description') };
+  return {
+    title: t('title'),
+    description: t('description'),
+    alternates: {
+      canonical: "https://lunapos.jp/news",
+    },
+    openGraph: {
+      title: t('title'),
+      description: t('description'),
+      url: "https://lunapos.jp/news",
+      type: "website",
+    },
+  };
 }
 
 export default async function NewsListPage({

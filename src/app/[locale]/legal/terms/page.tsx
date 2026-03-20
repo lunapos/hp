@@ -1,10 +1,23 @@
+import type { Metadata } from "next";
 import { getTranslations } from 'next-intl/server';
 import Section from "@/components/layout/Section";
 import Card from "@/components/ui/Card";
 
-export async function generateMetadata() {
+export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('metadata.terms');
-  return { title: t('title'), description: t('description') };
+  return {
+    title: t('title'),
+    description: t('description'),
+    alternates: {
+      canonical: "https://lunapos.jp/legal/terms",
+    },
+    openGraph: {
+      title: t('title'),
+      description: t('description'),
+      url: "https://lunapos.jp/legal/terms",
+      type: "website",
+    },
+  };
 }
 
 const sections = [
