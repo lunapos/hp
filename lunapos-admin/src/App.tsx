@@ -8,6 +8,7 @@ import CastsPage from './pages/CastsPage'
 import TablesPage from './pages/TablesPage'
 import PlansPage from './pages/PlansPage'
 import SettingsPage from './pages/SettingsPage'
+import SignupPage from './pages/SignupPage'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth()
@@ -36,6 +37,7 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/admin/login" element={user ? <Navigate to="/admin" replace /> : <LoginPage />} />
+      <Route path="/admin/signup" element={user ? <Navigate to="/admin" replace /> : <SignupPage />} />
       <Route path="/admin" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
       <Route path="/admin/menu" element={<ProtectedRoute><MenuPage /></ProtectedRoute>} />
       <Route path="/admin/casts" element={<ProtectedRoute><CastsPage /></ProtectedRoute>} />

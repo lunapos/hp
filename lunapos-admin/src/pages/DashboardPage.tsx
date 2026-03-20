@@ -9,19 +9,8 @@ import {
 } from 'recharts'
 import { supabase, requireTenantId } from '../lib/supabase'
 import { exportDailyPaymentsCSV, exportMonthlyCSV, exportCastRankingCSV } from '../lib/csvExport'
+import { toDateStr, formatYen, METHOD_LABELS, calcDailySummary, calcCastRankings, calcHourlyData, calcMonthlyData } from '../lib/dashboard'
 import type { PaymentRow, CastRow, NominationRow, VisitRow, CastRanking, HourlyData } from '../types'
-
-function toDateStr(d: Date): string {
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
-}
-
-function formatYen(n: number): string {
-  return `¥${n.toLocaleString()}`
-}
-
-const METHOD_LABELS: Record<string, string> = {
-  cash: '現金', credit: 'カード', electronic: '電子マネー', tab: 'ツケ',
-}
 
 type ViewMode = 'daily' | 'monthly'
 
@@ -100,23 +89,7 @@ export default function DashboardPage() {
           .gte('paid_at', monthStart)
           .lte('paid_at', monthEnd)
 
-        // 日別集計
-        const dailyMap: Record<string, { total: number; count: number }> = {}
-        for (let d = 1; d <= daysInMonth; d++) {
-          const key = `${selectedMonth}-${String(d).padStart(2, '0')}`
-          dailyMap[key] = { total: 0, count: 0 }
-        }
-        for (const p of (data || []) as { total: number; paid_at: string }[]) {
-          const date = new Date(p.paid_at)
-          const key = toDateStr(date)
-          if (dailyMap[key]) {
-            dailyMap[key].total += p.total
-            dailyMap[key].count += 1
-          }
-        }
-        setMonthlyData(
-          Object.entries(dailyMap).map(([date, v]) => ({ date, ...v })).sort((a, b) => a.date.localeCompare(b.date))
-        )
+        setMonthlyData(calcMonthlyData((data || []) as { total: number; paid_at: string }[], year, month))
       } catch {
         // エラー時は空データ
       }
@@ -126,57 +99,13 @@ export default function DashboardPage() {
   }, [selectedMonth, viewMode])
 
   // 日次集計
-  const dailySummary = useMemo(() => {
-    const totalSales = payments.reduce((s, p) => s + p.total, 0)
-    const visitCount = visits.length
-    const guestCount = visits.reduce((s, v) => s + v.guest_count, 0)
-    const avgSpend = visitCount > 0 ? Math.floor(totalSales / visitCount) : 0
-    const methodTotals: Record<string, number> = {}
-    for (const p of payments) {
-      methodTotals[p.payment_method] = (methodTotals[p.payment_method] || 0) + p.total
-    }
-    return { totalSales, visitCount, guestCount, avgSpend, methodTotals }
-  }, [payments, visits])
+  const dailySummary = useMemo(() => calcDailySummary(payments, visits), [payments, visits])
 
   // キャスト別ランキング
-  const castRankings = useMemo((): CastRanking[] => {
-    const visitIds = new Set(visits.map(v => v.id))
-    const relevantNoms = nominations.filter(n => visitIds.has(n.visit_id) && n.nomination_type !== 'none')
-    const castMap: Record<string, CastRanking> = {}
-    for (const c of casts) {
-      castMap[c.id] = { castId: c.id, stageName: c.stage_name, photoUrl: c.photo_url, nominations: 0, sales: 0, drinkCount: 0 }
-    }
-    for (const n of relevantNoms) {
-      if (castMap[n.cast_id]) {
-        castMap[n.cast_id].nominations += n.qty
-      }
-    }
-    // 売上は指名に紐づく来店の会計額で概算
-    for (const n of relevantNoms) {
-      const visit = visits.find(v => v.id === n.visit_id)
-      if (visit) {
-        const payment = payments.find(p => p.visit_id === visit.id)
-        if (payment && castMap[n.cast_id]) {
-          castMap[n.cast_id].sales += payment.total
-        }
-      }
-    }
-    return Object.values(castMap)
-      .filter(c => c.nominations > 0 || c.sales > 0)
-      .sort((a, b) => b.sales - a.sales)
-      .slice(0, 10)
-  }, [visits, nominations, payments, casts])
+  const castRankings = useMemo((): CastRanking[] => calcCastRankings(visits, nominations, payments, casts), [visits, nominations, payments, casts])
 
   // 時間帯別来店
-  const hourlyData = useMemo((): HourlyData[] => {
-    const hours: Record<number, number> = {}
-    for (let h = 0; h < 24; h++) hours[h] = 0
-    for (const v of visits) {
-      const h = new Date(v.check_in_time).getHours()
-      hours[h] += 1
-    }
-    return Object.entries(hours).map(([h, count]) => ({ hour: Number(h), count }))
-  }, [visits])
+  const hourlyData = useMemo((): HourlyData[] => calcHourlyData(visits), [visits])
 
   // 前日/前月移動
   function shiftDate(offset: number) {
