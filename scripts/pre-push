@@ -1,0 +1,31 @@
+#!/bin/sh
+# pre-push hook: pushする前にAdminのテストを実行
+# 失敗したらpushをブロック
+
+# pushされるコミットの差分からlunapos-adminの変更を検出
+ADMIN_CHANGED=$(git diff --name-only @{push}..HEAD 2>/dev/null | grep '^lunapos-admin/' || true)
+
+# @{push}が使えない場合（初回pushなど）はoriginとの差分をチェック
+if [ -z "$ADMIN_CHANGED" ]; then
+  REMOTE_REF=$(git rev-parse --abbrev-ref @{upstream} 2>/dev/null || echo "")
+  if [ -n "$REMOTE_REF" ]; then
+    ADMIN_CHANGED=$(git diff --name-only "$REMOTE_REF"..HEAD 2>/dev/null | grep '^lunapos-admin/' || true)
+  fi
+fi
+
+if [ -n "$ADMIN_CHANGED" ]; then
+  echo "lunapos-admin に変更あり: テスト実行中..."
+  cd lunapos-admin
+  npm test 2>&1
+  RESULT=$?
+  cd ..
+  if [ $RESULT -ne 0 ]; then
+    echo ""
+    echo "テスト失敗: pushをブロックしました"
+    echo "lunapos-admin/で npm test を実行して修正してください"
+    exit 1
+  fi
+  echo "テスト通過"
+fi
+
+exit 0

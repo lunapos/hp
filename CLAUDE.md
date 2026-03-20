@@ -74,6 +74,16 @@ luna/
 - **「リリースして」= push まで含む**: コミット → push まで一気にやる
 - **記事リリース**: article でリリース済みフォルダに移動（ローカル git のみ）→ `hp/content/column/` に MDX 変換して配置 → hp でコミット → push
 - **HP 開発ニュース（自動更新必須）**: 全プロジェクト（Floor/Admin/Cast/HP/LP/記事）で機能追加・変更を push するたびに、`hp/src/data/news-updates.ts` に開発アップデートを追加して push する。別途指示がなくても自動で行うこと
+- **push後のCIチェック・自動修正（必須）**: push後は**必ず**GitHub Actions CIの結果を確認する。失敗していたら自動で修正→再pushする。成功するまで繰り返す。ユーザーに「CI失敗しました」と報告して終わりにしない
+  - **確認手順**: push後30秒待ってから確認:
+    ```
+    sleep 30 && gh run list --limit 1 --repo zh-ru/luna --json databaseId,conclusion -q '.[0]'
+    ```
+  - **失敗時**: ログを取得して原因特定 → 修正 → コミット → 再push → 再度CI確認
+    ```
+    gh run view <run-id> --log-failed --repo zh-ru/luna
+    ```
+  - **CIが通るまで「完了」と報告してはいけない**
 
 ### 文体・トーン（マーケティング・記事・SNS）
 
