@@ -5,33 +5,17 @@ import {
 } from 'lucide-react'
 import { supabase, requireTenantId, requireCastId } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
+import {
+  formatYen, toDateStr, nominationLabel,
+  loadMemos as loadMemosFromStorage, saveMemos as saveMemosToStorage,
+  calcTodaySummary, calcMonthlyData, calcMonthlyTotals, filterMemos,
+} from '../lib/castApp'
 import type { NominationRow, PaymentRow, OrderItemRow, CustomerMemo, DailySummary } from '../types'
 
 type Tab = 'today' | 'monthly' | 'nominations' | 'memos'
 
-const MEMO_STORAGE_KEY = 'luna_cast_memos'
-
-function formatYen(n: number): string { return `¥${n.toLocaleString()}` }
-function toDateStr(d: Date): string {
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
-}
-
-function nominationLabel(type: string): string {
-  if (type === 'main') return '本指名'
-  if (type === 'in_store') return '場内指名'
-  return ''
-}
-
-// --- メモのローカルストレージ管理 ---
-function loadMemos(): CustomerMemo[] {
-  try {
-    const raw = localStorage.getItem(MEMO_STORAGE_KEY)
-    return raw ? JSON.parse(raw) : []
-  } catch { return [] }
-}
-function saveMemos(memos: CustomerMemo[]) {
-  localStorage.setItem(MEMO_STORAGE_KEY, JSON.stringify(memos))
-}
+function loadMemos(): CustomerMemo[] { return loadMemosFromStorage(localStorage) }
+function saveMemos(memos: CustomerMemo[]) { saveMemosToStorage(localStorage, memos) }
 
 export default function CastApp() {
   const { user, signOut } = useAuth()
@@ -133,13 +117,10 @@ function TodayTab() {
     setLoading(false)
   }
 
-  const mainNoms = nominations.filter(n => n.nomination_type === 'main').reduce((s, n) => s + n.qty, 0)
-  const inStoreNoms = nominations.filter(n => n.nomination_type === 'in_store').reduce((s, n) => s + n.qty, 0)
-  // 売上貢献は指名に紐づく来店の会計額
-  const nominatedVisitIds = new Set(nominations.map(n => n.visit_id))
-  const salesContribution = payments
-    .filter(p => nominatedVisitIds.has(p.visit_id))
-    .reduce((s, p) => s + p.total, 0)
+  const summary = calcTodaySummary(nominations, payments, [])
+  const mainNoms = summary.mainNominations
+  const inStoreNoms = summary.inStoreNominations
+  const salesContribution = summary.salesContribution
 
   if (loading) return <div className="text-center py-20 text-[#9090bb]">読み込み中...</div>
 
@@ -203,20 +184,7 @@ function MonthlyTab() {
         .eq('tenant_id', tid).eq('cast_id', cid)
         .gte('created_at', monthStart).lte('created_at', monthEnd)
 
-      // 日別集計
-      const byDay: Record<string, DailySummary> = {}
-      for (let d = 1; d <= daysInMonth; d++) {
-        const key = `${selectedMonth}-${String(d).padStart(2, '0')}`
-        byDay[key] = { date: key, mainNominations: 0, inStoreNominations: 0, drinkCount: 0, salesContribution: 0 }
-      }
-      for (const n of (noms || []) as NominationRow[]) {
-        const day = toDateStr(new Date(n.created_at))
-        if (byDay[day]) {
-          if (n.nomination_type === 'main') byDay[day].mainNominations += n.qty
-          else if (n.nomination_type === 'in_store') byDay[day].inStoreNominations += n.qty
-        }
-      }
-      setDailyData(Object.values(byDay).sort((a, b) => a.date.localeCompare(b.date)))
+      setDailyData(calcMonthlyData((noms || []) as NominationRow[], year, month))
     } catch { /* ignore */ }
     setLoading(false)
   }
@@ -227,9 +195,7 @@ function MonthlyTab() {
     setSelectedMonth(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`)
   }
 
-  const totalMain = dailyData.reduce((s, d) => s + d.mainNominations, 0)
-  const totalInStore = dailyData.reduce((s, d) => s + d.inStoreNominations, 0)
-  const activeDays = dailyData.filter(d => d.mainNominations + d.inStoreNominations > 0).length
+  const { totalMain, totalInStore, activeDays } = calcMonthlyTotals(dailyData)
 
   return (
     <div className="p-4 space-y-4">
@@ -411,9 +377,7 @@ function MemosTab() {
     saveMemos(updated)
   }
 
-  const filtered = memos.filter(m =>
-    !search || m.name.includes(search) || m.features.includes(search) || m.memo.includes(search)
-  )
+  const filtered = filterMemos(memos, search)
 
   return (
     <div className="p-4 space-y-4">

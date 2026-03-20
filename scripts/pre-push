@@ -28,6 +28,18 @@ if echo "$CHANGED" | grep -q '^lunapos-admin/'; then
   fi
 fi
 
+# lunapos-cast: vitest
+if echo "$CHANGED" | grep -q '^lunapos-cast/'; then
+  echo "lunapos-cast に変更あり: テスト実行中..."
+  (cd lunapos-cast && npm test 2>&1)
+  if [ $? -ne 0 ]; then
+    echo "lunapos-cast テスト失敗"
+    FAILED=1
+  else
+    echo "lunapos-cast テスト通過"
+  fi
+fi
+
 # lunapos-floor: Swiftビルドチェック（xcodebuildがある場合のみ）
 if echo "$CHANGED" | grep -q '^lunapos-floor/'; then
   if command -v xcodebuild >/dev/null 2>&1; then
