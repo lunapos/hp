@@ -8,7 +8,7 @@ interface PaginationProps {
 }
 
 function getVisiblePages(current: number, total: number): (number | "...")[] {
-  if (total <= 7) {
+  if (total <= 5) {
     return Array.from({ length: total }, (_, i) => i + 1);
   }
 
