@@ -3,6 +3,21 @@ import type { NewsItem } from "./news-types";
 
 export const announcementItems: NewsItem[] = [
   {
+    slug: "appstore-submission",
+    date: "2026-03-21",
+    title: "App Store へ審査申請を提出しました",
+    summary:
+      "LunaPos iPad版の App Store 審査申請を提出しました。承認され次第、App Store からダウンロードいただけるようになります。",
+    category: "お知らせ",
+    project: "Floor",
+    content: [
+      "LunaPos iPad版（フロア管理アプリ）の App Store 審査申請を提出しました。",
+      "",
+      "Appleの審査を通過次第、App Storeからダウンロードいただけるようになります。",
+      "進捗があり次第、こちらでお知らせいたします。",
+    ].join("\n"),
+  },
+  {
     slug: "hp-multilingual-support",
     date: "2026-03-01",
     title: "公式サイトが中国語・英語に対応しました",
