@@ -83,6 +83,7 @@ export default async function Footer() {
           <p className="text-xs text-luna-text-muted mb-2">zh グループ</p>
           <div className="flex flex-wrap gap-x-5 gap-y-1">
             {[
+              { name: "Kaigaijin", url: "https://kaigaijin.jp" },
               { name: "Wattly", url: "https://wattly.jp" },
               { name: "Casinohub", url: "https://casinohub.jp" },
               { name: "Roomly", url: "https://hp.roomly.jp" },
