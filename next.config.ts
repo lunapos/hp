@@ -26,6 +26,23 @@ const nextConfig: NextConfig = {
         destination: "/#pricing",
         permanent: true,
       },
+      // 旧ニュースURL → 正しいパスへリダイレクト
+      {
+        source: "/:locale(en|zh)/news/column-:slug",
+        destination: "/:locale/column/:slug",
+        permanent: true,
+      },
+      {
+        source: "/news/column-:slug",
+        destination: "/column/:slug",
+        permanent: true,
+      },
+      // 削除済みニュースアイテム
+      {
+        source: "/news/hp-nav-split-media-rename",
+        destination: "/news",
+        permanent: true,
+      },
     ];
   },
 };
