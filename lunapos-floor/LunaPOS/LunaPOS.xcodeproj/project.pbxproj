@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 63;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -22,14 +22,17 @@
 		947E2636BEA85BC8AF2B3DCB /* ErrorBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB55562F18EA56A696AB7D0D /* ErrorBanner.swift */; };
 		9EFD4C738120D23F9DDE86E4 /* ReceiptData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7251352CBC98DAEA6B227840 /* ReceiptData.swift */; };
 		A694EDE6D85A1C2153DF4674 /* AdminView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16DB6AA729C4459743D1269F /* AdminView.swift */; };
+		AA1B2C3D4E5F6A7B8C9D0E1F /* DeviceAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2C3D4E5F6A7B8C9D0E1F2A /* DeviceAuthView.swift */; };
 		ADD2F18395EAF5033160533C /* TableDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B71B64CEE6CA395A0DDE73B /* TableDetailView.swift */; };
 		B29EA66E0C7712EDF1D336E3 /* CastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD757EC82BD2C42045D48D54 /* CastView.swift */; };
 		C334D6940A367F333DFBB5E9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2B3E7B0690E1D6BB57C16A58 /* Assets.xcassets */; };
 		C8FAC888546B1E414CFA5FAF /* SupabaseServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBC72CA18982E186EFF8826 /* SupabaseServiceTests.swift */; };
+		CC3D4E5F6A7B8C9D0E1F2A3B /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD4E5F6A7B8C9D0E1F2A3B4C /* KeychainHelper.swift */; };
 		CF2927CADD6EDF3432B38539 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480C9A283E767FACA6761FBA /* Theme.swift */; };
 		D3FD52FD3C8304B3471248E9 /* AppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D04493AC941E96B28680899 /* AppViewModel.swift */; };
 		D536E01FCA61964F7BCDFF85 /* DTOs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894AF9F6CB1B8AB24932A558 /* DTOs.swift */; };
 		E5BDAFF079601A26291609B5 /* CheckoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C512060A2178FC4053F857 /* CheckoutView.swift */; };
+		A1B2C3D4E5F6A7B8C9D0E1F2 /* ReceiptPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1E2D3C4B5A6978869001234 /* ReceiptPreviewView.swift */; };
 		E8DBE60F51BC32ABF37F53DE /* SyncEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF3135CA1B1C0736CC81846 /* SyncEngineTests.swift */; };
 		FBF8DC17A87C04005305234F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F9DF5D7016B0EC3494A2FBC /* Constants.swift */; };
 		FFF58FFF04900EFFA1373460 /* RealtimeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7628E1B7E08407B8B6B209B9 /* RealtimeManager.swift */; };
@@ -52,15 +55,16 @@
 		1FDEE41A0AD2C6F08B9078B3 /* LunaPOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LunaPOSApp.swift; sourceTree = "<group>"; };
 		24C562CE23A872F25EFA0505 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		25C512060A2178FC4053F857 /* CheckoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutView.swift; sourceTree = "<group>"; };
+		F1E2D3C4B5A6978869001234 /* ReceiptPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptPreviewView.swift; sourceTree = "<group>"; };
 		2B3E7B0690E1D6BB57C16A58 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		37D1C12D0B61E577D1F0E413 /* LunaPOSTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = LunaPOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		37D1C12D0B61E577D1F0E413 /* LunaPOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LunaPOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		396A69E5923C15D88F489236 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		480C9A283E767FACA6761FBA /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		48E92DF18BD5E475940BE4F6 /* SupabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseService.swift; sourceTree = "<group>"; };
 		4B71B64CEE6CA395A0DDE73B /* TableDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableDetailView.swift; sourceTree = "<group>"; };
 		4D04493AC941E96B28680899 /* AppViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppViewModel.swift; sourceTree = "<group>"; };
 		4F4451DD65A7D6F5D6B5E3E1 /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
-		5A541F2FC51A1074BEC24B13 /* LunaPOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = LunaPOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5A541F2FC51A1074BEC24B13 /* LunaPOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LunaPOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7251352CBC98DAEA6B227840 /* ReceiptData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptData.swift; sourceTree = "<group>"; };
 		7628E1B7E08407B8B6B209B9 /* RealtimeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealtimeManager.swift; sourceTree = "<group>"; };
 		88037A9F7DE3BA7CC2A4D0FC /* PriceCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceCalculatorTests.swift; sourceTree = "<group>"; };
@@ -68,10 +72,12 @@
 		9AF3135CA1B1C0736CC81846 /* SyncEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncEngineTests.swift; sourceTree = "<group>"; };
 		A0B4FBD69062C7D494559475 /* SyncEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncEngine.swift; sourceTree = "<group>"; };
 		AB55562F18EA56A696AB7D0D /* ErrorBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorBanner.swift; sourceTree = "<group>"; };
+		BB2C3D4E5F6A7B8C9D0E1F2A /* DeviceAuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceAuthView.swift; sourceTree = "<group>"; };
 		BD757EC82BD2C42045D48D54 /* CastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CastView.swift; sourceTree = "<group>"; };
 		CE6EBC683C4AD966F2311D21 /* PriceCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceCalculator.swift; sourceTree = "<group>"; };
 		D35C9ADF38A33B6183C8D370 /* MockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockData.swift; sourceTree = "<group>"; };
 		D59C6A324BB3ED30B7B3E01F /* FloorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorView.swift; sourceTree = "<group>"; };
+		DD4E5F6A7B8C9D0E1F2A3B4C /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 		FC2D9D03138FBB4845858FF1 /* StoreSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreSettings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -109,6 +115,8 @@
 				BD757EC82BD2C42045D48D54 /* CastView.swift */,
 				25C512060A2178FC4053F857 /* CheckoutView.swift */,
 				24C562CE23A872F25EFA0505 /* ContentView.swift */,
+				F1E2D3C4B5A6978869001234 /* ReceiptPreviewView.swift */,
+				BB2C3D4E5F6A7B8C9D0E1F2A /* DeviceAuthView.swift */,
 				D59C6A324BB3ED30B7B3E01F /* FloorView.swift */,
 				4B71B64CEE6CA395A0DDE73B /* TableDetailView.swift */,
 				769460F36666822479733CFD /* Components */,
@@ -119,6 +127,7 @@
 		3B7306709065026B24F3EE94 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				DD4E5F6A7B8C9D0E1F2A3B4C /* KeychainHelper.swift */,
 				4F4451DD65A7D6F5D6B5E3E1 /* NetworkMonitor.swift */,
 				7628E1B7E08407B8B6B209B9 /* RealtimeManager.swift */,
 				48E92DF18BD5E475940BE4F6 /* SupabaseService.swift */,
@@ -248,7 +257,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 1600;
+				LastUpgradeCheck = 2620;
 			};
 			buildConfigurationList = 2B98B0586BA8CDCD0CBAFCCC /* Build configuration list for PBXProject "LunaPOS" */;
 			compatibilityVersion = "Xcode 14.0";
@@ -263,7 +272,6 @@
 			packageReferences = (
 				8AE77740E3750627EA52C67E /* XCRemoteSwiftPackageReference "supabase-swift" */,
 			);
-			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -293,11 +301,14 @@
 				D3FD52FD3C8304B3471248E9 /* AppViewModel.swift in Sources */,
 				B29EA66E0C7712EDF1D336E3 /* CastView.swift in Sources */,
 				E5BDAFF079601A26291609B5 /* CheckoutView.swift in Sources */,
+				A1B2C3D4E5F6A7B8C9D0E1F2 /* ReceiptPreviewView.swift in Sources */,
 				FBF8DC17A87C04005305234F /* Constants.swift in Sources */,
 				7CCFEFCE85FC0EA41D7772B9 /* ContentView.swift in Sources */,
+				AA1B2C3D4E5F6A7B8C9D0E1F /* DeviceAuthView.swift in Sources */,
 				D536E01FCA61964F7BCDFF85 /* DTOs.swift in Sources */,
 				947E2636BEA85BC8AF2B3DCB /* ErrorBanner.swift in Sources */,
 				9084AAE4110490DE72609DEF /* FloorView.swift in Sources */,
+				CC3D4E5F6A7B8C9D0E1F2A3B /* KeychainHelper.swift in Sources */,
 				42AEB1E90125086623C35F04 /* LunaPOSApp.swift in Sources */,
 				19FC3D67A981ECA37C5AA598 /* MockData.swift in Sources */,
 				76D4B95BC3FB4DB03933C1C2 /* Models.swift in Sources */,
@@ -388,6 +399,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -411,6 +423,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 6.0;
@@ -422,17 +435,27 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				ENABLE_TESTABILITY = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = FB5QCJ7YAF;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = LunaPOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Luna POS";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.luna.pos;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Release;
 		};
@@ -473,6 +496,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -489,6 +513,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 6.0;
@@ -500,17 +525,27 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = FB5QCJ7YAF;
 				ENABLE_TESTABILITY = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = LunaPOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Luna POS";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.luna.pos;
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Debug;
 		};

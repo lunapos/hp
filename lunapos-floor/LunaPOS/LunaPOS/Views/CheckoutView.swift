@@ -13,6 +13,8 @@ struct CheckoutView: View {
     @State private var completedTotal = 0
     @State private var completedChange = 0 // お釣り（現金時）
     @State private var showTabWarning = false // ツケ時の顧客未選択警告
+    @State private var showReceipt = false // レシートプレビュー
+    @State private var completedReceipt: ReceiptData? // 会計完了時のレシートデータ
 
     private var table: FloorTable? { vm.tables.first(where: { $0.id == tableId }) }
     private var visit: Visit? { table?.visitId.flatMap { vid in vm.visits.first(where: { $0.id == vid }) } }
@@ -66,18 +68,42 @@ struct CheckoutView: View {
                 }
             }
 
-            Text("フロアに戻ります...")
-                .font(.caption)
-                .foregroundStyle(.lunaMuted)
-                .tracking(2)
+            // レシート表示ボタン
+            if completedReceipt != nil {
+                Button {
+                    showReceipt = true
+                } label: {
+                    HStack(spacing: 8) {
+                        Image(systemName: "doc.text")
+                        Text("レシートを表示")
+                            .tracking(1)
+                    }
+                    .font(.subheadline.bold())
+                    .padding(.horizontal, 24)
+                    .padding(.vertical, 12)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.lunaDark)
+            }
+
+            Button {
+                showCheckout = false
+                selectedTableId = nil
+            } label: {
+                Text("フロアに戻る")
+                    .font(.caption)
+                    .foregroundStyle(.lunaMuted)
+                    .tracking(2)
+            }
             Spacer()
         }
         .frame(maxWidth: .infinity)
         .background(Color.lunaBg)
-        .onAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                showCheckout = false
-                selectedTableId = nil
+        .sheet(isPresented: $showReceipt) {
+            if let receipt = completedReceipt {
+                ReceiptPreviewView(receipt: receipt) {
+                    showReceipt = false
+                }
             }
         }
     }
@@ -449,5 +475,14 @@ struct CheckoutView: View {
             items: visit.orderItems
         )
         vm.checkout(payment: payment)
+
+        // レシートデータ生成（インボイス対応）
+        completedReceipt = ReceiptData.from(
+            payment: payment,
+            visit: visit,
+            breakdown: breakdown,
+            settings: vm.storeSettings,
+            casts: vm.casts
+        )
     }
 }
