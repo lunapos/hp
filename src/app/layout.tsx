@@ -20,9 +20,7 @@ export const metadata: Metadata = {
   },
   description:
     "キャバクラ・ガールズバー・スナック・ホスト向けの次世代POSシステム。フロア管理・会計・出退勤をiPad1台で。オフライン対応で安心の店舗運営。",
-  alternates: {
-    canonical: "https://lunapos.jp",
-  },
+  // alternates は [locale]/layout.tsx の generateMetadata で動的に設定
   openGraph: {
     type: "website",
     locale: "ja_JP",
