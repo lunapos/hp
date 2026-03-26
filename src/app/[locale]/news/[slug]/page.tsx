@@ -72,6 +72,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: `https://lunapos.jp/news/${slug}`,
       type: "article",
     },
+    ...(locale !== "ja" && { robots: { index: false, follow: true } }),
   };
 }
 

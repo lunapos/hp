@@ -9,7 +9,12 @@ import { Pagination } from "@/components/ui/Pagination";
 
 const ARTICLES_PER_PAGE = 6;
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
   const t = await getTranslations('metadata.column');
   return {
     title: t('title'),
@@ -23,6 +28,7 @@ export async function generateMetadata(): Promise<Metadata> {
       url: "https://lunapos.jp/column",
       type: "website",
     },
+    ...(locale !== "ja" && { robots: { index: false, follow: true } }),
   };
 }
 

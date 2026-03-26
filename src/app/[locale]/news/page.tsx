@@ -5,7 +5,12 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import NewsTabs from "@/components/ui/NewsTabs";
 import { getLocalizedNewsItems } from "@/data/news";
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
   const t = await getTranslations('metadata.news');
   return {
     title: t('title'),
@@ -19,6 +24,7 @@ export async function generateMetadata(): Promise<Metadata> {
       url: "https://lunapos.jp/news",
       type: "website",
     },
+    ...(locale !== "ja" && { robots: { index: false, follow: true } }),
   };
 }
 

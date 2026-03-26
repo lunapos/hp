@@ -59,8 +59,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/legal/tokushoho", changeFrequency: "yearly", priority: 0.3 },
   ];
 
+  // 全静的ページは ja のみ（en/zh は canonical が ja を指すためサイトマップに含めない）
   const staticPages = staticPaths.flatMap(({ path, ...opts }) =>
-    withAlternates(path, now, opts)
+    jaOnly(path, now, opts)
   );
 
   // コラム: ja のみ（en/zh は noindex なのでサイトマップに含めない）
@@ -72,8 +73,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })
   );
 
+  // ニュース: ja のみ（en/zh は noindex なのでサイトマップに含めない）
   const newsPages = newsItems.flatMap((item) =>
-    withAlternates(`/news/${item.slug}`, new Date(item.date), {
+    jaOnly(`/news/${item.slug}`, new Date(item.date), {
       changeFrequency: "monthly",
       priority: 0.6,
     })
