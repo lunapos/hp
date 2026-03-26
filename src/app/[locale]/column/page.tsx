@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations } from 'next-intl/server';
+import { localizedAlternates, localizedUrl } from "@/lib/seo";
 import { getAllArticles, getAllTags } from "@/lib/media";
 import Section from "@/components/layout/Section";
 import SectionHeading from "@/components/ui/SectionHeading";
@@ -19,16 +20,13 @@ export async function generateMetadata({
   return {
     title: t('title'),
     description: t('description'),
-    alternates: {
-      canonical: "https://lunapos.jp/column",
-    },
+    alternates: localizedAlternates("/column", locale),
     openGraph: {
       title: t('title'),
       description: t('description'),
-      url: "https://lunapos.jp/column",
+      url: localizedUrl("/column", locale),
       type: "website",
     },
-    ...(locale !== "ja" && { robots: { index: false, follow: true } }),
   };
 }
 

@@ -1,20 +1,20 @@
 import type { Metadata } from "next";
 import { getTranslations } from 'next-intl/server';
+import { localizedAlternates, localizedUrl } from "@/lib/seo";
 import Section from "@/components/layout/Section";
 import Card from "@/components/ui/Card";
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
   const t = await getTranslations('metadata.company');
   return {
     title: t('title'),
     description: t('description'),
-    alternates: {
-      canonical: "https://lunapos.jp/company",
-    },
+    alternates: localizedAlternates("/company", locale),
     openGraph: {
       title: t('title'),
       description: t('description'),
-      url: "https://lunapos.jp/company",
+      url: localizedUrl("/company", locale),
       type: "website",
     },
   };

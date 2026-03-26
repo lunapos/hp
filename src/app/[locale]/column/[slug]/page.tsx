@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Link } from "@/i18n/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import { getAllSlugs, getArticle, getAllArticles } from "@/lib/media";
+import { getAllSlugs, getArticle, getAllArticles, hasTranslation } from "@/lib/media";
+import { localizedAlternates, localizedUrl } from "@/lib/seo";
 import { Calendar, ArrowLeft, Tag, ChevronLeft, ChevronRight } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ArticleJsonLd, BreadcrumbJsonLd } from "@/components/seo/JsonLd";
@@ -24,21 +25,23 @@ export async function generateMetadata({
   const article = getArticle(slug, locale);
   if (!article) return {};
 
+  const articlePath = `/column/${slug}`;
+  // 翻訳ファイルが実在する場合のみインデックス可（ja フォールバックはnoindex）
+  const shouldNoindex = locale !== "ja" && !hasTranslation(slug, locale);
+
   return {
     title: article.title,
     description: article.description,
-    alternates: {
-      canonical: `https://lunapos.jp/column/${slug}`,
-    },
+    alternates: localizedAlternates(articlePath, locale),
     openGraph: {
       title: article.title,
       description: article.description,
-      url: `https://lunapos.jp/column/${slug}`,
+      url: localizedUrl(articlePath, locale),
       type: "article",
       publishedTime: article.date,
       modifiedTime: article.lastModified || article.date,
     },
-    ...(locale !== "ja" && { robots: { index: false, follow: true } }),
+    ...(shouldNoindex && { robots: { index: false, follow: true } }),
   };
 }
 

@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getAllArticles } from "@/lib/media";
+import { getAllArticles, getAllSlugs } from "@/lib/media";
 import { newsItems } from "@/data/news";
 import { routing } from "@/i18n/routing";
 
@@ -8,12 +8,12 @@ const locales = routing.locales; // ['ja', 'en', 'zh']
 const defaultLocale = routing.defaultLocale; // 'ja'
 
 function localizedUrl(path: string, locale: string): string {
-  // ja はプレフィックスなし（localePrefix: 'as-needed'）
   return locale === defaultLocale
     ? `${baseUrl}${path}`
     : `${baseUrl}/${locale}${path}`;
 }
 
+/** 全言語のエントリ + hreflang alternates */
 function withAlternates(path: string, lastModified: Date, opts: { changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"]; priority: number }) {
   return locales.map((locale) => ({
     url: localizedUrl(path, locale),
@@ -28,7 +28,7 @@ function withAlternates(path: string, lastModified: Date, opts: { changeFrequenc
   }));
 }
 
-/** jaのみのエントリ（en/zh は noindex のためサイトマップに含めない） */
+/** jaのみのエントリ */
 function jaOnly(path: string, lastModified: Date, opts: { changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"]; priority: number }) {
   return [{
     url: `${baseUrl}${path}`,
@@ -59,21 +59,46 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/legal/tokushoho", changeFrequency: "yearly", priority: 0.3 },
   ];
 
-  // 全静的ページは ja のみ（en/zh は canonical が ja を指すためサイトマップに含めない）
+  // 静的ページ: 全言語（hreflang付き）
   const staticPages = staticPaths.flatMap(({ path, ...opts }) =>
-    jaOnly(path, now, opts)
+    withAlternates(path, now, opts)
   );
 
-  // コラム: ja のみ（en/zh は noindex なのでサイトマップに含めない）
+  // コラム記事: ja は全記事、en/zh は翻訳が存在する記事のみ
   const jaArticles = getAllArticles("ja");
-  const mediaPages = jaArticles.flatMap((article) =>
-    jaOnly(`/column/${article.slug}`, new Date(article.date), {
-      changeFrequency: "monthly",
-      priority: 0.7,
-    })
-  );
+  const enSlugs = new Set(getAllSlugs("en"));
+  const zhSlugs = new Set(getAllSlugs("zh"));
 
-  // ニュース: ja のみ（en/zh は noindex なのでサイトマップに含めない）
+  const mediaPages = jaArticles.flatMap((article) => {
+    const path = `/column/${article.slug}`;
+    const lastMod = new Date(article.date);
+    const opts = { changeFrequency: "monthly" as const, priority: 0.7 };
+    const hasEn = enSlugs.has(article.slug);
+    const hasZh = zhSlugs.has(article.slug);
+
+    if (hasEn && hasZh) {
+      // 全言語揃っている → hreflang付きで全言語エントリ
+      return withAlternates(path, lastMod, opts);
+    }
+    // 一部の言語のみ → 存在する言語だけエントリ
+    const entries: MetadataRoute.Sitemap = [];
+    const availableLocales = ["ja", ...(hasEn ? ["en"] : []), ...(hasZh ? ["zh"] : [])];
+    const languages = Object.fromEntries(
+      availableLocales.map((l) => [l, localizedUrl(path, l)])
+    );
+    for (const locale of availableLocales) {
+      entries.push({
+        url: localizedUrl(path, locale),
+        lastModified: lastMod,
+        changeFrequency: opts.changeFrequency,
+        priority: opts.priority,
+        alternates: { languages },
+      });
+    }
+    return entries;
+  });
+
+  // ニュース: ja のみ（en/zh は noindex）
   const newsPages = newsItems.flatMap((item) =>
     jaOnly(`/news/${item.slug}`, new Date(item.date), {
       changeFrequency: "monthly",

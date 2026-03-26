@@ -101,6 +101,13 @@ export function getAllSlugs(locale = "ja"): string[] {
   return getAllArticles(locale).map((a) => a.slug);
 }
 
+/** 指定ロケールに翻訳ファイルが存在するか（ja フォールバックではなく実ファイル） */
+export function hasTranslation(slug: string, locale: string): boolean {
+  if (locale === "ja") return true;
+  const filePath = path.join(contentDir(locale), `${slug}.mdx`);
+  return fs.existsSync(filePath);
+}
+
 export function getAllTags(locale = "ja"): string[] {
   const articles = getAllArticles(locale);
   const tagSet = new Set<string>();
