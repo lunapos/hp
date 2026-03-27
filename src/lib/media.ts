@@ -9,6 +9,22 @@ function contentDir(locale = "ja"): string {
   return locale === "ja" ? BASE_DIR : path.join(BASE_DIR, locale);
 }
 
+// content/column/{date}/*.mdx を再帰的に収集（en/zh サブディレクトリは除外）
+function collectMdxFiles(dir: string): string[] {
+  if (!fs.existsSync(dir)) return [];
+  const results: string[] = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (entry.isDirectory()) {
+      // ja の場合、en/zh サブディレクトリは除外
+      if (dir === BASE_DIR && (entry.name === "en" || entry.name === "zh")) continue;
+      results.push(...collectMdxFiles(path.join(dir, entry.name)));
+    } else if (entry.name.endsWith(".mdx")) {
+      results.push(path.join(dir, entry.name));
+    }
+  }
+  return results;
+}
+
 export interface ArticleMeta {
   slug: string;
   title: string;
@@ -35,15 +51,12 @@ function isPublished(date: string): boolean {
 
 export function getAllArticles(locale = "ja"): ArticleMeta[] {
   const dir = contentDir(locale);
-  if (!fs.existsSync(dir)) return getAllArticles("ja"); // フォールバック
-
-  const files = fs.readdirSync(dir).filter((f) => f.endsWith(".mdx"));
-  if (files.length === 0 && locale !== "ja") return getAllArticles("ja");
+  const files = collectMdxFiles(dir);
+  if (files.length === 0 && locale !== "ja") return getAllArticles("ja"); // フォールバック
 
   const articles = files
-    .map((filename) => {
-      const slug = filename.replace(/\.mdx$/, "");
-      const filePath = path.join(dir, filename);
+    .map((filePath) => {
+      const slug = path.basename(filePath).replace(/\.mdx$/, "");
       const fileContent = fs.readFileSync(filePath, "utf-8");
       const { data } = matter(fileContent);
 
@@ -67,15 +80,13 @@ export function getAllArticles(locale = "ja"): ArticleMeta[] {
 export function getArticle(slug: string, locale = "ja"): Article | null {
   // まず指定ロケールで探す、なければ ja にフォールバック
   const dir = contentDir(locale);
-  let filePath = path.join(dir, `${slug}.mdx`);
-  if (!fs.existsSync(filePath)) {
-    if (locale !== "ja") {
-      filePath = path.join(BASE_DIR, `${slug}.mdx`);
-      if (!fs.existsSync(filePath)) return null;
-    } else {
-      return null;
-    }
+  const files = collectMdxFiles(dir);
+  let filePath = files.find((f) => path.basename(f) === `${slug}.mdx`) ?? null;
+  if (!filePath && locale !== "ja") {
+    const jaFiles = collectMdxFiles(BASE_DIR);
+    filePath = jaFiles.find((f) => path.basename(f) === `${slug}.mdx`) ?? null;
   }
+  if (!filePath) return null;
 
   const fileContent = fs.readFileSync(filePath, "utf-8");
   const { data, content } = matter(fileContent);
@@ -104,8 +115,8 @@ export function getAllSlugs(locale = "ja"): string[] {
 /** 指定ロケールに翻訳ファイルが存在するか（ja フォールバックではなく実ファイル） */
 export function hasTranslation(slug: string, locale: string): boolean {
   if (locale === "ja") return true;
-  const filePath = path.join(contentDir(locale), `${slug}.mdx`);
-  return fs.existsSync(filePath);
+  const files = collectMdxFiles(contentDir(locale));
+  return files.some((f) => path.basename(f) === `${slug}.mdx`);
 }
 
 export function getAllTags(locale = "ja"): string[] {
