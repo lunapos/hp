@@ -3,6 +3,36 @@ import type { NewsItem } from "./news-types";
 
 export const announcementItems: NewsItem[] = [
   {
+    slug: "beta-test-start",
+    date: "2026-04-01",
+    title: "ベータテストを開始しました",
+    summary:
+      "LunaPos iPad版のベータテストを開始しました。導入店舗様と連携しながら、実運用での検証を進めてまいります。",
+    category: "お知らせ",
+    project: "Floor",
+    content: [
+      "LunaPos iPad版（フロア管理アプリ）のベータテストを本日より開始しました。",
+      "",
+      "導入店舗様と連携しながら、実際の営業環境での検証・改善を進めてまいります。",
+      "フィードバックをもとに、正式リリースに向けて品質を高めていきます。",
+    ].join("\n"),
+  },
+  {
+    slug: "appstore-approved",
+    date: "2026-04-01",
+    title: "App Store 審査を通過しました",
+    summary:
+      "LunaPos iPad版が Apple の審査を通過しました。App Store からダウンロードいただけます。",
+    category: "お知らせ",
+    project: "Floor",
+    content: [
+      "LunaPos iPad版（フロア管理アプリ）が Apple の App Store 審査を通過しました。",
+      "",
+      "App Store からダウンロードいただけます。",
+      "今後もアップデートを続けてまいりますので、ぜひご利用ください。",
+    ].join("\n"),
+  },
+  {
     slug: "appstore-submission",
     date: "2026-03-21",
     title: "App Store へ審査申請を提出しました",
