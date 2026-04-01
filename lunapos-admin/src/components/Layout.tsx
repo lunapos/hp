@@ -7,22 +7,22 @@ import {
 import { useAuth } from '../contexts/AuthContext'
 
 const NAV_ITEMS = [
-  { path: '/admin', label: 'ダッシュボード', icon: BarChart3 },
-  { path: '/admin/menu', label: 'メニュー管理', icon: ShoppingBag },
-  { path: '/admin/casts', label: 'キャスト管理', icon: Users },
-  { path: '/admin/tables', label: 'テーブル管理', icon: TableProperties },
-  { path: '/admin/plans', label: 'セットプラン', icon: Clock },
-  { path: '/admin/settings', label: '店舗設定', icon: Settings },
+  { path: '/', label: 'ダッシュボード', icon: BarChart3 },
+  { path: '/menu', label: 'メニュー管理', icon: ShoppingBag },
+  { path: '/casts', label: 'キャスト管理', icon: Users },
+  { path: '/tables', label: 'テーブル管理', icon: TableProperties },
+  { path: '/plans', label: 'セットプラン', icon: Clock },
+  { path: '/settings', label: '店舗設定', icon: Settings },
 ]
 
 // パンくずリスト用マッピング
 const BREADCRUMB_LABELS: Record<string, string> = {
-  '/admin': 'ダッシュボード',
-  '/admin/menu': 'メニュー管理',
-  '/admin/casts': 'キャスト管理',
-  '/admin/tables': 'テーブル管理',
-  '/admin/plans': 'セットプラン',
-  '/admin/settings': '店舗設定',
+  '/': 'ダッシュボード',
+  '/menu': 'メニュー管理',
+  '/casts': 'キャスト管理',
+  '/tables': 'テーブル管理',
+  '/plans': 'セットプラン',
+  '/settings': '店舗設定',
 }
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -34,9 +34,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   // パンくずリスト生成
   const breadcrumbs = [
-    { path: '/admin', label: 'ホーム' },
+    { path: '/', label: 'ホーム' },
   ]
-  if (currentPath !== '/admin') {
+  if (currentPath !== '/') {
     breadcrumbs.push({
       path: currentPath,
       label: BREADCRUMB_LABELS[currentPath] || currentPath.split('/').pop() || '',

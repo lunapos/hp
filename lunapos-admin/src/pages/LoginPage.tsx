@@ -121,7 +121,7 @@ export default function LoginPage() {
               パスワードを忘れた場合
             </button>
             <Link
-              to="/admin/signup"
+              to="/signup"
               className="block w-full text-sm text-center text-[#9090bb] hover:text-[#d4b870]"
             >
               新規登録はこちら

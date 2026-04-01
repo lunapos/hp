@@ -19,7 +19,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
       </div>
     )
   }
-  if (!user) return <Navigate to="/admin/login" replace />
+  if (!user) return <Navigate to="/login" replace />
   return <Layout>{children}</Layout>
 }
 
@@ -36,15 +36,19 @@ function AppRoutes() {
 
   return (
     <Routes>
-      <Route path="/admin/login" element={user ? <Navigate to="/admin" replace /> : <LoginPage />} />
-      <Route path="/admin/signup" element={user ? <Navigate to="/admin" replace /> : <SignupPage />} />
-      <Route path="/admin" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
-      <Route path="/admin/menu" element={<ProtectedRoute><MenuPage /></ProtectedRoute>} />
-      <Route path="/admin/casts" element={<ProtectedRoute><CastsPage /></ProtectedRoute>} />
-      <Route path="/admin/tables" element={<ProtectedRoute><TablesPage /></ProtectedRoute>} />
-      <Route path="/admin/plans" element={<ProtectedRoute><PlansPage /></ProtectedRoute>} />
-      <Route path="/admin/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
-      <Route path="*" element={<Navigate to="/admin" replace />} />
+      <Route path="/login" element={user ? <Navigate to="/" replace /> : <LoginPage />} />
+      <Route path="/signup" element={user ? <Navigate to="/" replace /> : <SignupPage />} />
+      <Route path="/" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+      <Route path="/menu" element={<ProtectedRoute><MenuPage /></ProtectedRoute>} />
+      <Route path="/casts" element={<ProtectedRoute><CastsPage /></ProtectedRoute>} />
+      <Route path="/tables" element={<ProtectedRoute><TablesPage /></ProtectedRoute>} />
+      <Route path="/plans" element={<ProtectedRoute><PlansPage /></ProtectedRoute>} />
+      <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+      {/* 後方互換: /admin/* → / にリダイレクト */}
+      <Route path="/admin/login" element={<Navigate to="/login" replace />} />
+      <Route path="/admin/signup" element={<Navigate to="/signup" replace />} />
+      <Route path="/admin/*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
 }

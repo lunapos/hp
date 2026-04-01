@@ -3,51 +3,51 @@ import { describe, it, expect } from 'vitest'
 // ルーティング設定の正しさをテスト
 // App.tsxのルート定義と一致していることを確認
 
-const ADMIN_ROUTES = [
-  '/admin/login',
-  '/admin/signup',
-  '/admin',
-  '/admin/menu',
-  '/admin/casts',
-  '/admin/tables',
-  '/admin/plans',
-  '/admin/settings',
+const ALL_ROUTES = [
+  '/login',
+  '/signup',
+  '/',
+  '/menu',
+  '/casts',
+  '/tables',
+  '/plans',
+  '/settings',
 ]
 
 const PROTECTED_ROUTES = [
-  '/admin',
-  '/admin/menu',
-  '/admin/casts',
-  '/admin/tables',
-  '/admin/plans',
-  '/admin/settings',
+  '/',
+  '/menu',
+  '/casts',
+  '/tables',
+  '/plans',
+  '/settings',
 ]
 
 const PUBLIC_ROUTES = [
-  '/admin/login',
-  '/admin/signup',
+  '/login',
+  '/signup',
 ]
 
 const NAV_ITEMS = [
-  { path: '/admin', label: 'ダッシュボード' },
-  { path: '/admin/menu', label: 'メニュー管理' },
-  { path: '/admin/casts', label: 'キャスト管理' },
-  { path: '/admin/tables', label: 'テーブル管理' },
-  { path: '/admin/plans', label: 'セットプラン' },
-  { path: '/admin/settings', label: '店舗設定' },
+  { path: '/', label: 'ダッシュボード' },
+  { path: '/menu', label: 'メニュー管理' },
+  { path: '/casts', label: 'キャスト管理' },
+  { path: '/tables', label: 'テーブル管理' },
+  { path: '/plans', label: 'セットプラン' },
+  { path: '/settings', label: '店舗設定' },
 ]
 
 describe('ルーティング定義', () => {
-  it('全ルートが /admin プレフィックスを持つ', () => {
-    ADMIN_ROUTES.forEach(route => {
-      expect(route.startsWith('/admin')).toBe(true)
+  it('全ルートが / で始まる', () => {
+    ALL_ROUTES.forEach(route => {
+      expect(route.startsWith('/')).toBe(true)
     })
   })
 
   it('公開ルートは2つ（login, signup）', () => {
     expect(PUBLIC_ROUTES).toHaveLength(2)
-    expect(PUBLIC_ROUTES).toContain('/admin/login')
-    expect(PUBLIC_ROUTES).toContain('/admin/signup')
+    expect(PUBLIC_ROUTES).toContain('/login')
+    expect(PUBLIC_ROUTES).toContain('/signup')
   })
 
   it('保護ルートは6つ', () => {
@@ -67,23 +67,23 @@ describe('ルーティング定義', () => {
 
   it('signupルートはナビゲーションに含まれない', () => {
     const navPaths = NAV_ITEMS.map(i => i.path)
-    expect(navPaths).not.toContain('/admin/signup')
+    expect(navPaths).not.toContain('/signup')
   })
 
   it('loginルートはナビゲーションに含まれない', () => {
     const navPaths = NAV_ITEMS.map(i => i.path)
-    expect(navPaths).not.toContain('/admin/login')
+    expect(navPaths).not.toContain('/login')
   })
 })
 
 describe('パンくずリスト', () => {
   const BREADCRUMB_LABELS: Record<string, string> = {
-    '/admin': 'ダッシュボード',
-    '/admin/menu': 'メニュー管理',
-    '/admin/casts': 'キャスト管理',
-    '/admin/tables': 'テーブル管理',
-    '/admin/plans': 'セットプラン',
-    '/admin/settings': '店舗設定',
+    '/': 'ダッシュボード',
+    '/menu': 'メニュー管理',
+    '/casts': 'キャスト管理',
+    '/tables': 'テーブル管理',
+    '/plans': 'セットプラン',
+    '/settings': '店舗設定',
   }
 
   it('全保護ルートにパンくずラベルがある', () => {

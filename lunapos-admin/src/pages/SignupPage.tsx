@@ -55,7 +55,7 @@ export default function SignupPage() {
   async function handleLogin() {
     // 自動ログインしてダッシュボードへ
     await supabase.auth.signInWithPassword({ email: email.trim(), password })
-    navigate('/admin')
+    navigate('/')
   }
 
   return (
@@ -129,7 +129,7 @@ export default function SignupPage() {
               {loading ? '登録中...' : '無料で登録'}
             </button>
             <Link
-              to="/admin/login"
+              to="/login"
               className="block w-full text-sm text-center text-[#9090bb] hover:text-[#d4b870]"
             >
               アカウントをお持ちの方はログイン
