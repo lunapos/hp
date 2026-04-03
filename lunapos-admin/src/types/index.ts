@@ -173,6 +173,24 @@ export interface OrderItemRow {
   updated_at: string
 }
 
+export interface CashWithdrawalRow {
+  id: string
+  tenant_id: string
+  amount: number
+  note: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface RegisterSessionRow {
+  id: string
+  tenant_id: string
+  business_date: string
+  start_amount: number
+  created_at: string
+  updated_at: string
+}
+
 // --- UI表示用型 ---
 
 export interface DailySummary {

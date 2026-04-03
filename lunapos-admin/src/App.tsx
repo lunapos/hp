@@ -8,6 +8,7 @@ import CastsPage from './pages/CastsPage'
 import TablesPage from './pages/TablesPage'
 import PlansPage from './pages/PlansPage'
 import SettingsPage from './pages/SettingsPage'
+import RegisterPage from './pages/RegisterPage'
 import SignupPage from './pages/SignupPage'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -43,6 +44,7 @@ function AppRoutes() {
       <Route path="/casts" element={<ProtectedRoute><CastsPage /></ProtectedRoute>} />
       <Route path="/tables" element={<ProtectedRoute><TablesPage /></ProtectedRoute>} />
       <Route path="/plans" element={<ProtectedRoute><PlansPage /></ProtectedRoute>} />
+      <Route path="/register" element={<ProtectedRoute><RegisterPage /></ProtectedRoute>} />
       <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
       {/* 後方互換: /admin/* → / にリダイレクト */}
       <Route path="/admin/login" element={<Navigate to="/login" replace />} />

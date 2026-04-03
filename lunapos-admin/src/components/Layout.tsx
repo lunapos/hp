@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import {
   BarChart3, Users, ShoppingBag, Settings, TableProperties,
-  Clock, LogOut, Menu, X, ChevronRight, Home,
+  Clock, LogOut, Menu, X, ChevronRight, Home, Wallet,
 } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 
@@ -12,6 +12,7 @@ const NAV_ITEMS = [
   { path: '/casts', label: 'キャスト管理', icon: Users },
   { path: '/tables', label: 'テーブル管理', icon: TableProperties },
   { path: '/plans', label: 'セットプラン', icon: Clock },
+  { path: '/register', label: 'レジ金管理', icon: Wallet },
   { path: '/settings', label: '店舗設定', icon: Settings },
 ]
 
@@ -22,6 +23,7 @@ const BREADCRUMB_LABELS: Record<string, string> = {
   '/casts': 'キャスト管理',
   '/tables': 'テーブル管理',
   '/plans': 'セットプラン',
+  '/register': 'レジ金管理',
   '/settings': '店舗設定',
 }
 
