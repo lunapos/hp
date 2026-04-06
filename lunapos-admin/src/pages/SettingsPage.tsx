@@ -1,10 +1,17 @@
 import { useState, useEffect } from 'react'
-import { Check, AlertTriangle } from 'lucide-react'
+import { Check, AlertTriangle, Copy } from 'lucide-react'
 import { supabase, requireTenantId } from '../lib/supabase'
 import type { StoreRow } from '../types'
 
+interface DeviceRow {
+  id: string
+  device_name: string
+  device_token: string
+}
+
 export default function SettingsPage() {
   const [store, setStore] = useState<StoreRow | null>(null)
+  const [devices, setDevices] = useState<DeviceRow[]>([])
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [toast, setToast] = useState('')
@@ -22,7 +29,7 @@ export default function SettingsPage() {
     enable_drop_off: true,
   })
 
-  useEffect(() => { fetchStore() }, [])
+  useEffect(() => { fetchStore(); fetchDevices() }, [])
 
   async function fetchStore() {
     setLoading(true)
@@ -46,6 +53,20 @@ export default function SettingsPage() {
       })
     }
     setLoading(false)
+  }
+
+  async function fetchDevices() {
+    const tid = requireTenantId()
+    const { data } = await supabase.from('devices')
+      .select('id, device_name, device_token')
+      .eq('tenant_id', tid)
+      .order('created_at')
+    if (data) setDevices(data as DeviceRow[])
+  }
+
+  function copyToken(token: string) {
+    navigator.clipboard.writeText(token)
+    showToast('コピーしました')
   }
 
   function showToast(msg: string) { setToast(msg); setTimeout(() => setToast(''), 2000) }
@@ -172,6 +193,28 @@ export default function SettingsPage() {
           </button>
         </div>
       </div>
+
+      {/* デバイストークン（表示・コピーのみ） */}
+      {devices.length > 0 && (
+        <div className="bg-[#141430] rounded-xl border border-[#2e2e50] p-6 space-y-4">
+          <h2 className="text-lg font-bold text-white">iPadデバイストークン</h2>
+          <p className="text-xs text-[#9090bb]">iPadのLunaPOSアプリでこのトークンを入力するとPOSが使えます。</p>
+          <div className="space-y-2">
+            {devices.map(d => (
+              <div key={d.id} className="flex items-center gap-3 bg-[#0f0f28] border border-[#2e2e50] rounded-lg px-4 py-3">
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs text-[#9090bb]">{d.device_name}</p>
+                  <p className="font-mono text-[#d4b870] tracking-wider">{d.device_token}</p>
+                </div>
+                <button onClick={() => copyToken(d.device_token)}
+                  className="p-2 rounded-lg hover:bg-[#2e2e50] text-[#9090bb] hover:text-white shrink-0" title="コピー">
+                  <Copy size={16} />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* 確認ダイアログ */}
       {confirmOpen && (
