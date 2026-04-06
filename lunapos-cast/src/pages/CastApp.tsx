@@ -18,7 +18,6 @@ type Tab = 'today' | 'monthly' | 'nominations' | 'profile'
 // ルート
 // ========================================
 export default function CastApp() {
-  const { signOut } = useAuth()
   const [tab, setTab] = useState<Tab>('today')
 
   const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
@@ -33,19 +32,9 @@ export default function CastApp() {
       <div className="w-full max-w-[480px] mx-auto flex flex-col min-h-screen">
 
         {/* ヘッダー */}
-        <header className="bg-[#0d0d20] border-b border-[#2e2e50] px-5 py-4 flex items-center justify-between shrink-0">
-          <div className="flex items-center gap-2">
-            <span className="text-lg text-[#d4b870]">&#9789;</span>
-            <span className="text-base font-bold tracking-[0.15em] text-[#d4b870] uppercase">Luna Cast</span>
-          </div>
-          <button
-            onClick={signOut}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[#9090bb] active:bg-[#1a1a35]"
-            aria-label="ログアウト"
-          >
-            <LogOut size={18} />
-            <span className="text-xs">ログアウト</span>
-          </button>
+        <header className="bg-[#0d0d20] border-b border-[#2e2e50] px-5 py-4 flex items-center gap-2 shrink-0">
+          <span className="text-lg text-[#d4b870]">&#9789;</span>
+          <span className="text-base font-bold tracking-[0.15em] text-[#d4b870] uppercase">Luna Cast</span>
         </header>
 
         {/* コンテンツ */}
@@ -87,7 +76,6 @@ function TodayTab() {
   const [nominations, setNominations] = useState<NominationRow[]>([])
   const [payments, setPayments] = useState<PaymentRow[]>([])
   const [drinkCount, setDrinkCount] = useState(0)
-  const [stageName, setStageName] = useState('')
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -107,7 +95,7 @@ function TodayTab() {
       const dayStart = `${today}T00:00:00+09:00`
       const dayEnd   = `${today}T23:59:59+09:00`
 
-      const [nomsRes, paymentsRes, ordersRes, castRes] = await Promise.all([
+      const [nomsRes, paymentsRes, ordersRes] = await Promise.all([
         supabase.from('nominations')
           .select('id, visit_id, cast_id, nomination_type, qty, fee_override, created_at')
           .eq('tenant_id', tid).eq('cast_id', cid)
@@ -120,16 +108,11 @@ function TodayTab() {
           .select('id, visit_id, menu_item_name, price, quantity, cast_id')
           .eq('tenant_id', tid).eq('cast_id', cid)
           .gte('created_at', dayStart).lte('created_at', dayEnd),
-        supabase.from('casts')
-          .select('stage_name')
-          .eq('tenant_id', tid).eq('id', cid)
-          .single(),
       ])
 
       setNominations((nomsRes.data || []) as NominationRow[])
       setPayments((paymentsRes.data || []) as PaymentRow[])
       setDrinkCount((ordersRes.data || []).reduce((s: number, o: OrderItemRow) => s + o.quantity, 0))
-      if (castRes.data) setStageName(castRes.data.stage_name)
     } catch { /* ignore */ }
     setLoading(false)
   }
@@ -146,7 +129,6 @@ function TodayTab() {
       <div>
         <p className="text-xs text-[#9090bb] mb-0.5">{dateLabel}</p>
         <h2 className="text-lg font-bold text-white">今日のサマリー</h2>
-        {stageName && <p className="text-sm text-[#d4b870] mt-0.5">{stageName}</p>}
       </div>
 
       {/* メイン：売上貢献 */}
@@ -392,6 +374,7 @@ function NominationsTab() {
 // マイページタブ
 // ========================================
 function ProfileTab() {
+  const { signOut } = useAuth()
   const [cast, setCast] = useState<CastRow | null>(null)
   const [enableDropOff, setEnableDropOff] = useState(true)
   const [dropOff, setDropOff] = useState('')
@@ -499,10 +482,17 @@ function ProfileTab() {
         <div className="w-14 h-14 rounded-full bg-[#2e2e50] flex items-center justify-center shrink-0">
           <User size={24} className="text-[#9090bb]" />
         </div>
-        <div>
+        <div className="flex-1 min-w-0">
           <p className="text-xl font-bold text-white">{cast.stage_name}</p>
           {cast.real_name && <p className="text-sm text-[#9090bb] mt-0.5">{cast.real_name}</p>}
         </div>
+        <button
+          onClick={signOut}
+          className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[#9090bb] active:bg-[#0f0f28] shrink-0"
+        >
+          <LogOut size={16} />
+          <span className="text-xs">ログアウト</span>
+        </button>
       </div>
 
       {/* 今日の送り先 */}
