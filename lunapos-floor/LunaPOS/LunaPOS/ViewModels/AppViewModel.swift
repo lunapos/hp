@@ -310,13 +310,18 @@ final class AppViewModel {
 
     func clockIn(castId: String) {
         if let idx = casts.firstIndex(where: { $0.id == castId }) {
+            let shiftId = UUID().uuidString
             casts[idx].isWorking = true
             casts[idx].clockInTime = Date()
             casts[idx].clockOutTime = nil
+            casts[idx].dropOffConfirmed = false
+            casts[idx].currentShiftId = shiftId
             syncEngine.syncCastShift(
+                shiftId: shiftId,
                 castId: castId, clockIn: Date(), clockOut: nil,
                 scheduledIn: casts[idx].scheduledClockIn,
-                scheduledOut: casts[idx].scheduledClockOut
+                scheduledOut: casts[idx].scheduledClockOut,
+                cast: casts[idx]
             )
         }
         save()
@@ -326,11 +331,14 @@ final class AppViewModel {
         if let idx = casts.firstIndex(where: { $0.id == castId }) {
             casts[idx].isWorking = false
             casts[idx].clockOutTime = Date()
-            if let clockIn = casts[idx].clockInTime {
+            if let clockIn = casts[idx].clockInTime,
+               let shiftId = casts[idx].currentShiftId {
                 syncEngine.syncCastShift(
+                    shiftId: shiftId,
                     castId: castId, clockIn: clockIn, clockOut: Date(),
                     scheduledIn: casts[idx].scheduledClockIn,
-                    scheduledOut: casts[idx].scheduledClockOut
+                    scheduledOut: casts[idx].scheduledClockOut,
+                    cast: casts[idx]
                 )
             }
         }
@@ -350,6 +358,7 @@ final class AppViewModel {
         )
         casts.append(cast)
         save()
+        syncEngine.syncCast(cast)
     }
 
     func updateCast(id: String, stageName: String, realName: String, photo: String?, scheduledClockIn: String?, scheduledClockOut: String?, dropOffLocation: String?) {
@@ -360,6 +369,7 @@ final class AppViewModel {
             casts[idx].scheduledClockIn = scheduledClockIn
             casts[idx].scheduledClockOut = scheduledClockOut
             casts[idx].dropOffLocation = dropOffLocation
+            syncEngine.syncCast(casts[idx])
         }
         save()
     }
@@ -367,6 +377,7 @@ final class AppViewModel {
     func updateCastDropOff(castId: String, dropOff: String?) {
         if let idx = casts.firstIndex(where: { $0.id == castId }) {
             casts[idx].dropOffLocation = dropOff
+            casts[idx].dropOffConfirmed = true
         }
         save()
     }
@@ -441,7 +452,7 @@ final class AppViewModel {
     // MARK: - Computed
 
     var totalSales: Int {
-        payments.reduce(0) { $0 + $1.total }
+        todayPayments.reduce(0) { $0 + $1.total }
     }
 
     /// 営業日の開始時刻（当日12:00〜翌日12:00を1営業日とする）
@@ -475,11 +486,15 @@ final class AppViewModel {
     }
 
     func castSales(castId: String) -> Int {
+        // 管理画面・キャスト画面と同じ計算方式: subtotalを本指名数で按分
         return todayPayments.compactMap { p -> Int? in
             guard let visit = visits.first(where: { $0.id == p.visitId }) else { return nil }
             let mainNominations = visit.nominations.filter { $0.nominationType == .main }
             guard mainNominations.contains(where: { $0.castId == castId }) else { return nil }
-            return p.total / mainNominations.count
+            let totalMainNoms = mainNominations.reduce(0) { $0 + $1.qty }
+            let myNoms = mainNominations.filter { $0.castId == castId }.reduce(0) { $0 + $1.qty }
+            guard totalMainNoms > 0 else { return nil }
+            return Int(Double(p.subtotal) / Double(totalMainNoms) * Double(myNoms))
         }.reduce(0, +)
     }
 }
