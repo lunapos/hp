@@ -4,6 +4,16 @@ import type { NewsItem } from "./news-types";
 export const updateItems: NewsItem[] = [
   // --- 2026-04-06 ---
   {
+    slug: "cast-drop-off-toggle",
+    date: "2026-04-06",
+    title: "Cast/Admin: 送り先機能の店舗別ON/OFF",
+    summary:
+      "送り先機能を店舗ごとに有効/無効に設定できるようになりました。管理画面の店舗設定でトグルをOFFにすると、キャスト画面から送り先入力欄が非表示になります。",
+    category: "開発アップデート",
+    project: "Cast",
+    content: "送り先機能を店舗ごとに有効/無効に設定できるようになりました。\n\n## 変更内容\n・管理画面 › 店舗設定に「送り先機能」トグルを追加\n・OFFにするとキャスト画面のマイページから送り先入力欄が非表示になる\n・デフォルトはON（既存店舗も同じ）",
+  },
+  {
     slug: "admin-cast-sales-page",
     date: "2026-04-06",
     title: "Admin: キャスト別売上ページ追加",
