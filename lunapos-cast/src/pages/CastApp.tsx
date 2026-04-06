@@ -144,9 +144,9 @@ function TodayTab() {
         <h2 className="text-lg font-bold text-white">今日のサマリー</h2>
       </div>
 
-      {/* メイン：売上貢献 */}
+      {/* メイン：指名売上 */}
       <div className="bg-gradient-to-br from-[#1a1428] to-[#141030] rounded-2xl p-5 border border-[#d4b870]/20">
-        <p className="text-sm text-[#9090bb] mb-1">売上貢献</p>
+        <p className="text-sm text-[#9090bb] mb-1">指名売上</p>
         <p className="text-4xl font-bold text-[#d4b870]">{formatYen(summary.salesContribution)}</p>
       </div>
 
