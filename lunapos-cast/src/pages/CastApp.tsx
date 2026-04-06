@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import {
   TrendingUp, Star, ChevronLeft, ChevronRight,
   Calendar, LogOut, Wine,
-  MapPin, User, Check,
+  MapPin, User, Check, ClipboardList,
 } from 'lucide-react'
 import { supabase, requireTenantId, requireCastId } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
@@ -12,7 +12,7 @@ import {
 } from '../lib/castApp'
 import type { NominationRow, PaymentRow, OrderItemRow, DailySummary, CastRow } from '../types'
 
-type Tab = 'today' | 'monthly' | 'nominations' | 'profile'
+type Tab = 'today' | 'monthly' | 'nominations' | 'shift' | 'profile'
 
 // ========================================
 // ルート
@@ -32,6 +32,7 @@ export default function CastApp() {
     { id: 'today',       label: '今日',     icon: <TrendingUp size={20} /> },
     { id: 'monthly',     label: '月次',     icon: <Calendar size={20} /> },
     { id: 'nominations', label: '指名',     icon: <Star size={20} /> },
+    { id: 'shift',       label: 'シフト',   icon: <ClipboardList size={20} /> },
     { id: 'profile',     label: 'マイページ', icon: <User size={20} /> },
   ]
 
@@ -53,6 +54,7 @@ export default function CastApp() {
           {tab === 'today'       && <TodayTab />}
           {tab === 'monthly'     && <MonthlyTab />}
           {tab === 'nominations' && <NominationsTab />}
+          {tab === 'shift'       && <ShiftTab />}
           {tab === 'profile'     && <ProfileTab />}
         </main>
 
@@ -376,6 +378,205 @@ function NominationsTab() {
       {loadingMore && <p className="text-center text-xs text-[#9090bb] py-2">読み込み中...</p>}
       {!hasMore && nominations.length > 0 && (
         <p className="text-center text-xs text-[#3a3a5e] py-2">すべて表示しました</p>
+      )}
+    </div>
+  )
+}
+
+// ========================================
+// シフト提出タブ
+// ========================================
+const DEFAULT_START = '20:00'
+const DEFAULT_END = '01:00'
+
+interface ShiftRequest { id?: string; date: string; start_time: string; end_time: string }
+
+function ShiftTab() {
+  const today = new Date()
+  // 翌月をデフォルト表示
+  const defaultMonth = today.getMonth() === 11
+    ? `${today.getFullYear() + 1}-01`
+    : `${today.getFullYear()}-${String(today.getMonth() + 2).padStart(2, '0')}`
+
+  const [month, setMonth] = useState(defaultMonth)
+  const [requests, setRequests] = useState<Record<string, ShiftRequest>>({})
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [saved, setSaved] = useState(false)
+
+  const [year, mon] = month.split('-').map(Number)
+  const daysInMonth = new Date(year, mon, 0).getDate()
+  const days = Array.from({ length: daysInMonth }, (_, i) => {
+    const d = String(i + 1).padStart(2, '0')
+    return `${month}-${d}`
+  })
+
+  const weekdays = ['日', '月', '火', '水', '木', '金', '土']
+
+  function prevMonth() {
+    const d = new Date(year, mon - 2, 1)
+    setMonth(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`)
+  }
+  function nextMonth() {
+    const d = new Date(year, mon, 1)
+    setMonth(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`)
+  }
+
+  useEffect(() => { fetchRequests() }, [month])
+
+  async function fetchRequests() {
+    setLoading(true)
+    try {
+      const tid = requireTenantId()
+      const cid = requireCastId()
+      const { data } = await supabase.from('shift_requests')
+        .select('id, date, start_time, end_time')
+        .eq('tenant_id', tid).eq('cast_id', cid)
+        .gte('date', `${month}-01`).lte('date', `${month}-${daysInMonth}`)
+      const map: Record<string, ShiftRequest> = {}
+      for (const r of data || []) {
+        map[r.date] = { id: r.id, date: r.date, start_time: r.start_time.slice(0, 5), end_time: r.end_time.slice(0, 5) }
+      }
+      setRequests(map)
+    } catch { /* ignore */ }
+    setLoading(false)
+  }
+
+  function toggle(date: string) {
+    setRequests(prev => {
+      const next = { ...prev }
+      if (next[date]) {
+        delete next[date]
+      } else {
+        next[date] = { date, start_time: DEFAULT_START, end_time: DEFAULT_END }
+      }
+      return next
+    })
+    setSaved(false)
+  }
+
+  function updateTime(date: string, field: 'start_time' | 'end_time', value: string) {
+    setRequests(prev => ({ ...prev, [date]: { ...prev[date], date, [field]: value } }))
+    setSaved(false)
+  }
+
+  async function handleSave() {
+    setSaving(true); setSaved(false)
+    try {
+      const tid = requireTenantId()
+      const cid = requireCastId()
+
+      // 当月の既存を全削除して再挿入（upsertより確実）
+      await supabase.from('shift_requests')
+        .delete()
+        .eq('tenant_id', tid).eq('cast_id', cid)
+        .gte('date', `${month}-01`).lte('date', `${month}-${daysInMonth}`)
+
+      const rows = Object.values(requests).map(r => ({
+        tenant_id: tid,
+        cast_id: cid,
+        date: r.date,
+        start_time: r.start_time,
+        end_time: r.end_time,
+      }))
+      if (rows.length > 0) await supabase.from('shift_requests').insert(rows)
+
+      setSaved(true)
+      setTimeout(() => setSaved(false), 2000)
+      await fetchRequests()
+    } catch { /* ignore */ }
+    setSaving(false)
+  }
+
+  const selectedCount = Object.keys(requests).length
+
+  return (
+    <div className="px-4 pt-5 pb-4 space-y-4">
+      {/* ヘッダー */}
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-bold text-white">シフト希望</h2>
+        <div className="flex items-center gap-2">
+          <button onClick={prevMonth} className="p-2 rounded-lg text-[#9090bb] active:bg-[#1a1a35]">
+            <ChevronLeft size={18} />
+          </button>
+          <span className="text-sm text-white font-medium w-20 text-center">{year}年{mon}月</span>
+          <button onClick={nextMonth} className="p-2 rounded-lg text-[#9090bb] active:bg-[#1a1a35]">
+            <ChevronRight size={18} />
+          </button>
+        </div>
+      </div>
+
+      <p className="text-xs text-[#9090bb]">出勤できる日をタップして時間を設定してください</p>
+
+      {loading ? <Loading /> : (
+        <div className="space-y-2">
+          {days.map(date => {
+            const dow = new Date(date).getDay()
+            const req = requests[date]
+            const isSelected = !!req
+            const isSun = dow === 0
+            const isSat = dow === 6
+            return (
+              <div key={date} className={`rounded-2xl border transition-colors ${
+                isSelected ? 'border-[#d4b870]/40 bg-[#1a1428]' : 'border-[#2e2e50] bg-[#141430]'
+              }`}>
+                {/* 日付行 */}
+                <button
+                  onClick={() => toggle(date)}
+                  className="w-full flex items-center gap-3 px-4 py-3"
+                >
+                  <span className={`text-sm font-medium w-6 text-center ${
+                    isSun ? 'text-red-400' : isSat ? 'text-blue-400' : 'text-[#9090bb]'
+                  }`}>
+                    {weekdays[dow]}
+                  </span>
+                  <span className="text-sm font-semibold text-white">
+                    {mon}/{Number(date.slice(-2))}
+                  </span>
+                  <span className="flex-1" />
+                  {isSelected ? (
+                    <span className="text-xs text-[#d4b870] font-medium">✓ 出勤</span>
+                  ) : (
+                    <span className="text-xs text-[#3a3a5e]">タップで追加</span>
+                  )}
+                </button>
+                {/* 時間入力（選択済みのみ） */}
+                {isSelected && (
+                  <div className="flex items-center gap-2 px-4 pb-3">
+                    <input
+                      type="time"
+                      value={req.start_time}
+                      onChange={e => updateTime(date, 'start_time', e.target.value)}
+                      className="flex-1 bg-[#0f0f28] border border-[#2e2e50] rounded-xl px-3 py-2 text-white text-sm outline-none focus:border-[#d4b870]/50"
+                    />
+                    <span className="text-[#9090bb] text-sm">〜</span>
+                    <input
+                      type="time"
+                      value={req.end_time}
+                      onChange={e => updateTime(date, 'end_time', e.target.value)}
+                      className="flex-1 bg-[#0f0f28] border border-[#2e2e50] rounded-xl px-3 py-2 text-white text-sm outline-none focus:border-[#d4b870]/50"
+                    />
+                  </div>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      )}
+
+      {/* 保存ボタン */}
+      {!loading && (
+        <div className="sticky bottom-28 pt-2">
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className={`w-full py-4 rounded-2xl font-bold text-base transition-colors disabled:opacity-50 flex items-center justify-center gap-2 ${
+              saved ? 'bg-green-700 text-white' : 'bg-[#d4b870] text-black'
+            }`}
+          >
+            {saving ? '送信中...' : saved ? <><Check size={18} />送信しました（{selectedCount}日）</> : `シフトを送信（${selectedCount}日）`}
+          </button>
+        </div>
       )}
     </div>
   )
