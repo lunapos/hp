@@ -69,23 +69,29 @@ jobs:
       - name: ビルド確認
         run: npm run build
 
-  sync-admin:
-    name: Admin → lunapos/admin sync
+  deploy-admin:
+    name: Admin → Vercel デプロイ
     needs: admin-test
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: lunapos-admin
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: lunapos/admin にsync
-        run: |
-          git config user.name "zh-ru"
-          git config user.email "zh-ru@users.noreply.github.com"
-          git remote add lunapos-admin https://x-access-token:${{ secrets.LUNAPOS_DEPLOY_TOKEN }}@github.com/lunapos/admin.git
-          git subtree push --prefix=lunapos-admin lunapos-admin main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - run: npm install -g vercel@latest
+
+      - name: Vercel本番デプロイ
+        run: vercel --prod --token=${{ secrets.VERCEL_TOKEN }} --yes
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_ADMIN }}
 
   edge-function-check:
     name: Edge Function 構文チェック
