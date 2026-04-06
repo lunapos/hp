@@ -18,7 +18,7 @@ function makeNomination(overrides: Partial<NominationRow> = {}): NominationRow {
 
 function makePayment(overrides: Partial<PaymentRow> = {}): PaymentRow {
   return {
-    id: 'p1', visit_id: 'v1', total: 20000,
+    id: 'p1', visit_id: 'v1', total: 20000, subtotal: 20000,
     payment_method: 'cash', paid_at: '2026-03-20T21:00:00+09:00',
     nomination_fee: 5000,
     ...overrides,
