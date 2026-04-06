@@ -3,7 +3,7 @@ import { Plus, Pencil, X, Check, Clock } from 'lucide-react'
 import { supabase, supabaseUrl, supabaseAnonKey, requireTenantId } from '../lib/supabase'
 import type { CastRow, CastShiftRow } from '../types'
 
-const EMPTY_FORM = { stage_name: '', real_name: '', photo_url: '', drop_off_location: '', email: '', password: '' }
+const EMPTY_FORM = { stage_name: '', real_name: '', photo_url: '', drop_off_location: '', email: '' }
 
 export default function CastsPage() {
   const [casts, setCasts] = useState<CastRow[]>([])
@@ -83,16 +83,11 @@ export default function CastsPage() {
             return
           }
         } else {
-          // 新規アカウント作成
-          if (!form.password || form.password.length < 6) {
-            setFormError('新規アカウント作成にはパスワード（6文字以上）が必要です')
-            setSaving(false)
-            return
-          }
+          // 新規アカウント作成（初期パスワード: luna1234）
           const res = await fetch(`${supabaseUrl}/functions/v1/cast-signup`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${supabaseAnonKey}` },
-            body: JSON.stringify({ cast_id: editingId, email: emailTrimmed, password: form.password, tenant_id: tid }),
+            body: JSON.stringify({ cast_id: editingId, email: emailTrimmed, password: 'luna1234', tenant_id: tid }),
           })
           const data = await res.json()
           if (!res.ok) {
@@ -144,7 +139,6 @@ export default function CastsPage() {
       photo_url: cast.photo_url || '',
       drop_off_location: cast.drop_off_location || '',
       email: '',
-      password: '',
     })
     setShowForm(true)
 
@@ -216,15 +210,9 @@ export default function CastsPage() {
                   )}
                 </div>
                 {!hasAccount && form.email.trim() && (
-                  <div className="col-span-2">
-                    <input
-                      type="password"
-                      placeholder="パスワード（6文字以上）— 新規アカウント作成時のみ"
-                      value={form.password}
-                      onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
-                      className="w-full bg-[#0f0f28] border border-[#2e2e50] rounded-xl px-4 py-3 text-white placeholder-[#3a3a5e] outline-none focus:border-[#d4b870]/50"
-                    />
-                  </div>
+                  <p className="col-span-2 text-xs text-[#9090bb] bg-[#0f0f28] rounded-xl px-4 py-3 border border-[#2e2e50]">
+                    初期パスワード <span className="text-[#d4b870] font-mono">luna1234</span> でアカウントを作成します。キャスト本人がログイン後に変更できます。
+                  </p>
                 )}
               </>
             )}

@@ -401,6 +401,12 @@ function ProfileTab() {
   const [savedDefault, setSavedDefault] = useState(false)
   const [savingToday, setSavingToday] = useState(false)
   const [savedToday, setSavedToday] = useState(false)
+  // パスワード変更
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [savingPw, setSavingPw] = useState(false)
+  const [savedPw, setSavedPw] = useState(false)
+  const [pwError, setPwError] = useState('')
 
   useEffect(() => { fetchProfile() }, [])
 
@@ -469,6 +475,20 @@ function ProfileTab() {
     setSavingToday(false)
   }
 
+  async function savePassword() {
+    setPwError('')
+    if (newPassword.length < 6) { setPwError('6文字以上で入力してください'); return }
+    if (newPassword !== confirmPassword) { setPwError('パスワードが一致しません'); return }
+    setSavingPw(true)
+    const { error } = await supabase.auth.updateUser({ password: newPassword })
+    if (error) { setPwError(error.message); setSavingPw(false); return }
+    setSavedPw(true)
+    setNewPassword('')
+    setConfirmPassword('')
+    setTimeout(() => setSavedPw(false), 2000)
+    setSavingPw(false)
+  }
+
   if (loading) return <Loading />
   if (!cast) return <p className="text-center py-20 text-[#9090bb]">プロフィールの取得に失敗しました</p>
 
@@ -530,6 +550,32 @@ function ProfileTab() {
           <SaveButton loading={savingDefault} saved={savedDefault} onClick={saveDropOff} />
         </div>
       )}
+
+      {/* パスワード変更 */}
+      <div className="bg-[#141430] rounded-2xl p-5 border border-[#2e2e50] space-y-4">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-semibold text-[#9090bb]">パスワード変更</span>
+        </div>
+        <input
+          type="password"
+          inputMode="text"
+          placeholder="新しいパスワード（6文字以上）"
+          value={newPassword}
+          onChange={e => { setNewPassword(e.target.value); setSavedPw(false); setPwError('') }}
+          className="w-full bg-[#0f0f28] border border-[#2e2e50] rounded-xl px-4 py-3.5 text-white placeholder-[#3a3a5e] outline-none text-base"
+        />
+        <input
+          type="password"
+          inputMode="text"
+          placeholder="もう一度入力"
+          value={confirmPassword}
+          onChange={e => { setConfirmPassword(e.target.value); setSavedPw(false); setPwError('') }}
+          onKeyDown={e => { if (e.key === 'Enter') savePassword() }}
+          className="w-full bg-[#0f0f28] border border-[#2e2e50] rounded-xl px-4 py-3.5 text-white placeholder-[#3a3a5e] outline-none text-base"
+        />
+        {pwError && <p className="text-xs text-red-400">{pwError}</p>}
+        <SaveButton loading={savingPw} saved={savedPw} onClick={savePassword} />
+      </div>
     </div>
   )
 }
