@@ -69,6 +69,24 @@ jobs:
       - name: ビルド確認
         run: npm run build
 
+  sync-admin:
+    name: Admin → lunapos/admin sync
+    needs: admin-test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: lunapos/admin にsync
+        run: |
+          git config user.name "zh-ru"
+          git config user.email "zh-ru@users.noreply.github.com"
+          git remote add lunapos-admin https://x-access-token:${{ secrets.LUNAPOS_DEPLOY_TOKEN }}@github.com/lunapos/admin.git
+          git subtree push --prefix=lunapos-admin lunapos-admin main
+
   edge-function-check:
     name: Edge Function 構文チェック
     runs-on: ubuntu-latest
