@@ -19,6 +19,7 @@ export interface StoreRow {
   nomination_fee_main: number
   nomination_fee_in_store: number
   invoice_registration_number: string | null
+  enable_drop_off: boolean
   created_at: string
   updated_at: string
 }

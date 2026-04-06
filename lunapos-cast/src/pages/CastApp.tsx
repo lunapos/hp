@@ -386,6 +386,7 @@ function NominationsTab() {
 // ========================================
 function ProfileTab() {
   const [cast, setCast] = useState<CastRow | null>(null)
+  const [enableDropOff, setEnableDropOff] = useState(true)
   const [dropOff, setDropOff] = useState('')
   const [todayDropOff, setTodayDropOff] = useState('')
   const [loading, setLoading] = useState(true)
@@ -403,17 +404,26 @@ function ProfileTab() {
     try {
       const tid = requireTenantId()
       const cid = requireCastId()
-      const { data } = await supabase.from('casts')
-        .select('id, tenant_id, stage_name, real_name, photo_url, drop_off_location, today_drop_off_location, today_drop_off_date, is_active')
-        .eq('tenant_id', tid).eq('id', cid)
-        .single()
-      if (data) {
-        const row = data as CastRow
+      const [castRes, storeRes] = await Promise.all([
+        supabase.from('casts')
+          .select('id, tenant_id, stage_name, real_name, photo_url, drop_off_location, today_drop_off_location, today_drop_off_date, is_active')
+          .eq('tenant_id', tid).eq('id', cid)
+          .single(),
+        supabase.from('stores')
+          .select('enable_drop_off')
+          .eq('id', tid)
+          .single(),
+      ])
+      if (castRes.data) {
+        const row = castRes.data as CastRow
         setCast(row)
         setDropOff(row.drop_off_location || '')
         if (row.today_drop_off_date === todayStr) {
           setTodayDropOff(row.today_drop_off_location || '')
         }
+      }
+      if (storeRes.data) {
+        setEnableDropOff(storeRes.data.enable_drop_off ?? true)
       }
     } catch { /* ignore */ }
     setLoading(false)
@@ -469,46 +479,50 @@ function ProfileTab() {
       </div>
 
       {/* 今日の送り先 */}
-      <div className="bg-[#141430] rounded-2xl p-5 border border-[#d4b870]/25 space-y-4">
-        <div className="flex items-center gap-2">
-          <MapPin size={16} className="text-[#d4b870]" />
-          <span className="text-sm font-semibold text-[#d4b870]">今日の送り先</span>
+      {enableDropOff && (
+        <div className="bg-[#141430] rounded-2xl p-5 border border-[#d4b870]/25 space-y-4">
+          <div className="flex items-center gap-2">
+            <MapPin size={16} className="text-[#d4b870]" />
+            <span className="text-sm font-semibold text-[#d4b870]">今日の送り先</span>
+          </div>
+          <p className="text-xs text-[#9090bb] leading-relaxed">
+            いつもと違う場所のときだけ入力。空欄ならデフォルトが使われます
+          </p>
+          <input
+            type="text"
+            inputMode="text"
+            placeholder={dropOff ? `空欄 → ${dropOff}` : '最寄り駅や住所'}
+            value={todayDropOff}
+            onChange={e => { setTodayDropOff(e.target.value); setSavedToday(false) }}
+            onKeyDown={e => { if (e.key === 'Enter') saveTodayDropOff() }}
+            className="w-full bg-[#0f0f28] border border-[#d4b870]/25 rounded-xl px-4 py-3.5 text-white placeholder-[#3a3a5e] outline-none text-base"
+          />
+          <SaveButton loading={savingToday} saved={savedToday} onClick={saveTodayDropOff} />
         </div>
-        <p className="text-xs text-[#9090bb] leading-relaxed">
-          いつもと違う場所のときだけ入力。空欄ならデフォルトが使われます
-        </p>
-        <input
-          type="text"
-          inputMode="text"
-          placeholder={dropOff ? `空欄 → ${dropOff}` : '最寄り駅や住所'}
-          value={todayDropOff}
-          onChange={e => { setTodayDropOff(e.target.value); setSavedToday(false) }}
-          onKeyDown={e => { if (e.key === 'Enter') saveTodayDropOff() }}
-          className="w-full bg-[#0f0f28] border border-[#d4b870]/25 rounded-xl px-4 py-3.5 text-white placeholder-[#3a3a5e] outline-none text-base"
-        />
-        <SaveButton loading={savingToday} saved={savedToday} onClick={saveTodayDropOff} />
-      </div>
+      )}
 
       {/* デフォルト送り先 */}
-      <div className="bg-[#141430] rounded-2xl p-5 border border-[#2e2e50] space-y-4">
-        <div className="flex items-center gap-2">
-          <MapPin size={16} className="text-[#9090bb]" />
-          <span className="text-sm font-semibold text-[#9090bb]">デフォルト送り先</span>
+      {enableDropOff && (
+        <div className="bg-[#141430] rounded-2xl p-5 border border-[#2e2e50] space-y-4">
+          <div className="flex items-center gap-2">
+            <MapPin size={16} className="text-[#9090bb]" />
+            <span className="text-sm font-semibold text-[#9090bb]">デフォルト送り先</span>
+          </div>
+          <p className="text-xs text-[#9090bb] leading-relaxed">
+            毎回使う送り先。POS に自動で表示されます
+          </p>
+          <input
+            type="text"
+            inputMode="text"
+            placeholder="最寄り駅や住所（例: 渋谷駅）"
+            value={dropOff}
+            onChange={e => { setDropOff(e.target.value); setSavedDefault(false) }}
+            onKeyDown={e => { if (e.key === 'Enter') saveDropOff() }}
+            className="w-full bg-[#0f0f28] border border-[#2e2e50] rounded-xl px-4 py-3.5 text-white placeholder-[#3a3a5e] outline-none text-base"
+          />
+          <SaveButton loading={savingDefault} saved={savedDefault} onClick={saveDropOff} />
         </div>
-        <p className="text-xs text-[#9090bb] leading-relaxed">
-          毎回使う送り先。POS に自動で表示されます
-        </p>
-        <input
-          type="text"
-          inputMode="text"
-          placeholder="最寄り駅や住所（例: 渋谷駅）"
-          value={dropOff}
-          onChange={e => { setDropOff(e.target.value); setSavedDefault(false) }}
-          onKeyDown={e => { if (e.key === 'Enter') saveDropOff() }}
-          className="w-full bg-[#0f0f28] border border-[#2e2e50] rounded-xl px-4 py-3.5 text-white placeholder-[#3a3a5e] outline-none text-base"
-        />
-        <SaveButton loading={savingDefault} saved={savedDefault} onClick={saveDropOff} />
-      </div>
+      )}
     </div>
   )
 }

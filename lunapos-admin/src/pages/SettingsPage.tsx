@@ -19,6 +19,7 @@ export default function SettingsPage() {
     nomination_fee_main: '',
     nomination_fee_in_store: '',
     invoice_registration_number: '',
+    enable_drop_off: true,
   })
 
   useEffect(() => { fetchStore() }, [])
@@ -27,7 +28,7 @@ export default function SettingsPage() {
     setLoading(true)
     const tid = requireTenantId()
     const { data } = await supabase.from('stores')
-      .select('id, name, service_rate, tax_rate, douhan_fee, nomination_fee_main, nomination_fee_in_store, invoice_registration_number, created_at, updated_at')
+      .select('id, name, service_rate, tax_rate, douhan_fee, nomination_fee_main, nomination_fee_in_store, invoice_registration_number, enable_drop_off, created_at, updated_at')
       .eq('id', tid)
       .single()
     if (data) {
@@ -41,6 +42,7 @@ export default function SettingsPage() {
         nomination_fee_main: String(s.nomination_fee_main),
         nomination_fee_in_store: String(s.nomination_fee_in_store),
         invoice_registration_number: s.invoice_registration_number || '',
+        enable_drop_off: s.enable_drop_off ?? true,
       })
     }
     setLoading(false)
@@ -75,6 +77,7 @@ export default function SettingsPage() {
       nomination_fee_main: parseInt(form.nomination_fee_main) || 0,
       nomination_fee_in_store: parseInt(form.nomination_fee_in_store) || 0,
       invoice_registration_number: form.invoice_registration_number || null,
+      enable_drop_off: form.enable_drop_off,
       updated_at: new Date().toISOString(),
     }).eq('id', tid)
 
@@ -141,6 +144,24 @@ export default function SettingsPage() {
                 ? 'border-red-500' : 'border-[#2e2e50]'
             }`} />
           <p className="text-xs text-[#9090bb] mt-1">T + 13桁数字。未設定の場合はレシートにインボイス情報を印字しません。</p>
+        </div>
+
+        {/* キャスト向け機能 */}
+        <div>
+          <label className="text-xs text-[#9090bb] tracking-widest uppercase block mb-3">キャスト向け機能</label>
+          <label className="flex items-center justify-between cursor-pointer">
+            <div>
+              <p className="text-sm text-white">送り先機能</p>
+              <p className="text-xs text-[#9090bb] mt-0.5">キャスト画面のマイページに送り先入力欄を表示する</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setForm(f => ({ ...f, enable_drop_off: !f.enable_drop_off }))}
+              className={`relative w-12 h-6 rounded-full transition-colors ${form.enable_drop_off ? 'bg-[#d4b870]' : 'bg-[#2e2e50]'}`}
+            >
+              <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform ${form.enable_drop_off ? 'translate-x-6' : ''}`} />
+            </button>
+          </label>
         </div>
 
         {/* 保存ボタン */}
