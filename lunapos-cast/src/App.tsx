@@ -81,9 +81,23 @@ function LoginPage() {
 import { useState } from 'react'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth()
+  const { user, loading, signOut } = useAuth()
   if (loading) return <div className="min-h-screen bg-[#0a0a18] flex items-center justify-center"><div className="text-[#9090bb] text-sm">読み込み中...</div></div>
   if (!user) return <Navigate to="/cast/login" replace />
+  // cast_id がない = キャストアカウントではない（オーナー等）
+  if (!user.user_metadata?.cast_id) {
+    return (
+      <div className="min-h-screen bg-[#0a0a18] text-white flex items-center justify-center p-4">
+        <div className="text-center space-y-4 max-w-sm">
+          <p className="text-2xl text-[#9090bb]">&#9789;</p>
+          <p className="text-[#9090bb] text-sm">このアカウントはキャスト画面にアクセスできません</p>
+          <button onClick={signOut} className="px-6 py-3 rounded-xl bg-[#d4b870] text-black font-bold text-sm">
+            ログアウト
+          </button>
+        </div>
+      </div>
+    )
+  }
   return <>{children}</>
 }
 
