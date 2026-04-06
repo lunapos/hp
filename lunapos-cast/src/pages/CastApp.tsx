@@ -25,6 +25,7 @@ export default function CastApp() {
   // ヘッダー
   return (
     <div className="min-h-screen bg-[#0a0a18] text-white flex flex-col">
+      <div className="w-full max-w-[480px] mx-auto flex flex-col min-h-screen relative">
       <header className="bg-[#0a0a18] border-b border-[#2e2e50] px-4 py-3 flex items-center justify-between sticky top-0 z-10">
         <div>
           <p className="text-[10px] text-[#9090bb] tracking-[0.2em]">&#9789;</p>
@@ -66,6 +67,7 @@ export default function CastApp() {
         {tab === 'nominations' && <NominationsTab />}
         {tab === 'memos' && <MemosTab />}
         {tab === 'profile' && <ProfileTab />}
+      </div>
       </div>
     </div>
   )
