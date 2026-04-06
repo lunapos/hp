@@ -4,6 +4,42 @@ import type { NewsItem } from "./news-types";
 export const updateItems: NewsItem[] = [
   // --- 2026-04-06 ---
   {
+    slug: "floor-force-update",
+    date: "2026-04-06",
+    title: "Floor: 強制アップデート機能を追加",
+    summary: "管理画面から最低必要バージョンを設定できるようになりました。古いバージョンのアプリが起動した際にApp Storeへ誘導する画面を表示します。",
+    category: "開発アップデート",
+    project: "Floor",
+    content: "バージョン管理機能を追加しました。\n\n## 強制アップデート\n・Supabase stores テーブルの min_required_version カラムでバージョンを管理\n・アプリ起動時に現在のバージョンと比較\n・古い場合はApp Storeへ誘導する画面を表示（閉じられない）\n・新バージョンをリリースしたら管理側でカラムを更新するだけで対応完了",
+  },
+  {
+    slug: "admin-cast-sales-chart",
+    date: "2026-04-06",
+    title: "Admin: キャスト別売上TOP3バーグラフを追加",
+    summary: "キャスト別売上ページに売上TOP3のバーグラフを追加しました。🥇🥈🥉のメダルアイコンと横バーで視覚的に比較できます。",
+    category: "開発アップデート",
+    project: "Admin",
+    content: "キャスト別売上ページを改善しました。\n\n## TOP3バーグラフ\n・売上上位3名をバーグラフで表示\n・最大値に対する割合でバー幅を算出\n・日次・月次どちらのモードでも表示",
+  },
+  {
+    slug: "admin-auto-deploy",
+    date: "2026-04-06",
+    title: "Admin: GitHub Actionsによる自動デプロイを設定",
+    summary: "管理画面のコード変更をpushするたびに、テスト通過後に自動でVercelへデプロイされるようになりました。",
+    category: "開発アップデート",
+    project: "Admin",
+    content: "CI/CDパイプラインを整備しました。\n\n## 自動デプロイ\n・lunapos-admin/配下の変更をpushすると自動でGitHub Actionsが起動\n・テスト（116件）通過後にVercel本番環境へ自動デプロイ\n・手動でvercel --prodを実行する必要がなくなりました",
+  },
+  {
+    slug: "floor-cast-detail-redesign",
+    date: "2026-04-06",
+    title: "Floor: キャスト詳細画面をiPad向けに大型化リデザイン",
+    summary: "キャスト詳細シートの各要素を大型化しタップしやすくしました。送り先は編集開始時に自動で再入力モードに切り替わります。",
+    category: "開発アップデート",
+    project: "Floor",
+    content: "キャスト詳細シートのUIを改善しました。\n\n## 変更内容\n・アバター・フォント・ボタンを大型化（タップターゲット拡大）\n・出退勤ボタンのpadding拡大\n・送り先フィールドを編集すると自動で「確定済み」表示が外れ再入力モードに\n・確定済み状態は「変更する」ボタンで明示",
+  }
+  {
     slug: "cast-shift-request",
     date: "2026-04-06",
     title: "Cast: シフト希望提出機能追加",
