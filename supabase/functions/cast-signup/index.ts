@@ -87,6 +87,13 @@ Deno.serve(async (req) => {
       );
     }
 
+    // casts テーブルに auth_user_id を紐づけ
+    await supabase
+      .from("casts")
+      .update({ auth_user_id: authData.user.id })
+      .eq("id", cast_id)
+      .eq("tenant_id", tenant_id);
+
     return new Response(
       JSON.stringify({
         user_id: authData.user.id,
