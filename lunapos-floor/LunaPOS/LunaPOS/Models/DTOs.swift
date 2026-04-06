@@ -30,6 +30,7 @@ struct StoreRow: Codable, Sendable {
     let nominationFeeInStore: Int
     let extensionFeePerPerson: Int?
     let invoiceRegistrationNumber: String?
+    let minRequiredVersion: String?
 
     enum CodingKeys: String, CodingKey {
         case id, name
@@ -40,6 +41,7 @@ struct StoreRow: Codable, Sendable {
         case nominationFeeInStore = "nomination_fee_in_store"
         case extensionFeePerPerson = "extension_fee_per_person"
         case invoiceRegistrationNumber = "invoice_registration_number"
+        case minRequiredVersion = "min_required_version"
     }
 }
 
@@ -114,6 +116,8 @@ struct CastRow: Codable, Sendable {
     let realName: String
     let photoUrl: String?
     let dropOffLocation: String?
+    let todayDropOffLocation: String?
+    let todayDropOffDate: String?
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -122,6 +126,8 @@ struct CastRow: Codable, Sendable {
         case realName = "real_name"
         case photoUrl = "photo_url"
         case dropOffLocation = "drop_off_location"
+        case todayDropOffLocation = "today_drop_off_location"
+        case todayDropOffDate = "today_drop_off_date"
     }
 
     func toModel() -> Cast {
@@ -130,6 +136,9 @@ struct CastRow: Codable, Sendable {
             stageName: stageName,
             realName: realName,
             isWorking: false,
+            dropOffLocation: dropOffLocation,
+            todayDropOffLocation: todayDropOffLocation,
+            todayDropOffDate: todayDropOffDate,
             photo: photoUrl
         )
     }

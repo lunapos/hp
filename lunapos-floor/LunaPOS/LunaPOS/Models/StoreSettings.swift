@@ -9,6 +9,7 @@ final class StoreSettings: @unchecked Sendable {
     var nominationFeeInStore: Int = 2000
     var extensionFeePerPerson: Int = 5000
     var invoiceRegistrationNumber: String?
+    var minRequiredVersion: String?
 
     init() {}
 
@@ -20,5 +21,6 @@ final class StoreSettings: @unchecked Sendable {
         nominationFeeInStore = row.nominationFeeInStore
         extensionFeePerPerson = row.extensionFeePerPerson ?? 5000
         invoiceRegistrationNumber = row.invoiceRegistrationNumber
+        minRequiredVersion = row.minRequiredVersion
     }
 }
