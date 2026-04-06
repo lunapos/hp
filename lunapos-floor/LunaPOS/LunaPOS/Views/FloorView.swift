@@ -189,10 +189,13 @@ struct TableCard: View {
     private var isWarning: Bool { visit != nil && remaining <= 10 && remaining >= 0 }
     private var isOvertime: Bool { visit != nil && elapsed > totalSetMins }
 
-    // セット時間を1周とした経過割合（0.0〜1.0）
+    // 60分で1周。残り時間が少ないほどアークが伸びる
+    // 例: 残42分 → アークは18/60=30%、残10分 → 83%、超過 → 100%
     private var timeRatio: Double {
         guard visit != nil, totalSetMins > 0 else { return 0 }
-        return isOvertime ? 1.0 : min(Double(elapsed) / Double(totalSetMins), 1.0)
+        if isOvertime { return 1.0 }
+        let remainClamped = max(0, min(remaining, 60))
+        return 1.0 - Double(remainClamped) / 60.0
     }
 
     private var arcColor: Color {
@@ -279,13 +282,23 @@ struct TableCard: View {
                     }
                     .foregroundStyle(.secondary)
 
-                    // Nomination
-                    let primaryNom = visit.nominations.first(where: { $0.nominationType == .main }) ?? visit.nominations.first
-                    if let nom = primaryNom,
-                       let cast = casts.first(where: { $0.id == nom.castId }) {
+                    // Nomination — 本指名優先で表示（本/場 ラベル付き）
+                    let activeNoms = visit.nominations.filter { $0.nominationType != .none }
+                    if !activeNoms.isEmpty {
+                        let sorted = activeNoms.sorted { a, b in
+                            if a.nominationType == .main && b.nominationType != .main { return true }
+                            if a.nominationType != .main && b.nominationType == .main { return false }
+                            return false
+                        }
+                        let labels = sorted.prefix(3).compactMap { n -> String? in
+                            guard let name = casts.first(where: { $0.id == n.castId })?.stageName else { return nil }
+                            let tag = n.nominationType == .main ? "本" : "場"
+                            return "\(name)(\(tag))"
+                        }
+                        let extra = activeNoms.count - labels.count
                         HStack(spacing: 5) {
                             Image(systemName: "sparkles").font(.system(size: 15 * scale))
-                            Text(cast.stageName + (visit.nominations.count > 1 ? " +\(visit.nominations.count - 1)" : ""))
+                            Text(labels.joined(separator: " ") + (extra > 0 ? " +\(extra)" : ""))
                                 .font(.system(size: 18 * scale, weight: .bold))
                                 .lineLimit(1)
                         }
@@ -342,11 +355,6 @@ struct FloorView: View {
         VStack(spacing: 0) {
             roomTabsBar
             floorContent
-        }
-        .overlay(alignment: .top) {
-            // フロア画面上部にエラー・オフラインバナーを表示
-            ErrorBanner(syncEngine: vm.syncEngine)
-                .padding(.top, 4)
         }
         .sheet(item: $openingTable) { table in
             OpenTableSheet(table: table) { name, count, _, _ in
