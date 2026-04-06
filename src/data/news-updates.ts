@@ -4,6 +4,24 @@ import type { NewsItem } from "./news-types";
 export const updateItems: NewsItem[] = [
   // --- 2026-04-06 ---
   {
+    slug: "cast-shift-request",
+    date: "2026-04-06",
+    title: "Cast: シフト希望提出機能追加",
+    summary: "キャスト画面からシフト希望を提出できるようになりました。翌月のカレンダーから出勤希望日をタップして開始・終了時刻を設定できます。デフォルト時間は20:00〜翌1:00。",
+    category: "開発アップデート",
+    project: "Cast",
+    content: "キャスト画面にシフトタブを追加しました。\n\n## シフト希望提出\n・翌月のカレンダーを表示\n・出勤希望日をタップして追加/削除\n・開始・終了時刻を個別設定（デフォルト: 20:00〜翌1:00）\n・月を前後に切り替え可能\n・まとめて送信ボタンで保存",
+  },
+  {
+    slug: "cast-auth-improvements",
+    date: "2026-04-06",
+    title: "Cast/Admin: 認証・セキュリティ改善",
+    summary: "キャスト画面の認証フローを改善しました。cast_idのないアカウントのアクセスを拒否。管理画面でのパスワード設定を廃止し、初期パスワードluna1234に統一。キャスト本人がマイページからパスワード変更できます。",
+    category: "開発アップデート",
+    project: "Cast",
+    content: "キャスト画面の認証・セキュリティを改善しました。\n\n## 変更内容\n・cast_idのないアカウント（オーナー等）のアクセスを拒否\n・初期パスワードをluna1234に統一（管理画面でのパスワード設定欄を削除）\n・マイページにパスワード変更機能を追加\n・casts.auth_user_idカラム追加でキャストとAuthアカウントを双方向紐づけ",
+  },
+  {
     slug: "cast-drop-off-toggle",
     date: "2026-04-06",
     title: "Cast/Admin: 送り先機能の店舗別ON/OFF",
