@@ -306,6 +306,50 @@ export default function CastSalesPage() {
             </div>
           </div>
 
+          {/* TOP3 バーグラフ */}
+          {castSalesData.length > 0 && (() => {
+            const top3 = castSalesData.slice(0, 3)
+            const maxSales = top3[0]?.sales || 1
+            const medals = ['🥇', '🥈', '🥉']
+            const barColors = ['#d4b870', '#9090bb', '#4a4a6e']
+            return (
+              <div className="bg-[#141430] rounded-xl border border-[#2e2e50] p-5 space-y-4">
+                <h2 className="text-xs font-semibold text-[#9090bb] tracking-widest uppercase">
+                  <TrendingUp size={12} className="inline mr-1" />売上 TOP3
+                </h2>
+                {top3.map((c, idx) => (
+                  <div key={c.castId} className="space-y-1">
+                    <div className="flex items-center justify-between text-sm">
+                      <div className="flex items-center gap-2">
+                        <span>{medals[idx]}</span>
+                        {c.photoUrl ? (
+                          <img src={c.photoUrl} alt={c.stageName} className="w-6 h-6 rounded-full object-cover border border-[#2e2e50]" />
+                        ) : (
+                          <div className="w-6 h-6 rounded-full bg-[#0f0f28] border border-[#2e2e50] flex items-center justify-center text-[10px] text-[#9090bb]">
+                            {c.stageName.charAt(0)}
+                          </div>
+                        )}
+                        <span className="text-white font-medium">{c.stageName}</span>
+                      </div>
+                      <span className={`font-bold ${idx === 0 ? 'text-[#d4b870]' : 'text-white'}`}>
+                        {formatYen(c.sales)}
+                      </span>
+                    </div>
+                    <div className="h-2 bg-[#0f0f28] rounded-full overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all duration-500"
+                        style={{
+                          width: `${Math.round((c.sales / maxSales) * 100)}%`,
+                          backgroundColor: barColors[idx],
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )
+          })()}
+
           {/* キャスト別一覧テーブル */}
           <div className="bg-[#141430] rounded-xl border border-[#2e2e50] overflow-hidden">
             <div className="px-5 py-4 border-b border-[#2e2e50]">
