@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
-import { Plus, Pencil, X, Check, Clock, UserPlus, Mail } from 'lucide-react'
+import { Plus, Pencil, X, Check, Clock } from 'lucide-react'
 import { supabase, supabaseUrl, supabaseAnonKey, requireTenantId } from '../lib/supabase'
 import type { CastRow, CastShiftRow } from '../types'
 
-const EMPTY_FORM = { stage_name: '', real_name: '', photo_url: '', drop_off_location: '', email: '' }
+const EMPTY_FORM = { stage_name: '', real_name: '', photo_url: '', drop_off_location: '', email: '', password: '' }
 
 export default function CastsPage() {
   const [casts, setCasts] = useState<CastRow[]>([])
@@ -14,12 +14,11 @@ export default function CastsPage() {
   const [form, setForm] = useState(EMPTY_FORM)
   const [saving, setSaving] = useState(false)
   const [emailLoading, setEmailLoading] = useState(false)
+  const [hasAccount, setHasAccount] = useState(false)
+  const [formError, setFormError] = useState('')
   const [toast, setToast] = useState('')
   const [showRetired, setShowRetired] = useState(false)
   const [selectedCastId, setSelectedCastId] = useState<string | null>(null)
-  const [accountForm, setAccountForm] = useState<{ castId: string; email: string; password: string } | null>(null)
-  const [accountSaving, setAccountSaving] = useState(false)
-  const [accountError, setAccountError] = useState('')
 
   useEffect(() => { fetchCasts(); fetchShifts() }, [])
 
@@ -55,6 +54,7 @@ export default function CastsPage() {
 
   async function handleSave() {
     if (!form.stage_name.trim()) return
+    setFormError('')
     setSaving(true)
     const tid = requireTenantId()
 
@@ -67,18 +67,39 @@ export default function CastsPage() {
         updated_at: new Date().toISOString(),
       }).eq('id', editingId).eq('tenant_id', tid)
 
-      // メールアドレスが入力されていれば更新
-      if (form.email.trim()) {
-        const res = await fetch(`${supabaseUrl}/functions/v1/cast-account?action=update-email`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${supabaseAnonKey}` },
-          body: JSON.stringify({ cast_id: editingId, tenant_id: tid, email: form.email.trim() }),
-        })
-        const data = await res.json()
-        if (!res.ok) {
-          showToast(`メール更新失敗: ${data.error}`)
-          setSaving(false)
-          return
+      const emailTrimmed = form.email.trim()
+      if (emailTrimmed) {
+        if (hasAccount) {
+          // メールアドレス更新
+          const res = await fetch(`${supabaseUrl}/functions/v1/cast-account?action=update-email`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${supabaseAnonKey}` },
+            body: JSON.stringify({ cast_id: editingId, tenant_id: tid, email: emailTrimmed }),
+          })
+          const data = await res.json()
+          if (!res.ok) {
+            setFormError(`メール更新失敗: ${data.error}`)
+            setSaving(false)
+            return
+          }
+        } else {
+          // 新規アカウント作成
+          if (!form.password || form.password.length < 6) {
+            setFormError('新規アカウント作成にはパスワード（6文字以上）が必要です')
+            setSaving(false)
+            return
+          }
+          const res = await fetch(`${supabaseUrl}/functions/v1/cast-signup`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${supabaseAnonKey}` },
+            body: JSON.stringify({ cast_id: editingId, email: emailTrimmed, password: form.password, tenant_id: tid }),
+          })
+          const data = await res.json()
+          if (!res.ok) {
+            setFormError(data.error || 'アカウント作成に失敗しました')
+            setSaving(false)
+            return
+          }
         }
       }
 
@@ -115,12 +136,15 @@ export default function CastsPage() {
 
   async function startEdit(cast: CastRow) {
     setEditingId(cast.id)
+    setHasAccount(false)
+    setFormError('')
     setForm({
       stage_name: cast.stage_name,
       real_name: cast.real_name,
       photo_url: cast.photo_url || '',
       drop_off_location: cast.drop_off_location || '',
       email: '',
+      password: '',
     })
     setShowForm(true)
 
@@ -133,58 +157,12 @@ export default function CastsPage() {
         { headers: { 'Authorization': `Bearer ${supabaseAnonKey}` } }
       )
       const data = await res.json()
-      if (data.email) setForm(f => ({ ...f, email: data.email }))
+      if (data.email) {
+        setForm(f => ({ ...f, email: data.email }))
+        setHasAccount(true)
+      }
     } catch { /* ignore */ }
     setEmailLoading(false)
-  }
-
-  function openAccountForm(castId: string) {
-    setAccountForm({ castId, email: '', password: '' })
-    setAccountError('')
-  }
-
-  async function handleCreateAccount() {
-    if (!accountForm) return
-    const { castId, email, password } = accountForm
-    if (!email.trim() || !password) return
-    if (password.length < 6) {
-      setAccountError('パスワードは6文字以上で入力してください')
-      return
-    }
-
-    setAccountSaving(true)
-    setAccountError('')
-
-    try {
-      const tid = requireTenantId()
-      const res = await fetch(`${supabaseUrl}/functions/v1/cast-signup`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${supabaseAnonKey}`,
-        },
-        body: JSON.stringify({
-          cast_id: castId,
-          email: email.trim(),
-          password,
-          tenant_id: tid,
-        }),
-      })
-
-      const data = await res.json()
-
-      if (!res.ok) {
-        setAccountError(data.error || 'アカウント作成に失敗しました')
-        setAccountSaving(false)
-        return
-      }
-
-      showToast(`${data.stage_name}のログインアカウントを作成しました`)
-      setAccountForm(null)
-    } catch {
-      setAccountError('通信エラーが発生しました')
-    }
-    setAccountSaving(false)
   }
 
   const selectedCastShifts = shifts.filter(s => s.cast_id === selectedCastId)
@@ -225,21 +203,35 @@ export default function CastsPage() {
             <input type="text" placeholder="送り先" value={form.drop_off_location} onChange={e => setForm(f => ({ ...f, drop_off_location: e.target.value }))}
               className="bg-[#0f0f28] border border-[#2e2e50] rounded-xl px-4 py-3 text-white placeholder-[#3a3a5e] outline-none focus:border-[#d4b870]/50" />
             {editingId && (
-              <div className="col-span-2 relative">
-                <input
-                  type="email"
-                  placeholder={emailLoading ? 'メールアドレス取得中...' : 'ログイン用メールアドレス（アカウントなしは空欄）'}
-                  value={form.email}
-                  disabled={emailLoading}
-                  onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                  className="w-full bg-[#0f0f28] border border-[#2e2e50] rounded-xl px-4 py-3 text-white placeholder-[#3a3a5e] outline-none focus:border-[#d4b870]/50 disabled:opacity-50"
-                />
-                {emailLoading && (
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#9090bb]">取得中...</span>
+              <>
+                <div className="col-span-2 relative">
+                  <input
+                    type="email"
+                    placeholder={emailLoading ? 'メールアドレス取得中...' : 'ログイン用メールアドレス（任意）'}
+                    value={form.email}
+                    disabled={emailLoading}
+                    onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                    className="w-full bg-[#0f0f28] border border-[#2e2e50] rounded-xl px-4 py-3 text-white placeholder-[#3a3a5e] outline-none focus:border-[#d4b870]/50 disabled:opacity-50"
+                  />
+                  {emailLoading && (
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#9090bb]">取得中...</span>
+                  )}
+                </div>
+                {!hasAccount && form.email.trim() && (
+                  <div className="col-span-2">
+                    <input
+                      type="password"
+                      placeholder="パスワード（6文字以上）— 新規アカウント作成時のみ"
+                      value={form.password}
+                      onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
+                      className="w-full bg-[#0f0f28] border border-[#2e2e50] rounded-xl px-4 py-3 text-white placeholder-[#3a3a5e] outline-none focus:border-[#d4b870]/50"
+                    />
+                  </div>
                 )}
-              </div>
+              </>
             )}
           </div>
+          {formError && <p className="text-xs text-red-400">{formError}</p>}
           <button onClick={handleSave} disabled={saving || !form.stage_name.trim()}
             className="px-6 py-3 rounded-xl bg-[#d4b870] text-black font-bold disabled:opacity-30">
             {saving ? '保存中...' : editingId ? '更新' : '追加'}
@@ -274,11 +266,6 @@ export default function CastsPage() {
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <button onClick={() => openAccountForm(cast.id)}
-                    title="ログインアカウント作成"
-                    className="p-2 rounded-lg bg-[#0f0f28] text-[#9090bb] hover:text-emerald-400">
-                    <UserPlus size={14} />
-                  </button>
                   <button onClick={() => setSelectedCastId(selectedCastId === cast.id ? null : cast.id)}
                     className="p-2 rounded-lg bg-[#0f0f28] text-[#9090bb] hover:text-white">
                     <Clock size={14} />
@@ -319,47 +306,6 @@ export default function CastsPage() {
               )}
             </div>
           ))}
-        </div>
-      )}
-
-      {/* アカウント作成モーダル */}
-      {accountForm && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" onClick={() => setAccountForm(null)}>
-          <div className="bg-[#141430] border border-[#2e2e50] rounded-xl p-6 w-full max-w-sm space-y-4" onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm text-[#d4b870] tracking-widest uppercase font-semibold flex items-center gap-2">
-                <Mail size={16} />キャストアカウント作成
-              </h3>
-              <button onClick={() => setAccountForm(null)} className="text-[#9090bb]"><X size={18} /></button>
-            </div>
-            <p className="text-xs text-[#9090bb]">
-              {casts.find(c => c.id === accountForm.castId)?.stage_name}のログインアカウントを作成します。
-              cast.lunapos.jp でこのメールとパスワードでログインできるようになります。
-            </p>
-            <input
-              type="email"
-              placeholder="メールアドレス"
-              value={accountForm.email}
-              onChange={e => setAccountForm(f => f ? { ...f, email: e.target.value } : f)}
-              className="w-full bg-[#0f0f28] border border-[#2e2e50] rounded-xl px-4 py-3 text-white placeholder-[#3a3a5e] outline-none focus:border-[#d4b870]/50"
-              autoFocus
-            />
-            <input
-              type="password"
-              placeholder="パスワード（6文字以上）"
-              value={accountForm.password}
-              onChange={e => setAccountForm(f => f ? { ...f, password: e.target.value } : f)}
-              className="w-full bg-[#0f0f28] border border-[#2e2e50] rounded-xl px-4 py-3 text-white placeholder-[#3a3a5e] outline-none focus:border-[#d4b870]/50"
-            />
-            {accountError && <p className="text-xs text-red-400">{accountError}</p>}
-            <button
-              onClick={handleCreateAccount}
-              disabled={accountSaving || !accountForm.email.trim() || !accountForm.password}
-              className="w-full py-3 rounded-xl bg-[#d4b870] text-black font-bold disabled:opacity-30"
-            >
-              {accountSaving ? '作成中...' : 'アカウント作成'}
-            </button>
-          </div>
         </div>
       )}
 
