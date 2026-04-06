@@ -1,22 +1,18 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import {
   TrendingUp, Star, ChevronLeft, ChevronRight,
-  Calendar, Plus, Pencil, Trash2, X, FileText, LogOut, Wine,
+  Calendar, LogOut, Wine,
   MapPin, User, Check,
 } from 'lucide-react'
 import { supabase, requireTenantId, requireCastId } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import {
   formatYen, toDateStr, nominationLabel,
-  loadMemos as loadMemosFromStorage, saveMemos as saveMemosToStorage,
-  calcTodaySummary, calcMonthlyData, calcMonthlyTotals, filterMemos,
+  calcTodaySummary, calcMonthlyData, calcMonthlyTotals,
 } from '../lib/castApp'
-import type { NominationRow, PaymentRow, OrderItemRow, CustomerMemo, DailySummary, CastRow } from '../types'
+import type { NominationRow, PaymentRow, OrderItemRow, DailySummary, CastRow } from '../types'
 
-type Tab = 'today' | 'monthly' | 'nominations' | 'memos' | 'profile'
-
-function loadMemos(): CustomerMemo[] { return loadMemosFromStorage(localStorage) }
-function saveMemos(memos: CustomerMemo[]) { saveMemosToStorage(localStorage, memos) }
+type Tab = 'today' | 'monthly' | 'nominations' | 'profile'
 
 // ========================================
 // ルート
@@ -29,7 +25,6 @@ export default function CastApp() {
     { id: 'today',       label: '今日',     icon: <TrendingUp size={20} /> },
     { id: 'monthly',     label: '月次',     icon: <Calendar size={20} /> },
     { id: 'nominations', label: '指名',     icon: <Star size={20} /> },
-    { id: 'memos',       label: 'メモ',     icon: <FileText size={20} /> },
     { id: 'profile',     label: 'マイページ', icon: <User size={20} /> },
   ]
 
@@ -58,7 +53,6 @@ export default function CastApp() {
           {tab === 'today'       && <TodayTab />}
           {tab === 'monthly'     && <MonthlyTab />}
           {tab === 'nominations' && <NominationsTab />}
-          {tab === 'memos'       && <MemosTab />}
           {tab === 'profile'     && <ProfileTab />}
         </main>
 
@@ -519,167 +513,6 @@ function ProfileTab() {
   )
 }
 
-// ========================================
-// メモタブ
-// ========================================
-function MemosTab() {
-  const [memos, setMemos] = useState<CustomerMemo[]>(loadMemos)
-  const [showForm, setShowForm] = useState(false)
-  const [editingId, setEditingId] = useState<string | null>(null)
-  const [form, setForm] = useState({ name: '', features: '', favoriteDrink: '', visitFrequency: '', memo: '' })
-  const [search, setSearch] = useState('')
-
-  function openNew() {
-    setEditingId(null)
-    setForm({ name: '', features: '', favoriteDrink: '', visitFrequency: '', memo: '' })
-    setShowForm(true)
-  }
-
-  function openEdit(m: CustomerMemo) {
-    setEditingId(m.id)
-    setForm({ name: m.name, features: m.features, favoriteDrink: m.favoriteDrink, visitFrequency: m.visitFrequency, memo: m.memo })
-    setShowForm(true)
-  }
-
-  function save() {
-    if (!form.name.trim()) return
-    const now = new Date().toISOString()
-    let updated: CustomerMemo[]
-    if (editingId) {
-      updated = memos.map(m => m.id === editingId ? { ...m, ...form, name: form.name.trim(), updatedAt: now } : m)
-    } else {
-      updated = [{ id: crypto.randomUUID(), ...form, name: form.name.trim(), createdAt: now, updatedAt: now }, ...memos]
-    }
-    setMemos(updated)
-    saveMemos(updated)
-    setShowForm(false)
-    setEditingId(null)
-    setForm({ name: '', features: '', favoriteDrink: '', visitFrequency: '', memo: '' })
-  }
-
-  function deleteMemo(id: string) {
-    if (!confirm('このメモを削除しますか？')) return
-    const updated = memos.filter(m => m.id !== id)
-    setMemos(updated)
-    saveMemos(updated)
-  }
-
-  const filtered = filterMemos(memos, search)
-
-  // フォームをボトムシート風にフルスクリーン表示
-  if (showForm) {
-    return (
-      <div className="px-4 pt-5 pb-4 space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-bold text-white">{editingId ? 'メモを編集' : '新しいメモ'}</h2>
-          <button
-            onClick={() => setShowForm(false)}
-            className="w-11 h-11 flex items-center justify-center rounded-xl text-[#9090bb] active:bg-[#1a1a35]"
-          >
-            <X size={22} />
-          </button>
-        </div>
-
-        {[
-          { key: 'name', placeholder: 'お名前 *', required: true },
-          { key: 'features', placeholder: '特徴（見た目・性格など）' },
-          { key: 'favoriteDrink', placeholder: '好みのドリンク' },
-          { key: 'visitFrequency', placeholder: '来店頻度（例: 週1回）' },
-        ].map(f => (
-          <input
-            key={f.key}
-            type="text"
-            inputMode="text"
-            placeholder={f.placeholder}
-            value={form[f.key as keyof typeof form]}
-            onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
-            className="w-full bg-[#141430] border border-[#2e2e50] rounded-xl px-4 py-4 text-white placeholder-[#3a3a5e] outline-none text-base"
-          />
-        ))}
-        <textarea
-          placeholder="メモ（自由記述）"
-          value={form.memo}
-          onChange={e => setForm(f => ({ ...f, memo: e.target.value }))}
-          rows={4}
-          className="w-full bg-[#141430] border border-[#2e2e50] rounded-xl px-4 py-4 text-white placeholder-[#3a3a5e] outline-none text-base resize-none"
-        />
-        <button
-          onClick={save}
-          disabled={!form.name.trim()}
-          className="w-full py-4 rounded-2xl bg-[#d4b870] text-black font-bold text-base disabled:opacity-30 active:opacity-80"
-        >
-          {editingId ? '更新する' : '保存する'}
-        </button>
-      </div>
-    )
-  }
-
-  return (
-    <div className="px-4 pt-5 pb-4 space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-bold text-white">顧客メモ</h2>
-        <button
-          onClick={openNew}
-          className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#d4b870] text-black text-sm font-bold active:opacity-80"
-        >
-          <Plus size={16} />追加
-        </button>
-      </div>
-
-      <input
-        type="search"
-        inputMode="search"
-        placeholder="名前・特徴で検索"
-        value={search}
-        onChange={e => setSearch(e.target.value)}
-        className="w-full bg-[#141430] border border-[#2e2e50] rounded-xl px-4 py-3.5 text-white text-base placeholder-[#3a3a5e] outline-none"
-      />
-
-      {filtered.length === 0 ? (
-        <p className="text-center py-16 text-[#3a3a5e] text-sm">
-          {memos.length === 0 ? 'メモを追加してお客様の情報を記録しましょう' : '該当するメモがありません'}
-        </p>
-      ) : (
-        <div className="space-y-3">
-          {filtered.map(m => (
-            <div key={m.id} className="bg-[#141430] border border-[#2e2e50] rounded-2xl p-4">
-              <div className="flex items-start justify-between mb-3">
-                <div>
-                  <p className="text-base font-bold text-white">{m.name}</p>
-                  <p className="text-xs text-[#9090bb] mt-0.5">
-                    {new Date(m.updatedAt).toLocaleDateString('ja-JP', { year: 'numeric', month: 'short', day: 'numeric' })} 更新
-                  </p>
-                </div>
-                <div className="flex gap-1">
-                  <button
-                    onClick={() => openEdit(m)}
-                    className="w-11 h-11 flex items-center justify-center rounded-xl text-[#9090bb] active:bg-[#1a1a40]"
-                  >
-                    <Pencil size={18} />
-                  </button>
-                  <button
-                    onClick={() => deleteMemo(m.id)}
-                    className="w-11 h-11 flex items-center justify-center rounded-xl text-[#9090bb] active:text-red-400"
-                  >
-                    <Trash2 size={18} />
-                  </button>
-                </div>
-              </div>
-              <div className="space-y-1">
-                {m.features      && <MemoField label="特徴" value={m.features} />}
-                {m.favoriteDrink && <MemoField label="ドリンク" value={m.favoriteDrink} />}
-                {m.visitFrequency && <MemoField label="来店頻度" value={m.visitFrequency} />}
-                {m.memo && (
-                  <p className="text-sm text-white mt-2 bg-[#0f0f28] rounded-xl px-3 py-2.5 leading-relaxed">{m.memo}</p>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  )
-}
 
 // ========================================
 // 共通コンポーネント
@@ -712,13 +545,6 @@ function SaveButton({ loading, saved, onClick }: { loading: boolean; saved: bool
   )
 }
 
-function MemoField({ label, value }: { label: string; value: string }) {
-  return (
-    <p className="text-sm text-[#9090bb]">
-      <span className="text-[#555580]">{label}: </span>{value}
-    </p>
-  )
-}
 
 function Loading() {
   return (
