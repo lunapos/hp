@@ -81,55 +81,7 @@ struct RegisterTabView: View {
         let totalWithdrawn = todayWithdrawals.reduce(0) { $0 + $1.amount }
         let expectedCash = vm.registerStartAmount + cashReceived - totalWithdrawn
 
-        let castSalesRanking: [(cast: Cast, sales: Int)] = {
-            vm.casts.map { cast in
-                (cast: cast, sales: vm.castSales(castId: cast.id))
-            }
-            .filter { $0.sales > 0 }
-            .sorted { $0.sales > $1.sales }
-        }()
-        let top3 = Array(castSalesRanking.prefix(3))
-        let maxSales = top3.first?.sales ?? 1
-
         VStack(spacing: 12) {
-            // キャスト別売上TOP3
-            if !top3.isEmpty {
-                GroupBox {
-                    VStack(alignment: .leading, spacing: 12) {
-                        Label("キャスト別売上 TOP3", systemImage: "trophy")
-                            .font(.caption.bold()).foregroundStyle(.lunaMuted).tracking(2)
-
-                        ForEach(Array(top3.enumerated()), id: \.offset) { index, item in
-                            VStack(alignment: .leading, spacing: 4) {
-                                HStack {
-                                    // 順位メダル
-                                    Text(["🥇", "🥈", "🥉"][index])
-                                        .font(.title3)
-                                    Text(item.cast.stageName)
-                                        .font(.subheadline.bold())
-                                    Spacer()
-                                    Text(item.sales.yenFormatted)
-                                        .font(.subheadline.bold())
-                                        .foregroundStyle(index == 0 ? .lunaGoldDark : .primary)
-                                }
-                                // バー
-                                GeometryReader { geo in
-                                    ZStack(alignment: .leading) {
-                                        RoundedRectangle(cornerRadius: 4)
-                                            .fill(Color.lunaBorder)
-                                            .frame(height: 8)
-                                        RoundedRectangle(cornerRadius: 4)
-                                            .fill(index == 0 ? Color.lunaGoldDark : index == 1 ? Color.lunaLavender : Color.lunaSubtle)
-                                            .frame(width: geo.size.width * CGFloat(item.sales) / CGFloat(maxSales), height: 8)
-                                    }
-                                }
-                                .frame(height: 8)
-                            }
-                        }
-                    }
-                }
-            }
-
             GroupBox {
                 VStack(alignment: .leading, spacing: 12) {
                     Label("レジ締め", systemImage: "yensign.circle")
