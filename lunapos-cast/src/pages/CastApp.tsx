@@ -162,12 +162,18 @@ function TodayTab() {
 // ========================================
 // 月次売上推移（2.4.3）
 // ========================================
+interface ShiftRow {
+  clock_in: string
+  clock_out: string | null
+}
+
 function MonthlyTab() {
   const [selectedMonth, setSelectedMonth] = useState(() => {
     const d = new Date()
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
   })
   const [dailyData, setDailyData] = useState<DailySummary[]>([])
+  const [shifts, setShifts] = useState<ShiftRow[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => { fetchMonthly() }, [selectedMonth])
@@ -182,12 +188,19 @@ function MonthlyTab() {
       const monthStart = `${selectedMonth}-01T00:00:00+09:00`
       const monthEnd = `${selectedMonth}-${String(daysInMonth).padStart(2, '0')}T23:59:59+09:00`
 
-      const { data: noms } = await supabase.from('nominations')
-        .select('id, visit_id, cast_id, nomination_type, qty, fee_override, created_at')
-        .eq('tenant_id', tid).eq('cast_id', cid)
-        .gte('created_at', monthStart).lte('created_at', monthEnd)
+      const [nomsRes, shiftsRes] = await Promise.all([
+        supabase.from('nominations')
+          .select('id, visit_id, cast_id, nomination_type, qty, fee_override, created_at')
+          .eq('tenant_id', tid).eq('cast_id', cid)
+          .gte('created_at', monthStart).lte('created_at', monthEnd),
+        supabase.from('cast_shifts')
+          .select('clock_in, clock_out')
+          .eq('tenant_id', tid).eq('cast_id', cid)
+          .gte('clock_in', monthStart).lte('clock_in', monthEnd),
+      ])
 
-      setDailyData(calcMonthlyData((noms || []) as NominationRow[], year, month))
+      setDailyData(calcMonthlyData((nomsRes.data || []) as NominationRow[], year, month))
+      setShifts((shiftsRes.data || []) as ShiftRow[])
     } catch { /* ignore */ }
     setLoading(false)
   }
@@ -199,6 +212,14 @@ function MonthlyTab() {
   }
 
   const { totalMain, totalInStore, activeDays } = calcMonthlyTotals(dailyData)
+
+  // 出勤時間合計（clock_outがあるシフトのみ）
+  const totalWorkMinutes = shifts.reduce((sum, s) => {
+    if (!s.clock_out) return sum
+    return sum + Math.round((new Date(s.clock_out).getTime() - new Date(s.clock_in).getTime()) / 60000)
+  }, 0)
+  const workHours = Math.floor(totalWorkMinutes / 60)
+  const workMinutes = totalWorkMinutes % 60
 
   return (
     <div className="p-4 space-y-4">
@@ -213,7 +234,7 @@ function MonthlyTab() {
       </div>
 
       {/* 月間サマリー */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 gap-3">
         <div className="bg-[#141430] rounded-xl p-4 border border-[#2e2e50]">
           <div className="text-xs text-[#9090bb] mb-1">本指名</div>
           <div className="text-xl font-bold text-[#d4b870]">{totalMain}件</div>
@@ -225,6 +246,12 @@ function MonthlyTab() {
         <div className="bg-[#141430] rounded-xl p-4 border border-[#2e2e50]">
           <div className="text-xs text-[#9090bb] mb-1">出勤日数</div>
           <div className="text-xl font-bold text-white">{activeDays}日</div>
+        </div>
+        <div className="bg-[#141430] rounded-xl p-4 border border-[#2e2e50]">
+          <div className="text-xs text-[#9090bb] mb-1">出勤時間</div>
+          <div className="text-xl font-bold text-white">
+            {workHours}時間{workMinutes > 0 ? `${workMinutes}分` : ''}
+          </div>
         </div>
       </div>
 
