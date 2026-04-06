@@ -2,12 +2,13 @@ import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import {
   BarChart3, Users, ShoppingBag, Settings, TableProperties,
-  Clock, LogOut, Menu, X, ChevronRight, Home, Wallet,
+  Clock, LogOut, Menu, X, ChevronRight, Home, Wallet, TrendingUp,
 } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 
 const NAV_ITEMS = [
   { path: '/', label: 'ダッシュボード', icon: BarChart3 },
+  { path: '/cast-sales', label: 'キャスト別売上', icon: TrendingUp },
   { path: '/menu', label: 'メニュー管理', icon: ShoppingBag },
   { path: '/casts', label: 'キャスト管理', icon: Users },
   { path: '/tables', label: 'テーブル管理', icon: TableProperties },
@@ -19,6 +20,7 @@ const NAV_ITEMS = [
 // パンくずリスト用マッピング
 const BREADCRUMB_LABELS: Record<string, string> = {
   '/': 'ダッシュボード',
+  '/cast-sales': 'キャスト別売上',
   '/menu': 'メニュー管理',
   '/casts': 'キャスト管理',
   '/tables': 'テーブル管理',

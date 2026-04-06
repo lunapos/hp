@@ -10,6 +10,7 @@ import PlansPage from './pages/PlansPage'
 import SettingsPage from './pages/SettingsPage'
 import RegisterPage from './pages/RegisterPage'
 import SignupPage from './pages/SignupPage'
+import CastSalesPage from './pages/CastSalesPage'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth()
@@ -46,6 +47,7 @@ function AppRoutes() {
       <Route path="/plans" element={<ProtectedRoute><PlansPage /></ProtectedRoute>} />
       <Route path="/register" element={<ProtectedRoute><RegisterPage /></ProtectedRoute>} />
       <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+      <Route path="/cast-sales" element={<ProtectedRoute><CastSalesPage /></ProtectedRoute>} />
       {/* 後方互換: /admin/* → / にリダイレクト */}
       <Route path="/admin/login" element={<Navigate to="/login" replace />} />
       <Route path="/admin/signup" element={<Navigate to="/signup" replace />} />
