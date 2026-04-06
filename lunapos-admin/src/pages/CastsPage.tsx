@@ -3,7 +3,7 @@ import { Plus, Pencil, X, Check, Clock, UserPlus, Mail } from 'lucide-react'
 import { supabase, supabaseUrl, supabaseAnonKey, requireTenantId } from '../lib/supabase'
 import type { CastRow, CastShiftRow } from '../types'
 
-const EMPTY_FORM = { stage_name: '', real_name: '', photo_url: '', drop_off_location: '' }
+const EMPTY_FORM = { stage_name: '', real_name: '', photo_url: '', drop_off_location: '', email: '' }
 
 export default function CastsPage() {
   const [casts, setCasts] = useState<CastRow[]>([])
@@ -13,6 +13,7 @@ export default function CastsPage() {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [form, setForm] = useState(EMPTY_FORM)
   const [saving, setSaving] = useState(false)
+  const [emailLoading, setEmailLoading] = useState(false)
   const [toast, setToast] = useState('')
   const [showRetired, setShowRetired] = useState(false)
   const [selectedCastId, setSelectedCastId] = useState<string | null>(null)
@@ -65,6 +66,22 @@ export default function CastsPage() {
         drop_off_location: form.drop_off_location || null,
         updated_at: new Date().toISOString(),
       }).eq('id', editingId).eq('tenant_id', tid)
+
+      // メールアドレスが入力されていれば更新
+      if (form.email.trim()) {
+        const res = await fetch(`${supabaseUrl}/functions/v1/cast-account?action=update-email`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${supabaseAnonKey}` },
+          body: JSON.stringify({ cast_id: editingId, tenant_id: tid, email: form.email.trim() }),
+        })
+        const data = await res.json()
+        if (!res.ok) {
+          showToast(`メール更新失敗: ${data.error}`)
+          setSaving(false)
+          return
+        }
+      }
+
       showToast('キャスト情報を更新しました')
     } else {
       await supabase.from('casts').insert({
@@ -96,15 +113,29 @@ export default function CastsPage() {
     fetchCasts()
   }
 
-  function startEdit(cast: CastRow) {
+  async function startEdit(cast: CastRow) {
     setEditingId(cast.id)
     setForm({
       stage_name: cast.stage_name,
       real_name: cast.real_name,
       photo_url: cast.photo_url || '',
       drop_off_location: cast.drop_off_location || '',
+      email: '',
     })
     setShowForm(true)
+
+    // 既存のメールアドレスを取得
+    setEmailLoading(true)
+    try {
+      const tid = requireTenantId()
+      const res = await fetch(
+        `${supabaseUrl}/functions/v1/cast-account?action=get-email&cast_id=${cast.id}&tenant_id=${tid}`,
+        { headers: { 'Authorization': `Bearer ${supabaseAnonKey}` } }
+      )
+      const data = await res.json()
+      if (data.email) setForm(f => ({ ...f, email: data.email }))
+    } catch { /* ignore */ }
+    setEmailLoading(false)
   }
 
   function openAccountForm(castId: string) {
@@ -193,6 +224,21 @@ export default function CastsPage() {
               className="bg-[#0f0f28] border border-[#2e2e50] rounded-xl px-4 py-3 text-white placeholder-[#3a3a5e] outline-none focus:border-[#d4b870]/50" />
             <input type="text" placeholder="送り先" value={form.drop_off_location} onChange={e => setForm(f => ({ ...f, drop_off_location: e.target.value }))}
               className="bg-[#0f0f28] border border-[#2e2e50] rounded-xl px-4 py-3 text-white placeholder-[#3a3a5e] outline-none focus:border-[#d4b870]/50" />
+            {editingId && (
+              <div className="col-span-2 relative">
+                <input
+                  type="email"
+                  placeholder={emailLoading ? 'メールアドレス取得中...' : 'ログイン用メールアドレス（アカウントなしは空欄）'}
+                  value={form.email}
+                  disabled={emailLoading}
+                  onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                  className="w-full bg-[#0f0f28] border border-[#2e2e50] rounded-xl px-4 py-3 text-white placeholder-[#3a3a5e] outline-none focus:border-[#d4b870]/50 disabled:opacity-50"
+                />
+                {emailLoading && (
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#9090bb]">取得中...</span>
+                )}
+              </div>
+            )}
           </div>
           <button onClick={handleSave} disabled={saving || !form.stage_name.trim()}
             className="px-6 py-3 rounded-xl bg-[#d4b870] text-black font-bold disabled:opacity-30">
