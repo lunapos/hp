@@ -11,6 +11,9 @@ export interface CastRow {
   stage_name: string
   real_name: string
   photo_url: string | null
+  drop_off_location: string | null
+  today_drop_off_location: string | null
+  today_drop_off_date: string | null
   is_active: boolean
 }
 
@@ -37,6 +40,7 @@ export interface PaymentRow {
   id: string
   visit_id: string
   total: number
+  subtotal: number
   payment_method: PaymentMethod
   paid_at: string
   nomination_fee: number

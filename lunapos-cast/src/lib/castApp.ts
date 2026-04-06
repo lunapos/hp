@@ -49,10 +49,24 @@ export function calcTodaySummary(
     .filter(n => n.nomination_type === 'in_store')
     .reduce((s, n) => s + n.qty, 0)
   const drinkCount = orders.reduce((s, o) => s + o.quantity, 0)
-  const nominatedVisitIds = new Set(nominations.map(n => n.visit_id))
-  const salesContribution = payments
-    .filter(p => nominatedVisitIds.has(p.visit_id))
-    .reduce((s, p) => s + p.total, 0)
+
+  // 管理画面と同じ計算方式: subtotalを本指名数で按分
+  const paymentByVisit = new Map(payments.map(p => [p.visit_id, p]))
+  const mainNomTotalByVisit = new Map<string, number>()
+  for (const n of nominations) {
+    if (n.nomination_type !== 'main') continue
+    mainNomTotalByVisit.set(n.visit_id, (mainNomTotalByVisit.get(n.visit_id) ?? 0) + n.qty)
+  }
+  let salesContribution = 0
+  for (const n of nominations) {
+    if (n.nomination_type !== 'main') continue
+    const payment = paymentByVisit.get(n.visit_id)
+    const totalMainNoms = mainNomTotalByVisit.get(n.visit_id) ?? 1
+    if (payment) {
+      salesContribution += Math.round((payment.subtotal / totalMainNoms) * n.qty)
+    }
+  }
+
   return { mainNominations, inStoreNominations, drinkCount, salesContribution }
 }
 

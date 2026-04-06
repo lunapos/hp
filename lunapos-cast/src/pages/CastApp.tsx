@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import {
   TrendingUp, Star, ChevronLeft, ChevronRight,
   Calendar, Plus, Pencil, Trash2, X, FileText, LogOut, Wine,
+  MapPin, User,
 } from 'lucide-react'
 import { supabase, requireTenantId, requireCastId } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
@@ -10,9 +11,9 @@ import {
   loadMemos as loadMemosFromStorage, saveMemos as saveMemosToStorage,
   calcTodaySummary, calcMonthlyData, calcMonthlyTotals, filterMemos,
 } from '../lib/castApp'
-import type { NominationRow, PaymentRow, OrderItemRow, CustomerMemo, DailySummary } from '../types'
+import type { NominationRow, PaymentRow, OrderItemRow, CustomerMemo, DailySummary, CastRow } from '../types'
 
-type Tab = 'today' | 'monthly' | 'nominations' | 'memos'
+type Tab = 'today' | 'monthly' | 'nominations' | 'memos' | 'profile'
 
 function loadMemos(): CustomerMemo[] { return loadMemosFromStorage(localStorage) }
 function saveMemos(memos: CustomerMemo[]) { saveMemosToStorage(localStorage, memos) }
@@ -44,6 +45,7 @@ export default function CastApp() {
           { id: 'monthly' as Tab, label: '月次', icon: <Calendar size={14} /> },
           { id: 'nominations' as Tab, label: '指名履歴', icon: <Star size={14} /> },
           { id: 'memos' as Tab, label: 'メモ', icon: <FileText size={14} /> },
+          { id: 'profile' as Tab, label: 'マイページ', icon: <User size={14} /> },
         ]).map(t => (
           <button
             key={t.id}
@@ -63,6 +65,7 @@ export default function CastApp() {
         {tab === 'monthly' && <MonthlyTab />}
         {tab === 'nominations' && <NominationsTab />}
         {tab === 'memos' && <MemosTab />}
+        {tab === 'profile' && <ProfileTab />}
       </div>
     </div>
   )
@@ -101,7 +104,7 @@ function TodayTab() {
           .eq('tenant_id', tid).eq('cast_id', cid)
           .gte('created_at', dayStart).lte('created_at', dayEnd),
         supabase.from('payments')
-          .select('id, visit_id, total, payment_method, paid_at, nomination_fee')
+          .select('id, visit_id, total, subtotal, payment_method, paid_at, nomination_fee')
           .eq('tenant_id', tid)
           .gte('paid_at', dayStart).lte('paid_at', dayEnd),
         supabase.from('order_items')
@@ -331,6 +334,160 @@ function NominationsTab() {
           </div>
         </>
       )}
+    </div>
+  )
+}
+
+// ========================================
+// マイページ（プロフィール・送り先登録）
+// ========================================
+function ProfileTab() {
+  const [cast, setCast] = useState<CastRow | null>(null)
+  const [dropOff, setDropOff] = useState('')
+  const [todayDropOff, setTodayDropOff] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [savingDefault, setSavingDefault] = useState(false)
+  const [savedDefault, setSavedDefault] = useState(false)
+  const [savingToday, setSavingToday] = useState(false)
+  const [savedToday, setSavedToday] = useState(false)
+
+  useEffect(() => { fetchProfile() }, [])
+
+  const todayStr = toDateStr(new Date())
+
+  async function fetchProfile() {
+    setLoading(true)
+    try {
+      const tid = requireTenantId()
+      const cid = requireCastId()
+      const { data } = await supabase.from('casts')
+        .select('id, tenant_id, stage_name, real_name, photo_url, drop_off_location, today_drop_off_location, today_drop_off_date, is_active')
+        .eq('tenant_id', tid).eq('id', cid)
+        .single()
+      if (data) {
+        const row = data as CastRow
+        setCast(row)
+        setDropOff(row.drop_off_location || '')
+        // 今日の日付と一致する場合のみ表示
+        if (row.today_drop_off_date === todayStr) {
+          setTodayDropOff(row.today_drop_off_location || '')
+        }
+      }
+    } catch { /* ignore */ }
+    setLoading(false)
+  }
+
+  async function saveDropOff() {
+    if (!cast) return
+    setSavingDefault(true)
+    setSavedDefault(false)
+    try {
+      const tid = requireTenantId()
+      const value = dropOff.trim()
+      await supabase.from('casts')
+        .update({
+          drop_off_location: value || null,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', cast.id).eq('tenant_id', tid)
+      setSavedDefault(true)
+      setTimeout(() => setSavedDefault(false), 2000)
+    } catch { /* ignore */ }
+    setSavingDefault(false)
+  }
+
+  async function saveTodayDropOff() {
+    if (!cast) return
+    setSavingToday(true)
+    setSavedToday(false)
+    try {
+      const tid = requireTenantId()
+      const value = todayDropOff.trim()
+      await supabase.from('casts')
+        .update({
+          today_drop_off_location: value || null,
+          today_drop_off_date: value ? todayStr : null,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', cast.id).eq('tenant_id', tid)
+      setSavedToday(true)
+      setTimeout(() => setSavedToday(false), 2000)
+    } catch { /* ignore */ }
+    setSavingToday(false)
+  }
+
+  if (loading) return <div className="text-center py-20 text-[#9090bb]">読み込み中...</div>
+  if (!cast) return <div className="text-center py-20 text-[#9090bb]">プロフィールの取得に失敗しました</div>
+
+  return (
+    <div className="p-4 space-y-6">
+      <h2 className="text-xs text-[#9090bb] tracking-widest uppercase">マイページ</h2>
+
+      {/* 基本情報 */}
+      <div className="bg-[#141430] rounded-xl p-4 border border-[#2e2e50] space-y-3">
+        <div className="text-xs text-[#9090bb] tracking-widest uppercase font-semibold">基本情報</div>
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-full bg-[#2e2e50] flex items-center justify-center">
+            <User size={20} className="text-[#9090bb]" />
+          </div>
+          <div>
+            <div className="text-white font-semibold">{cast.stage_name}</div>
+            {cast.real_name && <div className="text-xs text-[#9090bb]">{cast.real_name}</div>}
+          </div>
+        </div>
+      </div>
+
+      {/* 今日の送り先 */}
+      <div className="bg-[#141430] rounded-xl p-4 border border-[#d4b870]/30 space-y-3">
+        <div className="flex items-center gap-2">
+          <MapPin size={14} className="text-[#d4b870]" />
+          <span className="text-xs text-[#d4b870] tracking-widest uppercase font-semibold">今日の送り先</span>
+        </div>
+        <p className="text-xs text-[#9090bb]">
+          いつもと違う場所に送ってほしいときだけ入力。空欄ならデフォルトが使われます
+        </p>
+        <input
+          type="text"
+          placeholder={dropOff ? `未入力 → ${dropOff}` : '最寄り駅や住所'}
+          value={todayDropOff}
+          onChange={e => { setTodayDropOff(e.target.value); setSavedToday(false) }}
+          onKeyDown={e => { if (e.key === 'Enter') saveTodayDropOff() }}
+          className="w-full bg-[#0f0f28] border border-[#d4b870]/30 rounded-xl px-4 py-3 text-white placeholder-[#3a3a5e] outline-none text-sm"
+        />
+        <button
+          onClick={saveTodayDropOff}
+          disabled={savingToday}
+          className="w-full py-3 rounded-xl bg-[#d4b870] text-black font-bold disabled:opacity-50"
+        >
+          {savingToday ? '保存中...' : savedToday ? '✓ 保存しました' : '保存'}
+        </button>
+      </div>
+
+      {/* デフォルト送り先 */}
+      <div className="bg-[#141430] rounded-xl p-4 border border-[#2e2e50] space-y-3">
+        <div className="flex items-center gap-2">
+          <MapPin size={14} className="text-[#9090bb]" />
+          <span className="text-xs text-[#9090bb] tracking-widest uppercase font-semibold">デフォルト送り先</span>
+        </div>
+        <p className="text-xs text-[#9090bb]">
+          毎回使う送り先。POS に自動で表示されます
+        </p>
+        <input
+          type="text"
+          placeholder="最寄り駅や住所（例: 渋谷駅）"
+          value={dropOff}
+          onChange={e => { setDropOff(e.target.value); setSavedDefault(false) }}
+          onKeyDown={e => { if (e.key === 'Enter') saveDropOff() }}
+          className="w-full bg-[#0f0f28] border border-[#2e2e50] rounded-xl px-4 py-3 text-white placeholder-[#3a3a5e] outline-none text-sm"
+        />
+        <button
+          onClick={saveDropOff}
+          disabled={savingDefault}
+          className="w-full py-3 rounded-xl bg-[#d4b870] text-black font-bold disabled:opacity-50"
+        >
+          {savingDefault ? '保存中...' : savedDefault ? '✓ 保存しました' : '保存'}
+        </button>
+      </div>
     </div>
   )
 }
