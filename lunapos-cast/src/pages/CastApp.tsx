@@ -87,6 +87,7 @@ function TodayTab() {
   const [nominations, setNominations] = useState<NominationRow[]>([])
   const [payments, setPayments] = useState<PaymentRow[]>([])
   const [drinkCount, setDrinkCount] = useState(0)
+  const [stageName, setStageName] = useState('')
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -106,7 +107,7 @@ function TodayTab() {
       const dayStart = `${today}T00:00:00+09:00`
       const dayEnd   = `${today}T23:59:59+09:00`
 
-      const [nomsRes, paymentsRes, ordersRes] = await Promise.all([
+      const [nomsRes, paymentsRes, ordersRes, castRes] = await Promise.all([
         supabase.from('nominations')
           .select('id, visit_id, cast_id, nomination_type, qty, fee_override, created_at')
           .eq('tenant_id', tid).eq('cast_id', cid)
@@ -119,11 +120,16 @@ function TodayTab() {
           .select('id, visit_id, menu_item_name, price, quantity, cast_id')
           .eq('tenant_id', tid).eq('cast_id', cid)
           .gte('created_at', dayStart).lte('created_at', dayEnd),
+        supabase.from('casts')
+          .select('stage_name')
+          .eq('tenant_id', tid).eq('id', cid)
+          .single(),
       ])
 
       setNominations((nomsRes.data || []) as NominationRow[])
       setPayments((paymentsRes.data || []) as PaymentRow[])
       setDrinkCount((ordersRes.data || []).reduce((s: number, o: OrderItemRow) => s + o.quantity, 0))
+      if (castRes.data) setStageName(castRes.data.stage_name)
     } catch { /* ignore */ }
     setLoading(false)
   }
@@ -140,6 +146,7 @@ function TodayTab() {
       <div>
         <p className="text-xs text-[#9090bb] mb-0.5">{dateLabel}</p>
         <h2 className="text-lg font-bold text-white">今日のサマリー</h2>
+        {stageName && <p className="text-sm text-[#d4b870] mt-0.5">{stageName}</p>}
       </div>
 
       {/* メイン：売上貢献 */}
