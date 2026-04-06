@@ -18,8 +18,8 @@ interface CastSalesData {
   nominationsTotal: number      // 合計指名数
   // 同伴
   douhanCount: number
-  // 売上（指名した来店の売上合計）
-  relatedSales: number
+  // 売上（本指名来店の小計 ÷ 本指名数の按分合計）
+  sales: number
   // 指名料
   nominationFee: number
 }
@@ -44,9 +44,16 @@ function calcCastSalesData(
       nominationsInStore: 0,
       nominationsTotal: 0,
       douhanCount: 0,
-      relatedSales: 0,
+      sales: 0,
       nominationFee: 0,
     }
+  }
+
+  // 来店ごとの本指名合計数を集計（按分の分母に使う）
+  const mainNomTotalByVisit = new Map<string, number>()
+  for (const n of nominations) {
+    if (n.nomination_type !== 'main') continue
+    mainNomTotalByVisit.set(n.visit_id, (mainNomTotalByVisit.get(n.visit_id) ?? 0) + n.qty)
   }
 
   // 指名集計
@@ -61,18 +68,19 @@ function calcCastSalesData(
       // 指名料（fee_override があればそれを使う）
       const fee = n.fee_override !== null ? n.fee_override : (store?.nomination_fee_main ?? 0)
       cast.nominationFee += fee * n.qty
+
+      // 売上按分: 来店の小計 ÷ 来店の本指名合計数 × このキャストの本指名数
+      const payment = paymentByVisit.get(n.visit_id)
+      const totalMainNoms = mainNomTotalByVisit.get(n.visit_id) ?? 1
+      if (payment) {
+        cast.sales += Math.round((payment.subtotal / totalMainNoms) * n.qty)
+      }
     } else if (n.nomination_type === 'in_store') {
       cast.nominationsInStore += n.qty
       const fee = n.fee_override !== null ? n.fee_override : (store?.nomination_fee_in_store ?? 0)
       cast.nominationFee += fee * n.qty
     }
     cast.nominationsTotal += n.qty
-
-    // 関連売上（指名があった来店の会計合計）
-    const payment = paymentByVisit.get(n.visit_id)
-    if (payment) {
-      cast.relatedSales += payment.total
-    }
   }
 
   // 同伴集計
@@ -84,7 +92,7 @@ function calcCastSalesData(
 
   return Object.values(castMap)
     .filter(c => c.nominationsTotal > 0 || c.douhanCount > 0)
-    .sort((a, b) => b.relatedSales - a.relatedSales)
+    .sort((a, b) => b.sales - a.sales)
 }
 
 export default function CastSalesPage() {
@@ -178,9 +186,9 @@ export default function CastSalesPage() {
   }
 
   function exportCSV() {
-    const header = 'キャスト名,本指名,場内指名,指名計,同伴,指名料合計,関連売上'
+    const header = 'キャスト名,本指名,場内指名,指名計,同伴,指名料合計,売上'
     const rows = castSalesData.map(c =>
-      `${c.stageName},${c.nominationsMain},${c.nominationsInStore},${c.nominationsTotal},${c.douhanCount},${c.nominationFee},${c.relatedSales}`
+      `${c.stageName},${c.nominationsMain},${c.nominationsInStore},${c.nominationsTotal},${c.douhanCount},${c.nominationFee},${c.sales}`
     )
     const csv = [header, ...rows].join('\n')
     const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' })
@@ -314,7 +322,7 @@ export default function CastSalesPage() {
               <span className="text-right w-16">場内指名</span>
               <span className="text-right w-16">同伴</span>
               <span className="text-right w-24">指名料</span>
-              <span className="text-right w-28">関連売上</span>
+              <span className="text-right w-28">売上</span>
             </div>
 
             <div className="divide-y divide-[#2e2e50]">
@@ -361,12 +369,12 @@ export default function CastSalesPage() {
                     <div className="text-[10px] text-[#3a3a5e] md:hidden">指名料</div>
                   </div>
 
-                  {/* 関連売上 */}
+                  {/* 売上 */}
                   <div className="text-right w-28 shrink-0">
                     <div className={`text-sm font-bold ${idx === 0 ? 'text-[#d4b870]' : 'text-white'}`}>
-                      {formatYen(c.relatedSales)}
+                      {formatYen(c.sales)}
                     </div>
-                    <div className="text-[10px] text-[#3a3a5e] md:hidden">関連売上</div>
+                    <div className="text-[10px] text-[#3a3a5e] md:hidden">売上</div>
                   </div>
                 </div>
               ))}
@@ -375,7 +383,7 @@ export default function CastSalesPage() {
 
           {/* 凡例 */}
           <div className="text-xs text-[#3a3a5e] px-1 space-y-1">
-            <p>※ 関連売上 = そのキャストを指名した来店の会計合計</p>
+            <p>※ 売上 = 本指名がついた来店の小計 ÷ その来店の本指名数 × 自分の本指名数（複数キャストがついた場合は按分）</p>
             <p>※ 指名料 = 本指名・場内指名の料金合計（fee_override が設定されている場合はその値を使用）</p>
           </div>
         </>
