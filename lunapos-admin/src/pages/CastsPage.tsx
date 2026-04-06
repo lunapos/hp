@@ -198,10 +198,8 @@ export default function CastsPage() {
               className="bg-[#0f0f28] border border-[#2e2e50] rounded-xl px-4 py-3 text-white placeholder-[#3a3a5e] outline-none focus:border-[#d4b870]/50" />
             <input type="text" placeholder="本名" value={form.real_name} onChange={e => setForm(f => ({ ...f, real_name: e.target.value }))}
               className="bg-[#0f0f28] border border-[#2e2e50] rounded-xl px-4 py-3 text-white placeholder-[#3a3a5e] outline-none focus:border-[#d4b870]/50" />
-            <input type="text" placeholder="プロフィール画像URL" value={form.photo_url} onChange={e => setForm(f => ({ ...f, photo_url: e.target.value }))}
-              className="bg-[#0f0f28] border border-[#2e2e50] rounded-xl px-4 py-3 text-white placeholder-[#3a3a5e] outline-none focus:border-[#d4b870]/50" />
             <input type="text" placeholder="送り先" value={form.drop_off_location} onChange={e => setForm(f => ({ ...f, drop_off_location: e.target.value }))}
-              className="bg-[#0f0f28] border border-[#2e2e50] rounded-xl px-4 py-3 text-white placeholder-[#3a3a5e] outline-none focus:border-[#d4b870]/50" />
+              className="col-span-2 bg-[#0f0f28] border border-[#2e2e50] rounded-xl px-4 py-3 text-white placeholder-[#3a3a5e] outline-none focus:border-[#d4b870]/50" />
             {editingId && (
               <>
                 <div className="col-span-2 relative">
