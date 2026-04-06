@@ -7,24 +7,12 @@ struct AddCastSheet: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var stageName = ""
-    @State private var realName = ""
-    @State private var scheduledClockIn = ""
-    @State private var scheduledClockOut = ""
-    @State private var dropOffLocation = ""
 
     var body: some View {
         NavigationStack {
             Form {
                 Section("基本情報") {
                     TextField("源氏名 *", text: $stageName)
-                    TextField("本名", text: $realName)
-                }
-                Section("シフト") {
-                    TextField("出勤予定 (例: 19:00)", text: $scheduledClockIn)
-                    TextField("退勤予定 (例: 24:00)", text: $scheduledClockOut)
-                }
-                Section("その他") {
-                    TextField("送り先", text: $dropOffLocation)
                 }
             }
             .navigationTitle("キャスト追加")
@@ -37,11 +25,11 @@ struct AddCastSheet: View {
                     Button("追加する") {
                         vm.addCast(
                             stageName: stageName.trimmingCharacters(in: .whitespaces),
-                            realName: realName.trimmingCharacters(in: .whitespaces),
+                            realName: "",
                             photo: nil,
-                            scheduledClockIn: scheduledClockIn.isEmpty ? nil : scheduledClockIn,
-                            scheduledClockOut: scheduledClockOut.isEmpty ? nil : scheduledClockOut,
-                            dropOffLocation: dropOffLocation.isEmpty ? nil : dropOffLocation
+                            scheduledClockIn: nil,
+                            scheduledClockOut: nil,
+                            dropOffLocation: nil
                         )
                         dismiss()
                     }
@@ -59,111 +47,155 @@ struct CastDetailSheet: View {
     let cast: Cast
     @Environment(AppViewModel.self) private var vm
     @Environment(\.dismiss) private var dismiss
+    @State private var dropOff = ""
+    @State private var dropOffSaved = false
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 16) {
-                // Avatar + Name
-                HStack(alignment: .top, spacing: 16) {
-                    avatarView(cast: cast, size: 80)
+            ScrollView {
+                VStack(spacing: 20) {
+                    // Avatar + Name + 出退勤ボタン
+                    HStack(alignment: .center, spacing: 20) {
+                        avatarView(cast: cast, size: 100)
 
-                    VStack(alignment: .leading, spacing: 4) {
-                        HStack(spacing: 8) {
-                            Text(cast.stageName).font(.title2.bold())
-                            Circle()
-                                .fill(cast.isWorking ? .green : .lunaLavender)
-                                .frame(width: 8, height: 8)
-                        }
-                        if !cast.realName.isEmpty {
-                            Text(cast.realName).font(.subheadline).foregroundStyle(.lunaMuted)
-                        }
-                        Text(cast.isWorking ? "出勤中" : "未出勤")
-                            .font(.caption.bold())
-                            .foregroundStyle(cast.isWorking ? .green : .lunaMuted)
-                    }
-
-                    Spacer()
-
-                    Button {
-                        if cast.isWorking {
-                            vm.clockOut(castId: cast.id)
-                        } else {
-                            vm.clockIn(castId: cast.id)
-                        }
-                    } label: {
-                        Label(cast.isWorking ? "退勤" : "出勤",
-                              systemImage: cast.isWorking ? "arrow.right.square" : "arrow.left.square")
-                            .font(.subheadline.bold())
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 8)
-                    }
-                    .buttonStyle(.bordered)
-                    .tint(cast.isWorking ? .red : .green)
-                }
-
-                // Shift info
-                VStack(spacing: 8) {
-                    if cast.scheduledClockIn != nil || cast.scheduledClockOut != nil {
-                        HStack(spacing: 8) {
-                            Image(systemName: "calendar").font(.caption).foregroundStyle(.lunaMuted)
-                            Text("シフト予定").font(.caption).foregroundStyle(.lunaMuted)
-                            Text("\(cast.scheduledClockIn ?? "--:--") 〜 \(cast.scheduledClockOut ?? "--:--")")
+                        VStack(alignment: .leading, spacing: 6) {
+                            HStack(spacing: 10) {
+                                Text(cast.stageName).font(.title.bold())
+                                Circle()
+                                    .fill(cast.isWorking ? .green : .lunaLavender)
+                                    .frame(width: 10, height: 10)
+                            }
+                            if !cast.realName.isEmpty {
+                                Text(cast.realName).font(.body).foregroundStyle(.lunaMuted)
+                            }
+                            Text(cast.isWorking ? "出勤中" : "未出勤")
                                 .font(.subheadline.bold())
-                            Spacer()
+                                .foregroundStyle(cast.isWorking ? .green : .lunaMuted)
                         }
-                    }
 
-                    HStack(spacing: 8) {
-                        Image(systemName: "clock").font(.caption).foregroundStyle(.lunaMuted)
-                        Text("出勤").font(.caption).foregroundStyle(.lunaMuted)
-                        Text(cast.clockInTime?.hhMM ?? "--:--").font(.subheadline.bold())
-                        if let out = cast.clockOutTime {
-                            Text("〜").foregroundStyle(.lunaMuted)
-                            Text(out.hhMM).font(.subheadline.bold())
-                        }
                         Spacer()
-                    }
 
-                    if let loc = cast.dropOffLocation {
+                        Button {
+                            if cast.isWorking {
+                                vm.clockOut(castId: cast.id)
+                            } else {
+                                vm.clockIn(castId: cast.id)
+                            }
+                            dismiss()
+                        } label: {
+                            Label(cast.isWorking ? "退勤" : "出勤",
+                                  systemImage: cast.isWorking ? "arrow.right.square" : "arrow.left.square")
+                                .font(.title3.bold())
+                                .padding(.horizontal, 24)
+                                .padding(.vertical, 14)
+                        }
+                        .buttonStyle(.bordered)
+                        .tint(cast.isWorking ? .red : .green)
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.top, 8)
+
+                    // 出勤時刻・シフト情報
+                    VStack(spacing: 0) {
+                        if cast.scheduledClockIn != nil || cast.scheduledClockOut != nil {
+                            infoRow(
+                                icon: "calendar",
+                                label: "シフト予定",
+                                value: "\(cast.scheduledClockIn ?? "--:--") 〜 \(cast.scheduledClockOut ?? "--:--")"
+                            )
+                            Divider().padding(.leading, 20)
+                        }
+
+                        infoRow(
+                            icon: "clock",
+                            label: "出勤",
+                            value: {
+                                let inTime = cast.clockInTime?.hhMM ?? "--:--"
+                                if let out = cast.clockOutTime {
+                                    return "\(inTime) 〜 \(out.hhMM)"
+                                }
+                                return inTime
+                            }()
+                        )
+                    }
+                    .background(Color.lunaCard)
+                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                    .padding(.horizontal, 20)
+
+                    // 送り先セクション
+                    VStack(alignment: .leading, spacing: 12) {
                         HStack(spacing: 8) {
-                            Image(systemName: "mappin").font(.caption).foregroundStyle(.lunaMuted)
-                            Text("送り先").font(.caption).foregroundStyle(.lunaMuted)
-                            Text(loc).font(.subheadline.bold())
+                            Image(systemName: "mappin").foregroundStyle(.lunaMuted)
+                            Text("送り先").font(.subheadline).foregroundStyle(.lunaMuted)
+                            if cast.isTodayOverride {
+                                Text("本日変更あり")
+                                    .font(.caption.bold())
+                                    .foregroundStyle(.lunaGoldDark)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 2)
+                                    .background(Color.lunaGoldDark.opacity(0.15))
+                                    .clipShape(Capsule())
+                            }
                             Spacer()
+                            if dropOffSaved {
+                                Label("確定済み", systemImage: "checkmark.circle.fill")
+                                    .font(.caption.bold())
+                                    .foregroundStyle(.green)
+                            }
+                        }
+
+                        HStack(spacing: 12) {
+                            TextField("最寄り駅を入力", text: $dropOff)
+                                .font(.title3)
+                                .padding(.horizontal, 14)
+                                .padding(.vertical, 12)
+                                .background(Color.lunaBg)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                                .onSubmit { saveDropOff() }
+                                .onChange(of: dropOff) { _, _ in
+                                    // テキストが変わったら「確定済み」表示を外す
+                                    if dropOffSaved {
+                                        dropOffSaved = false
+                                    }
+                                }
+
+                            Button {
+                                saveDropOff()
+                            } label: {
+                                Text(dropOffSaved ? "変更する" : "確定")
+                                    .font(.title3.bold())
+                                    .padding(.horizontal, 20)
+                                    .padding(.vertical, 12)
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .tint(dropOffSaved ? .lunaDark : .green)
                         }
                     }
-                }
-                .padding()
-                .background(Color.lunaCard)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-
-                // Stats
-                HStack(spacing: 16) {
-                    VStack {
-                        Text("\(vm.castNominations(castId: cast.id))")
-                            .font(.title.bold())
-                        Text("指名").font(.caption).foregroundStyle(.lunaMuted)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding()
+                    .padding(20)
                     .background(Color.lunaCard)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                    .padding(.horizontal, 20)
 
-                    VStack {
-                        Text(vm.castSales(castId: cast.id).yenFormatted)
-                            .font(.headline.bold())
-                            .foregroundStyle(.lunaGoldDark)
-                        Text("売上").font(.caption).foregroundStyle(.lunaMuted)
+                    // 指名・売上
+                    HStack(spacing: 16) {
+                        statCard(
+                            value: "\(vm.castNominations(castId: cast.id))",
+                            label: "指名",
+                            valueFont: .system(size: 44, weight: .bold),
+                            valueColor: .primary
+                        )
+                        statCard(
+                            value: vm.castSales(castId: cast.id).yenFormatted,
+                            label: "売上",
+                            valueFont: .title2.bold(),
+                            valueColor: .lunaGoldDark
+                        )
                     }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.lunaCard)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 20)
                 }
-
-                Spacer()
             }
-            .padding()
+            .background(Color.lunaBg)
             .navigationTitle("キャスト詳細")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -171,7 +203,52 @@ struct CastDetailSheet: View {
                     Button("閉じる") { dismiss() }
                 }
             }
+            .onAppear {
+                dropOff = cast.effectiveDropOffLocation ?? ""
+                dropOffSaved = cast.dropOffConfirmed
+            }
         }
+    }
+
+    private func saveDropOff() {
+        let value = dropOff.trimmingCharacters(in: .whitespaces)
+        vm.updateCastDropOff(castId: cast.id, dropOff: value.isEmpty ? nil : value)
+        dropOff = value
+        dropOffSaved = true
+    }
+
+    private func infoRow(icon: String, label: String, value: String) -> some View {
+        HStack(spacing: 14) {
+            Image(systemName: icon)
+                .font(.body)
+                .foregroundStyle(.lunaMuted)
+                .frame(width: 24)
+            Text(label)
+                .font(.subheadline)
+                .foregroundStyle(.lunaMuted)
+            Spacer()
+            Text(value)
+                .font(.title3.bold())
+        }
+        .padding(.horizontal, 20)
+        .padding(.vertical, 16)
+    }
+
+    private func statCard(value: String, label: String, valueFont: Font, valueColor: Color) -> some View {
+        VStack(spacing: 6) {
+            Text(value)
+                .font(valueFont)
+                .foregroundStyle(valueColor)
+                .minimumScaleFactor(0.7)
+                .lineLimit(1)
+            Text(label)
+                .font(.subheadline)
+                .foregroundStyle(.lunaMuted)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 24)
+        .background(Color.lunaCard)
+        .clipShape(RoundedRectangle(cornerRadius: 14))
     }
 }
 
@@ -271,7 +348,7 @@ private func initialAvatar(name: String, size: CGFloat) -> some View {
 struct CastView: View {
     @Environment(AppViewModel.self) private var vm
     @State private var showAdd = false
-    @State private var selectedCast: Cast?
+    @State private var selectedCastId: String?
     @State private var now = Date()
 
     private let timer = Timer.publish(every: 30, on: .main, in: .common).autoconnect()
@@ -312,7 +389,7 @@ struct CastView: View {
                 ScrollView {
                     LazyVGrid(columns: columns, spacing: spacing) {
                         ForEach(sortedCasts) { cast in
-                            Button { selectedCast = cast } label: {
+                            Button { selectedCastId = cast.id } label: {
                                 castCard(cast: cast, cardW: cardW, cardH: cardH, avatarSize: avatarSize)
                             }
                             .buttonStyle(.plain)
@@ -362,10 +439,13 @@ struct CastView: View {
         .sheet(isPresented: $showAdd) {
             AddCastSheet().environment(vm)
         }
-        .sheet(item: $selectedCast) { cast in
-            // Re-fetch to get latest state
-            let latest = vm.casts.first(where: { $0.id == cast.id }) ?? cast
-            CastDetailSheet(cast: latest).environment(vm)
+        .sheet(isPresented: Binding(
+            get: { selectedCastId != nil },
+            set: { if !$0 { selectedCastId = nil } }
+        )) {
+            if let cast = vm.casts.first(where: { $0.id == selectedCastId }) {
+                CastDetailSheet(cast: cast).environment(vm)
+            }
         }
         .onReceive(timer) { now = $0 }
     }
