@@ -1,9 +1,12 @@
 import { ImageResponse } from "next/og";
 import { newsItems, getNewsBySlug } from "@/data/news";
+import { readFileSync } from "fs";
+import { join } from "path";
 
 export const alt = "LunaPos ニュース";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
+export const dynamic = "force-static";
 
 export function generateStaticParams() {
   return newsItems.map((item) => ({ slug: item.slug }));
@@ -21,17 +24,9 @@ export default async function OgImage({
   const category = item?.category ?? "";
   const date = item?.date?.slice(0, 10) ?? "";
 
-  const notoSansJP = await fetch(
-    "https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap"
-  ).then(async (css) => {
-    const text = await css.text();
-    const fontUrl = text.match(
-      /src:\s*url\(([^)]+)\)\s*format\('[^']*'\)/
-    )?.[1];
-    if (!fontUrl) throw new Error("フォントURLが見つかりません");
-    const fontRes = await fetch(fontUrl);
-    return fontRes.arrayBuffer();
-  });
+  const notoSansJP = readFileSync(
+    join(process.cwd(), "public/fonts/NotoSansJP-Bold.ttf")
+  );
 
   // カテゴリ別のアクセントカラー
   const categoryColor =
@@ -152,7 +147,7 @@ export default async function OgImage({
       fonts: [
         {
           name: "Noto Sans JP",
-          data: notoSansJP,
+          data: notoSansJP.buffer as ArrayBuffer,
           weight: 700,
           style: "normal",
         },
