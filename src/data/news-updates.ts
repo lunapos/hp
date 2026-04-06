@@ -2,6 +2,27 @@
 import type { NewsItem } from "./news-types";
 
 export const updateItems: NewsItem[] = [
+  // --- 2026-04-06 ---
+  {
+    slug: "admin-cast-sales-page",
+    date: "2026-04-06",
+    title: "Admin: キャスト別売上ページ追加",
+    summary:
+      "管理画面にキャスト別売上ページを追加しました。本指名・場内指名・同伴・指名料・関連売上を日次/月次で確認できます。",
+    category: "開発アップデート",
+    project: "Admin",
+    content: [
+      "管理画面にキャスト別売上ページを追加しました。",
+      "",
+      "## キャスト別売上",
+      "・本指名・場内指名の件数",
+      "・同伴件数",
+      "・指名料合計（fee_override 対応）",
+      "・関連売上（指名があった来店の会計合計）",
+      "・日次/月次の切り替え",
+      "・CSVエクスポート",
+    ],
+  },
   // --- 2026-04-03 ---
   {
     slug: "admin-register-management",
