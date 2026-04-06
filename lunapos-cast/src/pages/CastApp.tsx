@@ -19,6 +19,14 @@ type Tab = 'today' | 'monthly' | 'nominations' | 'profile'
 // ========================================
 export default function CastApp() {
   const [tab, setTab] = useState<Tab>('today')
+  const [stageName, setStageName] = useState('')
+
+  useEffect(() => {
+    const tid = requireTenantId()
+    const cid = requireCastId()
+    supabase.from('casts').select('stage_name').eq('tenant_id', tid).eq('id', cid).single()
+      .then(({ data }) => { if (data) setStageName(data.stage_name) })
+  }, [])
 
   const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
     { id: 'today',       label: '今日',     icon: <TrendingUp size={20} /> },
@@ -32,9 +40,12 @@ export default function CastApp() {
       <div className="w-full max-w-[480px] mx-auto flex flex-col min-h-screen">
 
         {/* ヘッダー */}
-        <header className="bg-[#0d0d20] border-b border-[#2e2e50] px-5 py-4 flex items-center gap-2 shrink-0">
-          <span className="text-lg text-[#d4b870]">&#9789;</span>
-          <span className="text-base font-bold tracking-[0.15em] text-[#d4b870] uppercase">Luna Cast</span>
+        <header className="bg-[#0d0d20] border-b border-[#2e2e50] px-5 py-4 flex items-center justify-between shrink-0">
+          <div className="flex items-center gap-2">
+            <span className="text-lg text-[#d4b870]">&#9789;</span>
+            <span className="text-base font-bold tracking-[0.15em] text-[#d4b870] uppercase">Luna Cast</span>
+          </div>
+          {stageName && <span className="text-sm text-white font-medium">{stageName}</span>}
         </header>
 
         {/* コンテンツ */}
