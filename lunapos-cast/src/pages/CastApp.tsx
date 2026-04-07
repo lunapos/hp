@@ -144,7 +144,6 @@ function TodayTab() {
 
   const targetDate = getTargetDate(dayOffset)
   const dateLabel = targetDate.toLocaleDateString('ja-JP', { month: 'long', day: 'numeric', weekday: 'short' })
-  const dayLabels = ['今日', '昨日', '一昨日']
 
   return (
     <div className="px-4 pt-5 pb-4 space-y-5">
@@ -152,16 +151,12 @@ function TodayTab() {
       <div className="flex items-center justify-between">
         <button
           onClick={() => setDayOffset(o => o + 1)}
-          disabled={dayOffset >= 2}
-          className="p-2 rounded-full text-[#9090bb] active:bg-[#1a1a35] disabled:opacity-20"
+          className="p-2 rounded-full text-[#9090bb] active:bg-[#1a1a35]"
         >
           <ChevronLeft size={22} />
         </button>
         <div className="text-center">
-          <p className="text-xs text-[#9090bb]">{dateLabel}</p>
-          <p className="text-base font-bold text-white">
-            {dayOffset === 0 ? '今日のサマリー' : `${dayLabels[dayOffset]}のサマリー`}
-          </p>
+          <p className="text-base font-bold text-white">{dateLabel}</p>
         </div>
         <button
           onClick={() => setDayOffset(o => o - 1)}
@@ -196,7 +191,7 @@ function TodayTab() {
       </div>
 
       {nominations.length === 0 && (
-        <p className="text-center py-8 text-[#3a3a5e] text-sm">{dayLabels[dayOffset]}のデータはまだありません</p>
+        <p className="text-center py-8 text-[#3a3a5e] text-sm">{dateLabel}のデータはまだありません</p>
       )}
       </>)}
     </div>
