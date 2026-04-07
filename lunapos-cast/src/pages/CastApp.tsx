@@ -149,27 +149,27 @@ function TodayTab() {
   return (
     <div className="px-4 pt-5 pb-4 space-y-5">
       {/* 日付ナビゲーション */}
-      <div className="flex gap-2">
-        {dayLabels.map((label, i) => (
-          <button
-            key={i}
-            onClick={() => setDayOffset(i)}
-            className={`flex-1 py-2 rounded-xl text-sm font-medium transition-colors ${
-              dayOffset === i
-                ? 'bg-[#d4b870] text-[#0a0a18]'
-                : 'bg-[#1a1a35] text-[#9090bb] active:bg-[#2a2a45]'
-            }`}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
-
-      <div>
-        <p className="text-xs text-[#9090bb] mb-0.5">{dateLabel}</p>
-        <h2 className="text-lg font-bold text-white">
-          {dayOffset === 0 ? '今日のサマリー' : `${dayLabels[dayOffset]}のサマリー`}
-        </h2>
+      <div className="flex items-center justify-between">
+        <button
+          onClick={() => setDayOffset(o => o + 1)}
+          disabled={dayOffset >= 2}
+          className="p-2 rounded-full text-[#9090bb] active:bg-[#1a1a35] disabled:opacity-20"
+        >
+          <ChevronLeft size={22} />
+        </button>
+        <div className="text-center">
+          <p className="text-xs text-[#9090bb]">{dateLabel}</p>
+          <p className="text-base font-bold text-white">
+            {dayOffset === 0 ? '今日のサマリー' : `${dayLabels[dayOffset]}のサマリー`}
+          </p>
+        </div>
+        <button
+          onClick={() => setDayOffset(o => o - 1)}
+          disabled={dayOffset <= 0}
+          className="p-2 rounded-full text-[#9090bb] active:bg-[#1a1a35] disabled:opacity-20"
+        >
+          <ChevronRight size={22} />
+        </button>
       </div>
 
       {loading && <Loading />}
