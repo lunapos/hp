@@ -46,7 +46,7 @@ export default function CastApp() {
             <span className="text-lg text-[#d4b870]">&#9789;</span>
             <span className="text-base font-bold tracking-[0.15em] text-[#d4b870] uppercase">Luna Cast</span>
           </div>
-          {stageName && <span className="text-sm text-white font-medium">{stageName}</span>}
+          {stageName && <span className="text-base font-bold text-[#d4b870]">{stageName}</span>}
         </header>
 
         {/* コンテンツ */}
