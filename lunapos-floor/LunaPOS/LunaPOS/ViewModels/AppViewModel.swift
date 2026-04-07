@@ -310,6 +310,8 @@ final class AppViewModel {
 
     func clockIn(castId: String) {
         if let idx = casts.firstIndex(where: { $0.id == castId }) {
+            // 既に出勤中の場合は二重打刻を防ぐ
+            guard !casts[idx].isWorking else { return }
             let shiftId = UUID().uuidString
             casts[idx].isWorking = true
             casts[idx].clockInTime = Date()
