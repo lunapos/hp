@@ -229,7 +229,7 @@ export default function CastsPage() {
       {loading ? (
         <div className="text-center py-10 text-[#9090bb]">読み込み中...</div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
           {filtered.map(cast => (
             <div key={cast.id} className="bg-[#141430] border border-[#2e2e50] rounded-xl p-4">
               <div className="flex items-center gap-4">
