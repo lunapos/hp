@@ -89,9 +89,6 @@ struct DeviceAuthView: View {
 
                 // 説明
                 VStack(spacing: 8) {
-                    Text("トークンはLuna管理画面で発行できます")
-                        .font(.system(size: 13))
-                        .foregroundStyle(.lunaLight)
                     Text("一度設定すれば、次回以降は自動でログインします")
                         .font(.system(size: 13))
                         .foregroundStyle(.lunaLight)
