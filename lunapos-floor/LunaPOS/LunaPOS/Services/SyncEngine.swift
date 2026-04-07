@@ -101,14 +101,10 @@ final class SyncEngine: @unchecked Sendable {
         }
     }
 
-    private func setSyncError(_ message: String) {
+    private func setSyncError(_ message: String, detail: String? = nil) {
+        let fullMessage = detail.map { "\(message)\n\($0)" } ?? message
         Task { @MainActor in
-            lastSyncError = message
-            // 5秒後に自動クリア
-            try? await Task.sleep(for: .seconds(5))
-            if lastSyncError == message {
-                lastSyncError = nil
-            }
+            lastSyncError = fullMessage
         }
     }
 
@@ -242,7 +238,7 @@ final class SyncEngine: @unchecked Sendable {
             await loadBusinessData(into: vm)
         } catch {
             logger.error("[SyncEngine] 初期データ同期失敗: \(error)")
-            setSyncError("初期データの同期に失敗しました。ローカルデータで動作します。")
+            setSyncError("初期データの同期に失敗しました。ローカルデータで動作します。", detail: error.localizedDescription)
         }
     }
 
@@ -388,7 +384,7 @@ final class SyncEngine: @unchecked Sendable {
             } catch {
                 logger.error("[syncVisit] 失敗 visit_id=\(visit.id) table_id=\(visit.tableId) error=\(error)")
                 markSyncFailed(visit.id)
-                setSyncError("来店データの同期に失敗しました")
+                setSyncError("来店データの同期に失敗しました", detail: error.localizedDescription)
             }
         }
     }
@@ -414,7 +410,7 @@ final class SyncEngine: @unchecked Sendable {
             } catch {
                 logger.error("[syncFloorTable] 失敗 table_id=\(table.id) error=\(error)")
                 markSyncFailed(table.id)
-                setSyncError("テーブルの同期に失敗しました")
+                setSyncError("テーブルの同期に失敗しました", detail: error.localizedDescription)
             }
         }
     }
@@ -446,34 +442,80 @@ final class SyncEngine: @unchecked Sendable {
             } catch {
                 logger.error("[SyncEngine] Payment sync failed: \(error)")
                 markSyncFailed(payment.id)
-                setSyncError("会計データの同期に失敗しました")
+                setSyncError("会計データの同期に失敗しました", detail: error.localizedDescription)
             }
         }
     }
 
-    func syncCastShift(castId: String, clockIn: Date, clockOut: Date?, scheduledIn: String?, scheduledOut: String?) {
+    func syncCastShift(shiftId: String, castId: String, clockIn: Date, clockOut: Date?, scheduledIn: String?, scheduledOut: String?, cast: Cast? = nil) {
         guard let tenantId = supabase.tenantId else { return }
-        let shiftId = UUID()
-        markNeedsSync(shiftId.uuidString)
+        let shiftUUID = UUID(uuidString: shiftId) ?? UUID()
+        markNeedsSync(shiftId)
 
         guard isOnline else { return }
         Task {
             do {
+                // キャストがDBに存在しない可能性があるので先にupsertする
+                if let cast {
+                    let castRow = CastRow(
+                        id: UUID(uuidString: cast.id) ?? UUID(),
+                        tenantId: tenantId,
+                        stageName: cast.stageName,
+                        realName: cast.realName,
+                        photoUrl: cast.photo,
+                        dropOffLocation: cast.dropOffLocation,
+                        todayDropOffLocation: cast.todayDropOffLocation,
+                        todayDropOffDate: cast.todayDropOffDate
+                    )
+                    try await supabase.upsertCast(castRow)
+                }
+                let castUUID = UUID(uuidString: castId) ?? UUID()
+                // 出勤時は既存の未退勤レコードを先にクローズして制約違反を防ぐ
+                if clockOut == nil {
+                    try await supabase.closeOpenShifts(castId: castUUID, tenantId: tenantId, closeAt: clockIn)
+                }
                 let row = CastShiftRow(
-                    id: shiftId,
+                    id: shiftUUID,
                     tenantId: tenantId,
-                    castId: UUID(uuidString: castId) ?? UUID(),
+                    castId: castUUID,
                     clockIn: clockIn,
                     clockOut: clockOut,
                     scheduledClockIn: scheduledIn,
                     scheduledClockOut: scheduledOut
                 )
                 try await supabase.upsertCastShift(row)
-                markSynced(shiftId.uuidString)
+                markSynced(shiftId)
             } catch {
                 logger.error("[SyncEngine] Cast shift sync failed: \(error)")
-                markSyncFailed(shiftId.uuidString)
-                setSyncError("シフトデータの同期に失敗しました")
+                markSyncFailed(shiftId)
+                setSyncError("シフトデータの同期に失敗しました", detail: error.localizedDescription)
+            }
+        }
+    }
+
+    func syncCast(_ cast: Cast) {
+        guard let tenantId = supabase.tenantId else { return }
+        markNeedsSync(cast.id)
+
+        guard isOnline else { return }
+        Task {
+            do {
+                let row = CastRow(
+                    id: UUID(uuidString: cast.id) ?? UUID(),
+                    tenantId: tenantId,
+                    stageName: cast.stageName,
+                    realName: cast.realName,
+                    photoUrl: cast.photo,
+                    dropOffLocation: cast.dropOffLocation,
+                    todayDropOffLocation: cast.todayDropOffLocation,
+                    todayDropOffDate: cast.todayDropOffDate
+                )
+                try await supabase.upsertCast(row)
+                markSynced(cast.id)
+            } catch {
+                logger.error("[SyncEngine] Cast sync failed: \(error)")
+                markSyncFailed(cast.id)
+                setSyncError("キャストデータの同期に失敗しました", detail: error.localizedDescription)
             }
         }
     }
@@ -491,7 +533,7 @@ final class SyncEngine: @unchecked Sendable {
             } catch {
                 logger.error("[SyncEngine] Customer sync failed: \(error)")
                 markSyncFailed(customer.id)
-                setSyncError("顧客データの同期に失敗しました")
+                setSyncError("顧客データの同期に失敗しました", detail: error.localizedDescription)
             }
         }
     }
@@ -509,7 +551,7 @@ final class SyncEngine: @unchecked Sendable {
             } catch {
                 logger.error("[SyncEngine] Cash withdrawal sync failed: \(error)")
                 markSyncFailed(withdrawal.id)
-                setSyncError("出金データの同期に失敗しました")
+                setSyncError("出金データの同期に失敗しました", detail: error.localizedDescription)
             }
         }
     }

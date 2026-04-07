@@ -311,7 +311,7 @@ final class SupabaseService: @unchecked Sendable {
     func fetchCasts() async throws -> [CastRow] {
         guard let tenantId else { throw SupabaseError.authError(statusCode: 401) }
         return try await client.from("casts")
-            .select("id, tenant_id, stage_name, real_name, photo_url, drop_off_location")
+            .select("id, tenant_id, stage_name, real_name, photo_url, drop_off_location, today_drop_off_location, today_drop_off_date")
             .eq("tenant_id", value: tenantId.uuidString)
             .eq("is_active", value: true)
             .execute()
@@ -519,12 +519,40 @@ final class SupabaseService: @unchecked Sendable {
         logger.info("[upsertCashWithdrawal] 成功 amount=\(row.amount)")
     }
 
+    func upsertCast(_ row: CastRow) async throws {
+        try await withRetry(method: "upsertCast", targetId: row.id.uuidString) {
+            try await client.from("casts")
+                .upsert(row, onConflict: "id")
+                .execute()
+        }
+        logger.info("[upsertCast] 成功 id=\(row.id) stageName=\(row.stageName)")
+    }
+
     func upsertCastShift(_ row: CastShiftRow) async throws {
         try await withRetry(method: "upsertCastShift", targetId: row.id.uuidString) {
             try await client.from("cast_shifts")
                 .upsert(row, onConflict: "id")
                 .execute()
         }
+    }
+
+    /// 出勤INSERT前に同じキャストの未退勤レコードをクローズする（二重出勤防止）
+    func closeOpenShifts(castId: UUID, tenantId: UUID, closeAt: Date) async throws {
+        struct ClockOutUpdate: Encodable {
+            let clock_out: String
+            let updated_at: String
+        }
+        let iso = ISO8601DateFormatter()
+        let update = ClockOutUpdate(
+            clock_out: iso.string(from: closeAt),
+            updated_at: iso.string(from: Date())
+        )
+        try await client.from("cast_shifts")
+            .update(update)
+            .eq("cast_id", value: castId.uuidString)
+            .eq("tenant_id", value: tenantId.uuidString)
+            .filter("clock_out", operator: "is", value: "null")
+            .execute()
     }
 
     func updateCustomer(_ row: CustomerRow) async throws {
