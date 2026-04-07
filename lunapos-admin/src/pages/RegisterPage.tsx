@@ -96,11 +96,14 @@ export default function RegisterPage() {
     }
   }, [payments, withdrawals, session])
 
-  // 日付変更
+  const today = toDateStr(new Date())
+
+  // 日付変更（今日より先には進めない）
   function changeDate(offset: number) {
     const d = new Date(selectedDate)
     d.setDate(d.getDate() + offset)
-    setSelectedDate(toDateStr(d))
+    const next = toDateStr(d)
+    setSelectedDate(next > today ? today : next)
   }
 
   // 開始金額の保存
@@ -154,6 +157,7 @@ export default function RegisterPage() {
           <input
             type="date"
             value={selectedDate}
+            max={today}
             onChange={e => setSelectedDate(e.target.value)}
             className="bg-[#141430] border border-[#2e2e50] rounded-lg px-3 py-2 text-white text-sm"
           />

@@ -107,17 +107,22 @@ export default function DashboardPage() {
   // 時間帯別来店
   const hourlyData = useMemo((): HourlyData[] => calcHourlyData(visits), [visits])
 
-  // 前日/前月移動
+  const today = toDateStr(new Date())
+  const todayMonth = today.slice(0, 7)
+
+  // 前日/前月移動（今日より先には進めない）
   function shiftDate(offset: number) {
     const d = new Date(selectedDate)
     d.setDate(d.getDate() + offset)
-    setSelectedDate(toDateStr(d))
+    const next = toDateStr(d)
+    setSelectedDate(next > today ? today : next)
   }
 
   function shiftMonth(offset: number) {
     const [y, m] = selectedMonth.split('-').map(Number)
     const d = new Date(y, m - 1 + offset, 1)
-    setSelectedMonth(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`)
+    const next = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+    setSelectedMonth(next > todayMonth ? todayMonth : next)
   }
 
   return (
@@ -149,6 +154,7 @@ export default function DashboardPage() {
               <input
                 type="date"
                 value={selectedDate}
+                max={today}
                 onChange={e => setSelectedDate(e.target.value)}
                 className="bg-transparent text-white text-sm outline-none"
               />
@@ -171,6 +177,7 @@ export default function DashboardPage() {
             <input
               type="month"
               value={selectedMonth}
+              max={todayMonth}
               onChange={e => setSelectedMonth(e.target.value)}
               className="bg-[#141430] border border-[#2e2e50] rounded-lg px-3 py-2 text-white text-sm outline-none"
             />
