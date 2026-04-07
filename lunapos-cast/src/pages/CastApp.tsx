@@ -90,23 +90,33 @@ function TodayTab() {
   const [payments, setPayments] = useState<PaymentRow[]>([])
   const [drinkCount, setDrinkCount] = useState(0)
   const [loading, setLoading] = useState(true)
+  // 0=今日, 1=昨日, 2=一昨日
+  const [dayOffset, setDayOffset] = useState(0)
+
+  function getTargetDate(offset: number): Date {
+    const d = new Date()
+    d.setDate(d.getDate() - offset)
+    return d
+  }
 
   useEffect(() => {
-    fetchToday()
-    const channel = supabase.channel('cast-today')
-    channel.on('postgres_changes', { event: '*', schema: 'public', table: 'nominations' }, () => fetchToday())
-    channel.subscribe()
-    return () => { supabase.removeChannel(channel) }
-  }, [])
+    fetchDay(dayOffset)
+    if (dayOffset === 0) {
+      const channel = supabase.channel('cast-today')
+      channel.on('postgres_changes', { event: '*', schema: 'public', table: 'nominations' }, () => fetchDay(0))
+      channel.subscribe()
+      return () => { supabase.removeChannel(channel) }
+    }
+  }, [dayOffset])
 
-  async function fetchToday() {
+  async function fetchDay(offset: number) {
     setLoading(true)
     try {
       const tid = requireTenantId()
       const cid = requireCastId()
-      const today = toDateStr(new Date())
-      const dayStart = `${today}T00:00:00+09:00`
-      const dayEnd   = `${today}T23:59:59+09:00`
+      const targetDate = toDateStr(getTargetDate(offset))
+      const dayStart = `${targetDate}T00:00:00+09:00`
+      const dayEnd   = `${targetDate}T23:59:59+09:00`
 
       const [nomsRes, paymentsRes, ordersRes] = await Promise.all([
         supabase.from('nominations')
@@ -132,17 +142,38 @@ function TodayTab() {
 
   const summary = calcTodaySummary(nominations, payments, [])
 
-  if (loading) return <Loading />
-
-  const today = new Date()
-  const dateLabel = today.toLocaleDateString('ja-JP', { month: 'long', day: 'numeric', weekday: 'short' })
+  const targetDate = getTargetDate(dayOffset)
+  const dateLabel = targetDate.toLocaleDateString('ja-JP', { month: 'long', day: 'numeric', weekday: 'short' })
+  const dayLabels = ['今日', '昨日', '一昨日']
 
   return (
     <div className="px-4 pt-5 pb-4 space-y-5">
+      {/* 日付ナビゲーション */}
+      <div className="flex gap-2">
+        {dayLabels.map((label, i) => (
+          <button
+            key={i}
+            onClick={() => setDayOffset(i)}
+            className={`flex-1 py-2 rounded-xl text-sm font-medium transition-colors ${
+              dayOffset === i
+                ? 'bg-[#d4b870] text-[#0a0a18]'
+                : 'bg-[#1a1a35] text-[#9090bb] active:bg-[#2a2a45]'
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
       <div>
         <p className="text-xs text-[#9090bb] mb-0.5">{dateLabel}</p>
-        <h2 className="text-lg font-bold text-white">今日のサマリー</h2>
+        <h2 className="text-lg font-bold text-white">
+          {dayOffset === 0 ? '今日のサマリー' : `${dayLabels[dayOffset]}のサマリー`}
+        </h2>
       </div>
+
+      {loading && <Loading />}
+      {!loading && (<>
 
       {/* メイン：指名売上 */}
       <div className="bg-gradient-to-br from-[#1a1428] to-[#141030] rounded-2xl p-5 border border-[#d4b870]/20">
@@ -165,8 +196,9 @@ function TodayTab() {
       </div>
 
       {nominations.length === 0 && (
-        <p className="text-center py-8 text-[#3a3a5e] text-sm">今日のデータはまだありません</p>
+        <p className="text-center py-8 text-[#3a3a5e] text-sm">{dayLabels[dayOffset]}のデータはまだありません</p>
       )}
+      </>)}
     </div>
   )
 }
