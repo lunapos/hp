@@ -181,55 +181,100 @@ ON CONFLICT (id) DO UPDATE SET
 
 -- ============================================================
 -- サンプル来店・会計データ（過去3日分）
--- 売上グラフ・レポート画面が動く状態にしておく
+-- IDに gen_random_uuid() を使うことで、reset_demo.sql → seed_demo.sql の
+-- 順で実行するたびに「その日から過去3日」のデータになる。
 -- ============================================================
+DO $$
+DECLARE
+  v1 UUID := gen_random_uuid();
+  v2 UUID := gen_random_uuid();
+  v3 UUID := gen_random_uuid();
+  v4 UUID := gen_random_uuid();  -- あかり 同伴
+  v5 UUID := gen_random_uuid();  -- あかり 場内指名
+  v6 UUID := gen_random_uuid();  -- あかり 本指名（今日）
+BEGIN
 
--- 来店1: 現金・本指名あり（2日前）
-INSERT INTO visits (id, tenant_id, table_id, customer_name, guest_count, douhan_qty, check_in_time, check_out_time, set_minutes, extension_minutes, is_checked_out) VALUES
-    ('c0000020-0001-0000-0000-000000000001', 'c0000000-0000-0000-0000-000000000001', 'c0000002-0001-0000-0000-000000000001', 'デモ田中様', 2, 1, NOW() - INTERVAL '2 days' + INTERVAL '20 hours', NOW() - INTERVAL '2 days' + INTERVAL '21 hours', 60, 0, true)
-ON CONFLICT (id) DO NOTHING;
-INSERT INTO nominations (id, tenant_id, visit_id, cast_id, nomination_type, qty) VALUES
-    ('c0000021-0001-0000-0000-000000000001', 'c0000000-0000-0000-0000-000000000001', 'c0000020-0001-0000-0000-000000000001', 'c0000003-0001-0000-0000-000000000001', 'main', 1)
-ON CONFLICT (id) DO NOTHING;
-INSERT INTO order_items (id, tenant_id, visit_id, menu_item_id, menu_item_name, price, quantity, is_expense) VALUES
-    ('c0000022-0001-0000-0000-000000000001', 'c0000000-0000-0000-0000-000000000001', 'c0000020-0001-0000-0000-000000000001', 'c0000004-0001-0000-0000-000000000001', 'ビール',         800,  3, false),
-    ('c0000022-0002-0000-0000-000000000001', 'c0000000-0000-0000-0000-000000000001', 'c0000020-0001-0000-0000-000000000001', 'c0000004-0011-0000-0000-000000000001', '枝豆',           500,  1, false),
-    ('c0000022-0003-0000-0000-000000000001', 'c0000000-0000-0000-0000-000000000001', 'c0000020-0001-0000-0000-000000000001', 'c0000004-0016-0000-0000-000000000001', 'レディースドリンク', 1500, 2, false)
-ON CONFLICT (id) DO NOTHING;
--- 小計: セット5000 + 同伴3000 + 本指名5000 + ビール×3(2400) + 枝豆(500) + レディース×2(3000) = 18900
--- サービス料(40%): 7560、消費税(10%): 2646、合計: 29106
-INSERT INTO payments (id, tenant_id, visit_id, table_id, customer_name, subtotal, expense_total, nomination_fee, service_fee, tax, discount, total, payment_method, paid_at) VALUES
-    ('c0000023-0001-0000-0000-000000000001', 'c0000000-0000-0000-0000-000000000001', 'c0000020-0001-0000-0000-000000000001', 'c0000002-0001-0000-0000-000000000001', 'デモ田中様', 18900, 0, 5000, 7560, 2646, 0, 29106, 'cash', NOW() - INTERVAL '2 days' + INTERVAL '21 hours')
-ON CONFLICT (id) DO NOTHING;
+  -- ── 来店1: 田中様・本指名（あかり）・同伴・2日前 ──────────────────
+  INSERT INTO visits (id, tenant_id, table_id, customer_name, guest_count,
+      douhan_cast_id, douhan_qty, check_in_time, check_out_time, set_minutes, extension_minutes, is_checked_out)
+  VALUES (v1, 'c0000000-0000-0000-0000-000000000001', 'c0000002-0001-0000-0000-000000000001',
+      'デモ田中様', 2,
+      'c0000003-0001-0000-0000-000000000001', 1,
+      NOW() - INTERVAL '2 days' + INTERVAL '11 hours',
+      NOW() - INTERVAL '2 days' + INTERVAL '12 hours',
+      60, 0, true);
+  INSERT INTO nominations (id, tenant_id, visit_id, cast_id, nomination_type, qty)
+  VALUES (gen_random_uuid(), 'c0000000-0000-0000-0000-000000000001', v1, 'c0000003-0001-0000-0000-000000000001', 'main', 1);
+  INSERT INTO order_items (id, tenant_id, visit_id, menu_item_id, menu_item_name, price, quantity, is_expense, cast_id)
+  VALUES
+    (gen_random_uuid(), 'c0000000-0000-0000-0000-000000000001', v1, 'c0000004-0016-0000-0000-000000000001', 'レディースドリンク', 1500, 3, false, 'c0000003-0001-0000-0000-000000000001'),
+    (gen_random_uuid(), 'c0000000-0000-0000-0000-000000000001', v1, 'c0000004-0002-0000-0000-000000000001', 'ハイボール', 700, 4, false, 'c0000003-0001-0000-0000-000000000001'),
+    (gen_random_uuid(), 'c0000000-0000-0000-0000-000000000001', v1, 'c0000004-0011-0000-0000-000000000001', '枝豆', 500, 1, false, NULL);
+  -- 小計: セット5000 + 同伴3000 + 本指名5000 + レディース×3(4500) + ハイボール×4(2800) + 枝豆(500) = 20800
+  -- サービス料(40%): 8320、消費税(10%): 2912、合計: 32032
+  INSERT INTO payments (id, tenant_id, visit_id, table_id, customer_name,
+      subtotal, expense_total, nomination_fee, service_fee, tax, discount, total, payment_method, paid_at)
+  VALUES (gen_random_uuid(), 'c0000000-0000-0000-0000-000000000001', v1, 'c0000002-0001-0000-0000-000000000001',
+      'デモ田中様', 20800, 0, 5000, 8320, 2912, 0, 32032, 'cash',
+      NOW() - INTERVAL '2 days' + INTERVAL '12 hours');
 
--- 来店2: カード・場内指名（昨日）
-INSERT INTO visits (id, tenant_id, table_id, customer_name, guest_count, douhan_qty, check_in_time, check_out_time, set_minutes, is_checked_out) VALUES
-    ('c0000020-0002-0000-0000-000000000001', 'c0000000-0000-0000-0000-000000000001', 'c0000002-0007-0000-0000-000000000001', 'デモ山田様', 3, 1, NOW() - INTERVAL '1 day' + INTERVAL '20 hours', NOW() - INTERVAL '1 day' + INTERVAL '22 hours', 90, true)
-ON CONFLICT (id) DO NOTHING;
-INSERT INTO nominations (id, tenant_id, visit_id, cast_id, nomination_type, qty) VALUES
-    ('c0000021-0002-0000-0000-000000000001', 'c0000000-0000-0000-0000-000000000001', 'c0000020-0002-0000-0000-000000000001', 'c0000003-0002-0000-0000-000000000001', 'in_store', 1)
-ON CONFLICT (id) DO NOTHING;
-INSERT INTO payments (id, tenant_id, visit_id, table_id, customer_name, subtotal, expense_total, nomination_fee, service_fee, tax, discount, total, payment_method, paid_at) VALUES
-    ('c0000023-0002-0000-0000-000000000001', 'c0000000-0000-0000-0000-000000000001', 'c0000020-0002-0000-0000-000000000001', 'c0000002-0007-0000-0000-000000000001', 'デモ山田様', 22000, 0, 2000, 8800, 3080, 0, 33880, 'credit', NOW() - INTERVAL '1 day' + INTERVAL '22 hours')
-ON CONFLICT (id) DO NOTHING;
+  -- ── 来店2: 山田様・場内指名（あかり）・昨日 ──────────────────────
+  INSERT INTO visits (id, tenant_id, table_id, customer_name, guest_count,
+      douhan_qty, check_in_time, check_out_time, set_minutes, extension_minutes, is_checked_out)
+  VALUES (v2, 'c0000000-0000-0000-0000-000000000001', 'c0000002-0007-0000-0000-000000000001',
+      'デモ山田様', 3, 0,
+      NOW() - INTERVAL '1 day' + INTERVAL '11 hours',
+      NOW() - INTERVAL '1 day' + INTERVAL '12 hours 30 minutes',
+      60, 30, true);
+  INSERT INTO nominations (id, tenant_id, visit_id, cast_id, nomination_type, qty)
+  VALUES (gen_random_uuid(), 'c0000000-0000-0000-0000-000000000001', v2, 'c0000003-0001-0000-0000-000000000001', 'in_store', 1);
+  INSERT INTO order_items (id, tenant_id, visit_id, menu_item_id, menu_item_name, price, quantity, is_expense, cast_id)
+  VALUES
+    (gen_random_uuid(), 'c0000000-0000-0000-0000-000000000001', v2, 'c0000004-0016-0000-0000-000000000001', 'レディースドリンク', 1500, 2, false, 'c0000003-0001-0000-0000-000000000001'),
+    (gen_random_uuid(), 'c0000000-0000-0000-0000-000000000001', v2, 'c0000004-0001-0000-0000-000000000001', 'ビール', 800, 3, false, NULL);
+  -- 小計: セット5000 + 延長3000 + 場内指名2000 + レディース×2(3000) + ビール×3(2400) = 15400
+  -- サービス料(40%): 6160、消費税(10%): 2156、合計: 23716
+  INSERT INTO payments (id, tenant_id, visit_id, table_id, customer_name,
+      subtotal, expense_total, nomination_fee, service_fee, tax, discount, total, payment_method, paid_at)
+  VALUES (gen_random_uuid(), 'c0000000-0000-0000-0000-000000000001', v2, 'c0000002-0007-0000-0000-000000000001',
+      'デモ山田様', 15400, 0, 2000, 6160, 2156, 0, 23716, 'credit',
+      NOW() - INTERVAL '1 day' + INTERVAL '12 hours 30 minutes');
 
--- 来店3: 現金・割引あり（今日）
-INSERT INTO visits (id, tenant_id, table_id, customer_name, guest_count, douhan_qty, check_in_time, check_out_time, set_minutes, is_checked_out) VALUES
-    ('c0000020-0003-0000-0000-000000000001', 'c0000000-0000-0000-0000-000000000001', 'c0000002-0003-0000-0000-000000000001', 'デモ佐藤様', 2, 0, NOW() - INTERVAL '3 hours', NOW() - INTERVAL '2 hours', 60, true)
-ON CONFLICT (id) DO NOTHING;
-INSERT INTO payments (id, tenant_id, visit_id, table_id, customer_name, subtotal, expense_total, nomination_fee, service_fee, tax, discount, total, payment_method, paid_at) VALUES
-    ('c0000023-0003-0000-0000-000000000001', 'c0000000-0000-0000-0000-000000000001', 'c0000020-0003-0000-0000-000000000001', 'c0000002-0003-0000-0000-000000000001', 'デモ佐藤様', 8000, 0, 0, 3200, 1120, 1000, 11320, 'cash', NOW() - INTERVAL '2 hours')
-ON CONFLICT (id) DO NOTHING;
+  -- ── 来店3: 佐藤様・指名なし・昨日（割引あり） ────────────────────
+  INSERT INTO visits (id, tenant_id, table_id, customer_name, guest_count,
+      douhan_qty, check_in_time, check_out_time, set_minutes, is_checked_out)
+  VALUES (v3, 'c0000000-0000-0000-0000-000000000001', 'c0000002-0003-0000-0000-000000000001',
+      'デモ佐藤様', 2, 0,
+      NOW() - INTERVAL '1 day' + INTERVAL '13 hours',
+      NOW() - INTERVAL '1 day' + INTERVAL '14 hours',
+      60, true);
+  INSERT INTO payments (id, tenant_id, visit_id, table_id, customer_name,
+      subtotal, expense_total, nomination_fee, service_fee, tax, discount, total, payment_method, paid_at)
+  VALUES (gen_random_uuid(), 'c0000000-0000-0000-0000-000000000001', v3, 'c0000002-0003-0000-0000-000000000001',
+      'デモ佐藤様', 8000, 0, 0, 3200, 1120, 1000, 11320, 'cash',
+      NOW() - INTERVAL '1 day' + INTERVAL '14 hours');
 
--- ============================================================
--- デモ用リセットSQL（このファイル末尾にコメントで記載）
--- 来店・会計データをリセットしたい場合は以下を実行:
---
--- DELETE FROM payments WHERE tenant_id = 'c0000000-0000-0000-0000-000000000001';
--- DELETE FROM nominations WHERE tenant_id = 'c0000000-0000-0000-0000-000000000001';
--- DELETE FROM order_items WHERE tenant_id = 'c0000000-0000-0000-0000-000000000001';
--- DELETE FROM visits WHERE tenant_id = 'c0000000-0000-0000-0000-000000000001';
--- UPDATE floor_tables SET status = 'empty', visit_id = NULL
---   WHERE tenant_id = 'c0000000-0000-0000-0000-000000000001';
--- DELETE FROM cast_shifts WHERE tenant_id = 'c0000000-0000-0000-0000-000000000001';
--- ============================================================
+  -- ── 来店4: 伊藤様・本指名（あかり）・シャンパン・今日 ─────────────
+  INSERT INTO visits (id, tenant_id, table_id, customer_name, guest_count,
+      douhan_qty, check_in_time, check_out_time, set_minutes, is_checked_out)
+  VALUES (v4, 'c0000000-0000-0000-0000-000000000001', 'c0000002-0005-0000-0000-000000000001',
+      'デモ伊藤様', 2, 0,
+      NOW() - INTERVAL '3 hours',
+      NOW() - INTERVAL '1 hour 30 minutes',
+      90, true);
+  INSERT INTO nominations (id, tenant_id, visit_id, cast_id, nomination_type, qty)
+  VALUES (gen_random_uuid(), 'c0000000-0000-0000-0000-000000000001', v4, 'c0000003-0001-0000-0000-000000000001', 'main', 1);
+  INSERT INTO order_items (id, tenant_id, visit_id, menu_item_id, menu_item_name, price, quantity, is_expense, cast_id)
+  VALUES
+    (gen_random_uuid(), 'c0000000-0000-0000-0000-000000000001', v4, 'c0000004-0016-0000-0000-000000000001', 'レディースドリンク', 1500, 4, false, 'c0000003-0001-0000-0000-000000000001'),
+    (gen_random_uuid(), 'c0000000-0000-0000-0000-000000000001', v4, 'c0000004-0009-0000-0000-000000000001', 'シャンパンボトル', 30000, 1, false, NULL),
+    (gen_random_uuid(), 'c0000000-0000-0000-0000-000000000001', v4, 'c0000004-0014-0000-0000-000000000001', 'フルーツ盛り', 1500, 1, false, NULL);
+  -- 小計: セット7000 + 本指名5000 + レディース×4(6000) + シャンパン(30000) + フルーツ(1500) = 49500
+  -- サービス料(40%): 19800、消費税(10%): 6930、合計: 76230
+  INSERT INTO payments (id, tenant_id, visit_id, table_id, customer_name,
+      subtotal, expense_total, nomination_fee, service_fee, tax, discount, total, payment_method, paid_at)
+  VALUES (gen_random_uuid(), 'c0000000-0000-0000-0000-000000000001', v4, 'c0000002-0005-0000-0000-000000000001',
+      'デモ伊藤様', 49500, 0, 5000, 19800, 6930, 0, 76230, 'cash',
+      NOW() - INTERVAL '1 hour 30 minutes');
+
+END $$;
