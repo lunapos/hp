@@ -62,7 +62,8 @@ export default function CastsPage() {
     setTimeout(() => setToast(''), 2000)
   }
 
-  const filtered = casts.filter(c => showRetired || c.is_active)
+  const activeCasts = casts.filter(c => c.is_active)
+  const retiredCasts = casts.filter(c => !c.is_active)
 
   async function handleSave() {
     if (!form.stage_name.trim()) return
@@ -215,10 +216,28 @@ export default function CastsPage() {
         </button>
       </div>
 
-      <label className="flex items-center gap-2 text-sm text-[#9090bb] cursor-pointer">
-        <input type="checkbox" checked={showRetired} onChange={e => setShowRetired(e.target.checked)} className="rounded" />
+      <button
+        onClick={() => setShowRetired(v => !v)}
+        className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-medium transition-colors ${
+          showRetired
+            ? 'border-[#9090bb]/50 bg-[#9090bb]/10 text-[#9090bb]'
+            : 'border-[#2e2e50] bg-transparent text-[#3a3a5e] hover:text-[#9090bb] hover:border-[#9090bb]/30'
+        }`}
+      >
+        <span className={`w-3.5 h-3.5 rounded-sm border flex items-center justify-center shrink-0 ${
+          showRetired ? 'border-[#9090bb] bg-[#9090bb]/20' : 'border-[#3a3a5e]'
+        }`}>
+          {showRetired && <Check size={9} strokeWidth={3} />}
+        </span>
         退職者も表示
-      </label>
+        {retiredCasts.length > 0 && (
+          <span className={`ml-0.5 px-1.5 py-0.5 rounded-full text-[10px] ${
+            showRetired ? 'bg-[#9090bb]/20 text-[#9090bb]' : 'bg-[#2e2e50] text-[#3a3a5e]'
+          }`}>
+            {retiredCasts.length}
+          </span>
+        )}
+      </button>
 
       {/* 追加/編集フォーム */}
       {showForm && (
@@ -271,132 +290,54 @@ export default function CastsPage() {
       {loading ? (
         <div className="text-center py-10 text-[#9090bb]">読み込み中...</div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
-          {filtered.map(cast => (
-            <div key={cast.id} className="bg-[#141430] border border-[#2e2e50] rounded-xl p-4">
-              <div className="flex items-center gap-4">
-                {cast.photo_url ? (
-                  <img src={cast.photo_url} alt={cast.stage_name} className="w-14 h-14 rounded-full object-cover border border-[#2e2e50]" />
-                ) : (
-                  <div className="w-14 h-14 rounded-full bg-[#0f0f28] border border-[#2e2e50] flex items-center justify-center text-lg text-[#9090bb] font-semibold">
-                    {cast.stage_name.charAt(0)}
-                  </div>
-                )}
-                <div className="flex-1 min-w-0">
-                  <div className={`text-base font-semibold ${cast.is_active ? 'text-white' : 'text-[#9090bb] line-through'}`}>
-                    {cast.stage_name}
-                  </div>
-                  {cast.real_name && <div className="text-xs text-[#9090bb]">{cast.real_name}</div>}
-                  <div className={`text-xs mt-1 px-2 py-0.5 rounded inline-block ${
-                    cast.is_active ? 'bg-emerald-900/30 text-emerald-400' : 'bg-red-900/30 text-red-400'
-                  }`}>
-                    {cast.is_active ? '在籍' : '退職'}
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => { setSelectedCastId(selectedCastId === cast.id ? null : cast.id); setEditingShiftId(null) }}
-                    className={`p-2 rounded-lg bg-[#0f0f28] ${selectedCastId === cast.id ? 'text-[#d4b870]' : 'text-[#9090bb] hover:text-white'}`}
-                  >
-                    <Clock size={14} />
-                  </button>
-                  <button onClick={() => startEdit(cast)} className="p-2 rounded-lg bg-[#0f0f28] text-[#9090bb] hover:text-[#d4b870]">
-                    <Pencil size={14} />
-                  </button>
-                  <button onClick={() => { if (confirm(cast.is_active ? 'このキャストを退職処理しますか？' : '在籍に復帰しますか？')) toggleRetire(cast) }}
-                    className={`px-3 py-2 rounded-lg text-xs font-medium ${cast.is_active ? 'bg-red-900/20 text-red-400' : 'bg-emerald-900/20 text-emerald-400'}`}>
-                    {cast.is_active ? '退職' : '復帰'}
-                  </button>
-                </div>
-              </div>
+        <div className="space-y-8">
+          {/* 在籍キャスト */}
+          <CastGrid
+            casts={activeCasts}
+            shifts={shifts}
+            selectedCastId={selectedCastId}
+            setSelectedCastId={setSelectedCastId}
+            editingShiftId={editingShiftId}
+            setEditingShiftId={setEditingShiftId}
+            shiftForm={shiftForm}
+            setShiftForm={setShiftForm}
+            shiftSaving={shiftSaving}
+            selectedCastShifts={selectedCastShifts}
+            startEdit={startEdit}
+            toggleRetire={toggleRetire}
+            startEditShift={startEditShift}
+            saveShift={saveShift}
+            deleteShift={deleteShift}
+          />
 
-              {/* 出退勤履歴（展開） */}
-              {selectedCastId === cast.id && (
-                <div className="mt-4 pt-4 border-t border-[#2e2e50]">
-                  <h4 className="text-xs text-[#9090bb] tracking-widest uppercase mb-3">直近30日の出退勤履歴</h4>
-                  {selectedCastShifts.length === 0 ? (
-                    <p className="text-xs text-[#3a3a5e]">記録なし</p>
-                  ) : (
-                    <div className="space-y-2 max-h-72 overflow-y-auto">
-                      {selectedCastShifts.slice(0, 20).map(s => (
-                        <div key={s.id}>
-                          {editingShiftId === s.id ? (
-                            /* 編集フォーム */
-                            <div className="bg-[#0f0f28] border border-[#d4b870]/30 rounded-lg p-3 space-y-2">
-                              <div className="grid grid-cols-2 gap-2">
-                                <div>
-                                  <label className="text-[10px] text-[#9090bb] mb-1 block">出勤</label>
-                                  <input
-                                    type="datetime-local"
-                                    value={shiftForm.clock_in}
-                                    onChange={e => setShiftForm(f => ({ ...f, clock_in: e.target.value }))}
-                                    className="w-full bg-[#141430] border border-[#2e2e50] rounded-lg px-2 py-1.5 text-white text-xs outline-none focus:border-[#d4b870]/50"
-                                  />
-                                </div>
-                                <div>
-                                  <label className="text-[10px] text-[#9090bb] mb-1 block">退勤（空欄 = 勤務中）</label>
-                                  <input
-                                    type="datetime-local"
-                                    value={shiftForm.clock_out}
-                                    onChange={e => setShiftForm(f => ({ ...f, clock_out: e.target.value }))}
-                                    className="w-full bg-[#141430] border border-[#2e2e50] rounded-lg px-2 py-1.5 text-white text-xs outline-none focus:border-[#d4b870]/50"
-                                  />
-                                </div>
-                              </div>
-                              <div className="flex gap-2 justify-end">
-                                <button
-                                  onClick={() => setEditingShiftId(null)}
-                                  className="px-3 py-1.5 rounded-lg text-xs text-[#9090bb] hover:text-white"
-                                >
-                                  キャンセル
-                                </button>
-                                <button
-                                  onClick={() => saveShift(s.id)}
-                                  disabled={shiftSaving || !shiftForm.clock_in}
-                                  className="px-3 py-1.5 rounded-lg bg-[#d4b870] text-black text-xs font-bold disabled:opacity-30"
-                                >
-                                  {shiftSaving ? '保存中...' : '保存'}
-                                </button>
-                              </div>
-                            </div>
-                          ) : (
-                            /* 表示行 */
-                            <div className="flex items-center justify-between text-xs group">
-                              <span className="text-[#9090bb] w-12 shrink-0">
-                                {new Date(s.clock_in).toLocaleDateString('ja-JP', { month: 'short', day: 'numeric' })}
-                              </span>
-                              <span className="text-white flex-1">
-                                {new Date(s.clock_in).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}
-                                {' - '}
-                                {s.clock_out
-                                  ? new Date(s.clock_out).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })
-                                  : <span className="text-emerald-400">勤務中</span>
-                                }
-                              </span>
-                              <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button
-                                  onClick={() => startEditShift(s)}
-                                  className="p-1 rounded text-[#9090bb] hover:text-[#d4b870]"
-                                >
-                                  <Pencil size={11} />
-                                </button>
-                                <button
-                                  onClick={() => deleteShift(s.id)}
-                                  className="p-1 rounded text-[#9090bb] hover:text-red-400"
-                                >
-                                  <Trash2 size={11} />
-                                </button>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
+          {/* 退職者セクション */}
+          {showRetired && retiredCasts.length > 0 && (
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <span className="text-xs text-[#9090bb] tracking-widest uppercase font-semibold">退職者</span>
+                <div className="flex-1 h-px bg-[#2e2e50]" />
+                <span className="text-xs text-[#3a3a5e]">{retiredCasts.length}名</span>
+              </div>
+              <CastGrid
+                casts={retiredCasts}
+                shifts={shifts}
+                selectedCastId={selectedCastId}
+                setSelectedCastId={setSelectedCastId}
+                editingShiftId={editingShiftId}
+                setEditingShiftId={setEditingShiftId}
+                shiftForm={shiftForm}
+                setShiftForm={setShiftForm}
+                shiftSaving={shiftSaving}
+                selectedCastShifts={selectedCastShifts}
+                startEdit={startEdit}
+                toggleRetire={toggleRetire}
+                startEditShift={startEditShift}
+                saveShift={saveShift}
+                deleteShift={deleteShift}
+                dimmed
+              />
             </div>
-          ))}
+          )}
         </div>
       )}
 
@@ -405,6 +346,153 @@ export default function CastsPage() {
           <Check size={16} />{toast}
         </div>
       )}
+    </div>
+  )
+}
+
+// ---- キャストグリッド（在籍・退職共用） ----
+interface CastGridProps {
+  casts: CastRow[]
+  shifts: CastShiftRow[]
+  selectedCastId: string | null
+  setSelectedCastId: (id: string | null) => void
+  editingShiftId: string | null
+  setEditingShiftId: (id: string | null) => void
+  shiftForm: { clock_in: string; clock_out: string }
+  setShiftForm: (fn: (f: { clock_in: string; clock_out: string }) => { clock_in: string; clock_out: string }) => void
+  shiftSaving: boolean
+  selectedCastShifts: CastShiftRow[]
+  startEdit: (cast: CastRow) => void
+  toggleRetire: (cast: CastRow) => void
+  startEditShift: (shift: CastShiftRow) => void
+  saveShift: (id: string) => void
+  deleteShift: (id: string) => void
+  dimmed?: boolean
+}
+
+function CastGrid({
+  casts, selectedCastId, setSelectedCastId, editingShiftId, setEditingShiftId,
+  shiftForm, setShiftForm, shiftSaving, selectedCastShifts,
+  startEdit, toggleRetire, startEditShift, saveShift, deleteShift, dimmed,
+}: CastGridProps) {
+  return (
+    <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 items-start ${dimmed ? 'opacity-55' : ''}`}>
+      {casts.map(cast => (
+        <div key={cast.id} className="bg-[#141430] border border-[#2e2e50] rounded-xl p-4">
+          <div className="flex items-center gap-4">
+            {cast.photo_url ? (
+              <img src={cast.photo_url} alt={cast.stage_name} className="w-14 h-14 rounded-full object-cover border border-[#2e2e50]" />
+            ) : (
+              <div className="w-14 h-14 rounded-full bg-[#0f0f28] border border-[#2e2e50] flex items-center justify-center text-lg text-[#9090bb] font-semibold">
+                {cast.stage_name.charAt(0)}
+              </div>
+            )}
+            <div className="flex-1 min-w-0">
+              <div className={`text-base font-semibold ${cast.is_active ? 'text-white' : 'text-[#9090bb] line-through'}`}>
+                {cast.stage_name}
+              </div>
+              {cast.real_name && <div className="text-xs text-[#9090bb]">{cast.real_name}</div>}
+              <div className={`text-xs mt-1 px-2 py-0.5 rounded inline-block ${
+                cast.is_active ? 'bg-emerald-900/30 text-emerald-400' : 'bg-red-900/30 text-red-400'
+              }`}>
+                {cast.is_active ? '在籍' : '退職'}
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => { setSelectedCastId(selectedCastId === cast.id ? null : cast.id); setEditingShiftId(null) }}
+                className={`p-2 rounded-lg bg-[#0f0f28] ${selectedCastId === cast.id ? 'text-[#d4b870]' : 'text-[#9090bb] hover:text-white'}`}
+              >
+                <Clock size={14} />
+              </button>
+              <button onClick={() => startEdit(cast)} className="p-2 rounded-lg bg-[#0f0f28] text-[#9090bb] hover:text-[#d4b870]">
+                <Pencil size={14} />
+              </button>
+              <button
+                onClick={() => { if (confirm(cast.is_active ? 'このキャストを退職処理しますか？' : '在籍に復帰しますか？')) toggleRetire(cast) }}
+                className={`px-3 py-2 rounded-lg text-xs font-medium ${cast.is_active ? 'bg-red-900/20 text-red-400' : 'bg-emerald-900/20 text-emerald-400'}`}
+              >
+                {cast.is_active ? '退職' : '復帰'}
+              </button>
+            </div>
+          </div>
+
+          {/* 出退勤履歴（展開） */}
+          {selectedCastId === cast.id && (
+            <div className="mt-4 pt-4 border-t border-[#2e2e50]">
+              <h4 className="text-xs text-[#9090bb] tracking-widest uppercase mb-3">直近30日の出退勤履歴</h4>
+              {selectedCastShifts.length === 0 ? (
+                <p className="text-xs text-[#3a3a5e]">記録なし</p>
+              ) : (
+                <div className="space-y-2 max-h-72 overflow-y-auto">
+                  {selectedCastShifts.slice(0, 20).map(s => (
+                    <div key={s.id}>
+                      {editingShiftId === s.id ? (
+                        <div className="bg-[#0f0f28] border border-[#d4b870]/30 rounded-lg p-3 space-y-2">
+                          <div className="grid grid-cols-2 gap-2">
+                            <div>
+                              <label className="text-[10px] text-[#9090bb] mb-1 block">出勤</label>
+                              <input
+                                type="datetime-local"
+                                value={shiftForm.clock_in}
+                                onChange={e => setShiftForm(f => ({ ...f, clock_in: e.target.value }))}
+                                className="w-full bg-[#141430] border border-[#2e2e50] rounded-lg px-2 py-1.5 text-white text-xs outline-none focus:border-[#d4b870]/50"
+                              />
+                            </div>
+                            <div>
+                              <label className="text-[10px] text-[#9090bb] mb-1 block">退勤（空欄 = 勤務中）</label>
+                              <input
+                                type="datetime-local"
+                                value={shiftForm.clock_out}
+                                onChange={e => setShiftForm(f => ({ ...f, clock_out: e.target.value }))}
+                                className="w-full bg-[#141430] border border-[#2e2e50] rounded-lg px-2 py-1.5 text-white text-xs outline-none focus:border-[#d4b870]/50"
+                              />
+                            </div>
+                          </div>
+                          <div className="flex gap-2 justify-end">
+                            <button onClick={() => setEditingShiftId(null)} className="px-3 py-1.5 rounded-lg text-xs text-[#9090bb] hover:text-white">
+                              キャンセル
+                            </button>
+                            <button
+                              onClick={() => saveShift(s.id)}
+                              disabled={shiftSaving || !shiftForm.clock_in}
+                              className="px-3 py-1.5 rounded-lg bg-[#d4b870] text-black text-xs font-bold disabled:opacity-30"
+                            >
+                              {shiftSaving ? '保存中...' : '保存'}
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-between text-xs group">
+                          <span className="text-[#9090bb] w-12 shrink-0">
+                            {new Date(s.clock_in).toLocaleDateString('ja-JP', { month: 'short', day: 'numeric' })}
+                          </span>
+                          <span className="text-white flex-1">
+                            {new Date(s.clock_in).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}
+                            {' - '}
+                            {s.clock_out
+                              ? new Date(s.clock_out).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })
+                              : <span className="text-emerald-400">勤務中</span>
+                            }
+                          </span>
+                          <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button onClick={() => startEditShift(s)} className="p-1 rounded text-[#9090bb] hover:text-[#d4b870]">
+                              <Pencil size={11} />
+                            </button>
+                            <button onClick={() => deleteShift(s.id)} className="p-1 rounded text-[#9090bb] hover:text-red-400">
+                              <Trash2 size={11} />
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      ))}
     </div>
   )
 }
