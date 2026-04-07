@@ -4,8 +4,8 @@
 --
 -- ■ 認証情報（公開OK）
 --   Floor (iPad): デバイストークン「luna-demo」
---   Admin (Web):  demo@lunapos.jp / luna1234
---   Cast (Web):   demo@lunapos.jp / luna1234
+--   Admin (Web):  demo-admin@lunapos.jp / luna-admin-demo
+--   Cast (Web):   demo-cast@lunapos.jp  / luna-cast-demo
 --
 -- ■ 設定
 --   新宿アップスと同じ料金設定を使用
