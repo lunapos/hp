@@ -220,15 +220,29 @@ final class SyncEngine: @unchecked Sendable {
             async let rooms = supabase.fetchRooms()
             async let tables = supabase.fetchFloorTables()
             async let casts = supabase.fetchCasts()
+            async let activeShifts = supabase.fetchActiveShifts()
             async let menuItems = supabase.fetchMenuItems()
             async let setPlans = supabase.fetchSetPlans()
             async let customers = supabase.fetchCustomers()
 
-            let (r, t, c, m, s, cu) = try await (rooms, tables, casts, menuItems, setPlans, customers)
+            let (r, t, c, aShifts, m, s, cu) = try await (rooms, tables, casts, activeShifts, menuItems, setPlans, customers)
 
             vm.rooms = r.map { $0.toModel() }
             vm.tables = t.map { $0.toModel() }
-            vm.casts = c.map { $0.toModel() }
+
+            // キャストの isWorking / clockInTime / currentShiftId をDBの勤務中シフトから復元
+            let activeShiftByCastId = Dictionary(uniqueKeysWithValues: aShifts.map { ($0.castId.uuidString, $0) })
+            vm.casts = c.map { castRow in
+                var cast = castRow.toModel()
+                if let shift = activeShiftByCastId[cast.id] {
+                    cast.isWorking = true
+                    cast.clockInTime = shift.clockIn
+                    cast.clockOutTime = nil
+                    cast.currentShiftId = shift.id.uuidString
+                }
+                return cast
+            }
+
             vm.menuItems = m.map { $0.toModel() }
             vm.setPlans = s.map { $0.toModel() }
             vm.customers = cu.map { $0.toModel() }

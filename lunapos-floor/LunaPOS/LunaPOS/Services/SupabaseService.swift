@@ -318,6 +318,17 @@ final class SupabaseService: @unchecked Sendable {
             .value
     }
 
+    /// clock_out が NULL（勤務中）のシフトを全件取得。起動時に isWorking を復元するために使用
+    func fetchActiveShifts() async throws -> [CastShiftRow] {
+        guard let tenantId else { throw SupabaseError.authError(statusCode: 401) }
+        return try await client.from("cast_shifts")
+            .select("id, tenant_id, cast_id, clock_in, clock_out, scheduled_clock_in, scheduled_clock_out")
+            .eq("tenant_id", value: tenantId.uuidString)
+            .filter("clock_out", operator: "is", value: "null")
+            .execute()
+            .value
+    }
+
     func fetchCustomers() async throws -> [CustomerRow] {
         guard let tenantId else { throw SupabaseError.authError(statusCode: 401) }
         return try await client.from("customers")
