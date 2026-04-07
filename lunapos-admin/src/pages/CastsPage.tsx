@@ -1,9 +1,16 @@
 import { useState, useEffect } from 'react'
-import { Plus, Pencil, X, Check, Clock } from 'lucide-react'
+import { Plus, Pencil, X, Check, Clock, Trash2 } from 'lucide-react'
 import { supabase, supabaseUrl, supabaseAnonKey, requireTenantId } from '../lib/supabase'
 import type { CastRow, CastShiftRow } from '../types'
 
 const EMPTY_FORM = { stage_name: '', real_name: '', photo_url: '', drop_off_location: '', email: '' }
+
+// Date → datetime-local の value 形式（ローカル時刻）
+function toDatetimeLocal(iso: string): string {
+  const d = new Date(iso)
+  const pad = (n: number) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
+}
 
 export default function CastsPage() {
   const [casts, setCasts] = useState<CastRow[]>([])
@@ -19,6 +26,11 @@ export default function CastsPage() {
   const [toast, setToast] = useState('')
   const [showRetired, setShowRetired] = useState(false)
   const [selectedCastId, setSelectedCastId] = useState<string | null>(null)
+
+  // シフト編集
+  const [editingShiftId, setEditingShiftId] = useState<string | null>(null)
+  const [shiftForm, setShiftForm] = useState({ clock_in: '', clock_out: '' })
+  const [shiftSaving, setShiftSaving] = useState(false)
 
   useEffect(() => { fetchCasts(); fetchShifts() }, [])
 
@@ -70,7 +82,6 @@ export default function CastsPage() {
       const emailTrimmed = form.email.trim()
       if (emailTrimmed) {
         if (hasAccount) {
-          // メールアドレス更新
           const res = await fetch(`${supabaseUrl}/functions/v1/cast-account?action=update-email`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${supabaseAnonKey}` },
@@ -83,7 +94,6 @@ export default function CastsPage() {
             return
           }
         } else {
-          // 新規アカウント作成（初期パスワード: luna1234）
           const res = await fetch(`${supabaseUrl}/functions/v1/cast-signup`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${supabaseAnonKey}` },
@@ -142,7 +152,6 @@ export default function CastsPage() {
     })
     setShowForm(true)
 
-    // 既存のメールアドレスを取得
     setEmailLoading(true)
     try {
       const tid = requireTenantId()
@@ -157,6 +166,39 @@ export default function CastsPage() {
       }
     } catch { /* ignore */ }
     setEmailLoading(false)
+  }
+
+  function startEditShift(shift: CastShiftRow) {
+    setEditingShiftId(shift.id)
+    setShiftForm({
+      clock_in: toDatetimeLocal(shift.clock_in),
+      clock_out: shift.clock_out ? toDatetimeLocal(shift.clock_out) : '',
+    })
+  }
+
+  async function saveShift(shiftId: string) {
+    if (!shiftForm.clock_in) return
+    setShiftSaving(true)
+    const tid = requireTenantId()
+    const clockIn = new Date(shiftForm.clock_in).toISOString()
+    const clockOut = shiftForm.clock_out ? new Date(shiftForm.clock_out).toISOString() : null
+    await supabase.from('cast_shifts').update({
+      clock_in: clockIn,
+      clock_out: clockOut,
+      updated_at: new Date().toISOString(),
+    }).eq('id', shiftId).eq('tenant_id', tid)
+    setEditingShiftId(null)
+    setShiftSaving(false)
+    showToast('シフトを更新しました')
+    fetchShifts()
+  }
+
+  async function deleteShift(shiftId: string) {
+    if (!confirm('このシフト記録を削除しますか？')) return
+    const tid = requireTenantId()
+    await supabase.from('cast_shifts').delete().eq('id', shiftId).eq('tenant_id', tid)
+    showToast('シフトを削除しました')
+    fetchShifts()
   }
 
   const selectedCastShifts = shifts.filter(s => s.cast_id === selectedCastId)
@@ -252,8 +294,10 @@ export default function CastsPage() {
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <button onClick={() => setSelectedCastId(selectedCastId === cast.id ? null : cast.id)}
-                    className="p-2 rounded-lg bg-[#0f0f28] text-[#9090bb] hover:text-white">
+                  <button
+                    onClick={() => { setSelectedCastId(selectedCastId === cast.id ? null : cast.id); setEditingShiftId(null) }}
+                    className={`p-2 rounded-lg bg-[#0f0f28] ${selectedCastId === cast.id ? 'text-[#d4b870]' : 'text-[#9090bb] hover:text-white'}`}
+                  >
                     <Clock size={14} />
                   </button>
                   <button onClick={() => startEdit(cast)} className="p-2 rounded-lg bg-[#0f0f28] text-[#9090bb] hover:text-[#d4b870]">
@@ -273,17 +317,78 @@ export default function CastsPage() {
                   {selectedCastShifts.length === 0 ? (
                     <p className="text-xs text-[#3a3a5e]">記録なし</p>
                   ) : (
-                    <div className="space-y-1.5 max-h-40 overflow-y-auto">
+                    <div className="space-y-2 max-h-72 overflow-y-auto">
                       {selectedCastShifts.slice(0, 20).map(s => (
-                        <div key={s.id} className="flex items-center justify-between text-xs">
-                          <span className="text-[#9090bb]">
-                            {new Date(s.clock_in).toLocaleDateString('ja-JP', { month: 'short', day: 'numeric' })}
-                          </span>
-                          <span className="text-white">
-                            {new Date(s.clock_in).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}
-                            {' - '}
-                            {s.clock_out ? new Date(s.clock_out).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' }) : '勤務中'}
-                          </span>
+                        <div key={s.id}>
+                          {editingShiftId === s.id ? (
+                            /* 編集フォーム */
+                            <div className="bg-[#0f0f28] border border-[#d4b870]/30 rounded-lg p-3 space-y-2">
+                              <div className="grid grid-cols-2 gap-2">
+                                <div>
+                                  <label className="text-[10px] text-[#9090bb] mb-1 block">出勤</label>
+                                  <input
+                                    type="datetime-local"
+                                    value={shiftForm.clock_in}
+                                    onChange={e => setShiftForm(f => ({ ...f, clock_in: e.target.value }))}
+                                    className="w-full bg-[#141430] border border-[#2e2e50] rounded-lg px-2 py-1.5 text-white text-xs outline-none focus:border-[#d4b870]/50"
+                                  />
+                                </div>
+                                <div>
+                                  <label className="text-[10px] text-[#9090bb] mb-1 block">退勤（空欄 = 勤務中）</label>
+                                  <input
+                                    type="datetime-local"
+                                    value={shiftForm.clock_out}
+                                    onChange={e => setShiftForm(f => ({ ...f, clock_out: e.target.value }))}
+                                    className="w-full bg-[#141430] border border-[#2e2e50] rounded-lg px-2 py-1.5 text-white text-xs outline-none focus:border-[#d4b870]/50"
+                                  />
+                                </div>
+                              </div>
+                              <div className="flex gap-2 justify-end">
+                                <button
+                                  onClick={() => setEditingShiftId(null)}
+                                  className="px-3 py-1.5 rounded-lg text-xs text-[#9090bb] hover:text-white"
+                                >
+                                  キャンセル
+                                </button>
+                                <button
+                                  onClick={() => saveShift(s.id)}
+                                  disabled={shiftSaving || !shiftForm.clock_in}
+                                  className="px-3 py-1.5 rounded-lg bg-[#d4b870] text-black text-xs font-bold disabled:opacity-30"
+                                >
+                                  {shiftSaving ? '保存中...' : '保存'}
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            /* 表示行 */
+                            <div className="flex items-center justify-between text-xs group">
+                              <span className="text-[#9090bb] w-12 shrink-0">
+                                {new Date(s.clock_in).toLocaleDateString('ja-JP', { month: 'short', day: 'numeric' })}
+                              </span>
+                              <span className="text-white flex-1">
+                                {new Date(s.clock_in).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}
+                                {' - '}
+                                {s.clock_out
+                                  ? new Date(s.clock_out).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })
+                                  : <span className="text-emerald-400">勤務中</span>
+                                }
+                              </span>
+                              <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button
+                                  onClick={() => startEditShift(s)}
+                                  className="p-1 rounded text-[#9090bb] hover:text-[#d4b870]"
+                                >
+                                  <Pencil size={11} />
+                                </button>
+                                <button
+                                  onClick={() => deleteShift(s.id)}
+                                  className="p-1 rounded text-[#9090bb] hover:text-red-400"
+                                >
+                                  <Trash2 size={11} />
+                                </button>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
