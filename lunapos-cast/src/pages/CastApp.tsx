@@ -112,19 +112,30 @@ function TodayTab() {
       const targetDate = businessDateByOffset(offset)
       const { dayStart, dayEnd } = businessDayRange(targetDate)
 
+      // まず当日営業日のvisit_idを取得（check_in_timeベースでフィルタ）
+      const visitsRes = await supabase.from('visits')
+        .select('id')
+        .eq('tenant_id', tid)
+        .gte('check_in_time', dayStart).lte('check_in_time', dayEnd)
+      const visitIds = (visitsRes.data || []).map((v: { id: string }) => v.id)
+
       const [nomsRes, paymentsRes, ordersRes] = await Promise.all([
-        supabase.from('nominations')
-          .select('id, visit_id, cast_id, nomination_type, qty, fee_override, created_at')
-          .eq('tenant_id', tid).eq('cast_id', cid)
-          .gte('created_at', dayStart).lte('created_at', dayEnd),
+        visitIds.length === 0
+          ? Promise.resolve({ data: [] })
+          : supabase.from('nominations')
+              .select('id, visit_id, cast_id, nomination_type, qty, fee_override, created_at')
+              .eq('tenant_id', tid).eq('cast_id', cid)
+              .in('visit_id', visitIds),
         supabase.from('payments')
           .select('id, visit_id, total, subtotal, payment_method, paid_at, nomination_fee')
           .eq('tenant_id', tid)
           .gte('paid_at', dayStart).lte('paid_at', dayEnd),
-        supabase.from('order_items')
-          .select('id, visit_id, menu_item_name, price, quantity, cast_id')
-          .eq('tenant_id', tid).eq('cast_id', cid)
-          .gte('created_at', dayStart).lte('created_at', dayEnd),
+        visitIds.length === 0
+          ? Promise.resolve({ data: [] })
+          : supabase.from('order_items')
+              .select('id, visit_id, menu_item_name, price, quantity, cast_id')
+              .eq('tenant_id', tid).eq('cast_id', cid)
+              .in('visit_id', visitIds),
       ])
 
       setNominations((nomsRes.data || []) as NominationRow[])
