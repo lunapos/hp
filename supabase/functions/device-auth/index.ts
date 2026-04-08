@@ -66,7 +66,7 @@ Deno.serve(async (req) => {
       {
         iss: "supabase",
         ref: Deno.env.get("SUPABASE_URL")!.split("//")[1].split(".")[0],
-        role: "anon",
+        role: "authenticated",
         tenant_id: device.tenant_id,
         device_id: device.id,
         iat: now,
