@@ -139,3 +139,21 @@ jobs:
 
       - name: device-auth 構文チェック
         run: deno check supabase/functions/device-auth/index.ts
+
+  deploy-edge-functions:
+    name: Edge Functions → Supabase デプロイ
+    needs: edge-function-check
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: device-auth デプロイ
+        run: supabase functions deploy device-auth --project-ref ${{ secrets.SUPABASE_PROJECT_REF }} --no-verify-jwt
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
