@@ -6,6 +6,34 @@ export function toDateStr(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
 
+/**
+ * 現在の「営業日」の日付文字列を返す（正午〜翌正午を1営業日とする）
+ * 12:00 以前なら前日の日付を返す
+ */
+export function todayBusinessDate(): string {
+  const now = new Date()
+  if (now.getHours() < 12) {
+    const yesterday = new Date(now)
+    yesterday.setDate(yesterday.getDate() - 1)
+    return toDateStr(yesterday)
+  }
+  return toDateStr(now)
+}
+
+/**
+ * 営業日の開始・終了時刻を返す（ISO8601 JST）
+ * selectedDate の 12:00 JST 〜 翌日 11:59:59 JST
+ */
+export function businessDayRange(selectedDate: string): { dayStart: string; dayEnd: string } {
+  const dayStart = `${selectedDate}T12:00:00+09:00`
+  // 翌日の日付を計算
+  const d = new Date(`${selectedDate}T12:00:00+09:00`)
+  d.setDate(d.getDate() + 1)
+  const nextDate = toDateStr(d)
+  const dayEnd = `${nextDate}T11:59:59+09:00`
+  return { dayStart, dayEnd }
+}
+
 export function formatYen(n: number): string {
   return `¥${n.toLocaleString()}`
 }

@@ -9,6 +9,7 @@ import { useAuth } from '../contexts/AuthContext'
 import {
   formatYen, toDateStr, nominationLabel,
   calcTodaySummary, calcMonthlyData, calcMonthlyTotals,
+  businessDayRange, businessDateByOffset,
 } from '../lib/castApp'
 import type { NominationRow, PaymentRow, OrderItemRow, DailySummary, CastRow } from '../types'
 
@@ -93,12 +94,6 @@ function TodayTab() {
   // 0=今日, 1=昨日, 2=一昨日
   const [dayOffset, setDayOffset] = useState(0)
 
-  function getTargetDate(offset: number): Date {
-    const d = new Date()
-    d.setDate(d.getDate() - offset)
-    return d
-  }
-
   useEffect(() => {
     fetchDay(dayOffset)
     if (dayOffset === 0) {
@@ -114,9 +109,8 @@ function TodayTab() {
     try {
       const tid = requireTenantId()
       const cid = requireCastId()
-      const targetDate = toDateStr(getTargetDate(offset))
-      const dayStart = `${targetDate}T00:00:00+09:00`
-      const dayEnd   = `${targetDate}T23:59:59+09:00`
+      const targetDate = businessDateByOffset(offset)
+      const { dayStart, dayEnd } = businessDayRange(targetDate)
 
       const [nomsRes, paymentsRes, ordersRes] = await Promise.all([
         supabase.from('nominations')
@@ -142,7 +136,8 @@ function TodayTab() {
 
   const summary = calcTodaySummary(nominations, payments, [])
 
-  const targetDate = getTargetDate(dayOffset)
+  const targetDateStr = businessDateByOffset(dayOffset)
+  const targetDate = new Date(`${targetDateStr}T12:00:00+09:00`)
   const dateLabel = targetDate.toLocaleDateString('ja-JP', { month: 'long', day: 'numeric', weekday: 'short' })
 
   return (

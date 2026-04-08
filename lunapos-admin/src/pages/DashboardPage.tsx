@@ -9,14 +9,14 @@ import {
 } from 'recharts'
 import { supabase, requireTenantId } from '../lib/supabase'
 import { exportDailyPaymentsCSV, exportMonthlyCSV, exportCastRankingCSV } from '../lib/csvExport'
-import { toDateStr, formatYen, METHOD_LABELS, calcDailySummary, calcCastRankings, calcHourlyData, calcMonthlyData } from '../lib/dashboard'
+import { toDateStr, todayBusinessDate, businessDayRange, formatYen, METHOD_LABELS, calcDailySummary, calcCastRankings, calcHourlyData, calcMonthlyData } from '../lib/dashboard'
 import type { PaymentRow, CastRow, NominationRow, VisitRow, CastRanking, HourlyData } from '../types'
 
 type ViewMode = 'daily' | 'monthly'
 
 export default function DashboardPage() {
   const [viewMode, setViewMode] = useState<ViewMode>('daily')
-  const [selectedDate, setSelectedDate] = useState(toDateStr(new Date()))
+  const [selectedDate, setSelectedDate] = useState(todayBusinessDate)
   const [selectedMonth, setSelectedMonth] = useState(() => {
     const d = new Date()
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
@@ -35,8 +35,7 @@ export default function DashboardPage() {
       setLoading(true)
       try {
         const tid = requireTenantId()
-        const dayStart = `${selectedDate}T00:00:00+09:00`
-        const dayEnd = `${selectedDate}T23:59:59+09:00`
+        const { dayStart, dayEnd } = businessDayRange(selectedDate)
 
         const [paymentsRes, visitsRes, nomsRes, castsRes] = await Promise.all([
           supabase.from('payments')

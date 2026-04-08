@@ -10,6 +10,33 @@ export function toDateStr(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
 
+/**
+ * 営業日の開始・終了時刻を返す（ISO8601 JST）
+ * 正午〜翌正午を1営業日とする（POS と同じ定義）
+ */
+export function businessDayRange(dateStr: string): { dayStart: string; dayEnd: string } {
+  const dayStart = `${dateStr}T12:00:00+09:00`
+  const d = new Date(`${dateStr}T12:00:00+09:00`)
+  d.setDate(d.getDate() + 1)
+  const nextDate = toDateStr(d)
+  const dayEnd = `${nextDate}T11:59:59+09:00`
+  return { dayStart, dayEnd }
+}
+
+/**
+ * offsetが0=今日の営業日, 1=昨日の営業日 の日付文字列を返す
+ * 12:00 前なら前日扱い
+ */
+export function businessDateByOffset(offset: number): string {
+  const now = new Date()
+  const effectiveNow = now.getHours() < 12
+    ? new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1)
+    : now
+  const d = new Date(effectiveNow)
+  d.setDate(d.getDate() - offset)
+  return toDateStr(d)
+}
+
 export function nominationLabel(type: string): string {
   if (type === 'main') return '本指名'
   if (type === 'in_store') return '場内指名'
