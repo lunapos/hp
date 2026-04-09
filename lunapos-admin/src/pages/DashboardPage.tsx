@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import {
   TrendingUp, Users, CreditCard, Clock, Star, Download,
-  ChevronLeft, ChevronRight, Calendar,
+  ChevronLeft, ChevronRight, Calendar, ChevronDown,
 } from 'lucide-react'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -11,6 +11,15 @@ import { supabase, requireTenantId } from '../lib/supabase'
 import { exportDailyPaymentsCSV, exportMonthlyCSV, exportCastRankingCSV } from '../lib/csvExport'
 import { toDateStr, todayBusinessDate, businessDayRange, formatYen, METHOD_LABELS, calcDailySummary, calcCastRankings, calcHourlyData, calcMonthlyData } from '../lib/dashboard'
 import type { PaymentRow, CastRow, NominationRow, VisitRow, CastRanking, HourlyData } from '../types'
+
+interface PaymentItemRow {
+  id: string
+  payment_id: string
+  menu_item_name: string
+  price: number
+  quantity: number
+  is_expense: boolean
+}
 
 type ViewMode = 'daily' | 'monthly'
 
@@ -26,6 +35,8 @@ export default function DashboardPage() {
   const [nominations, setNominations] = useState<NominationRow[]>([])
   const [casts, setCasts] = useState<CastRow[]>([])
   const [monthlyData, setMonthlyData] = useState<{ date: string; total: number; count: number }[]>([])
+  const [paymentItems, setPaymentItems] = useState<PaymentItemRow[]>([])
+  const [expandedPaymentId, setExpandedPaymentId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
   // 日次データ取得
@@ -58,10 +69,24 @@ export default function DashboardPage() {
             .eq('is_active', true),
         ])
 
-        setPayments((paymentsRes.data || []) as PaymentRow[])
+        const fetchedPayments = (paymentsRes.data || []) as PaymentRow[]
+        setPayments(fetchedPayments)
         setVisits((visitsRes.data || []) as VisitRow[])
         setNominations((nomsRes.data || []) as NominationRow[])
         setCasts((castsRes.data || []) as CastRow[])
+        setExpandedPaymentId(null)
+
+        // payment_items を payment_id でまとめて取得
+        if (fetchedPayments.length > 0) {
+          const paymentIds = fetchedPayments.map(p => p.id)
+          const itemsRes = await supabase.from('payment_items')
+            .select('id, payment_id, menu_item_name, price, quantity, is_expense')
+            .eq('tenant_id', tid)
+            .in('payment_id', paymentIds)
+          setPaymentItems((itemsRes.data || []) as PaymentItemRow[])
+        } else {
+          setPaymentItems([])
+        }
       } catch {
         // エラー時は空データ
       }
@@ -311,21 +336,83 @@ export default function DashboardPage() {
           {payments.length > 0 && (
             <div className="bg-[#141430] rounded-xl p-5 border border-[#2e2e50]">
               <h2 className="text-xs font-semibold text-[#9090bb] tracking-widest uppercase mb-4">会計履歴</h2>
-              <div className="space-y-2">
-                {payments.map(p => (
-                  <div key={p.id} className="flex items-center justify-between text-sm py-2 border-b border-[#2e2e50] last:border-0">
-                    <div>
-                      <span className="text-white">{p.customer_name || '---'}</span>
-                      <span className="text-[#9090bb] text-xs ml-2">
-                        {new Date(p.paid_at).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}
-                      </span>
+              <div className="space-y-1">
+                {payments.map(p => {
+                  const items = paymentItems.filter(i => i.payment_id === p.id)
+                  const isExpanded = expandedPaymentId === p.id
+                  return (
+                    <div key={p.id} className="border-b border-[#2e2e50] last:border-0">
+                      {/* ヘッダー行（クリックで開閉） */}
+                      <button
+                        onClick={() => setExpandedPaymentId(isExpanded ? null : p.id)}
+                        className="w-full flex items-center justify-between text-sm py-3 hover:bg-[#1a1a40] rounded-lg px-2 -mx-2 transition-colors"
+                      >
+                        <div className="flex items-center gap-2">
+                          <ChevronDown size={14} className={`text-[#9090bb] transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                          <span className="text-white">{p.customer_name || '---'}</span>
+                          <span className="text-[#9090bb] text-xs">
+                            {new Date(p.paid_at).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[#d4b870] font-bold">{formatYen(p.total)}</span>
+                          <span className="text-[#9090bb] text-xs">{METHOD_LABELS[p.payment_method]}</span>
+                        </div>
+                      </button>
+
+                      {/* 展開: 内訳 */}
+                      {isExpanded && (
+                        <div className="mx-2 mb-3 bg-[#0f0f28] rounded-lg p-3 space-y-1 text-xs">
+                          {/* 注文明細 */}
+                          {items.length > 0 && (
+                            <>
+                              {items.map(item => (
+                                <div key={item.id} className="flex justify-between text-[#9090bb]">
+                                  <span>{item.menu_item_name} × {item.quantity}</span>
+                                  <span>{formatYen(item.price * item.quantity)}</span>
+                                </div>
+                              ))}
+                              <div className="border-t border-[#2e2e50] my-1" />
+                            </>
+                          )}
+                          {/* 小計・各種料金 */}
+                          <div className="flex justify-between text-[#9090bb]">
+                            <span>小計</span><span>{formatYen(p.subtotal)}</span>
+                          </div>
+                          {p.nomination_fee > 0 && (
+                            <div className="flex justify-between text-[#9090bb]">
+                              <span>指名料</span><span>{formatYen(p.nomination_fee)}</span>
+                            </div>
+                          )}
+                          {p.expense_total > 0 && (
+                            <div className="flex justify-between text-[#9090bb]">
+                              <span>経費</span><span>{formatYen(p.expense_total)}</span>
+                            </div>
+                          )}
+                          {p.service_fee > 0 && (
+                            <div className="flex justify-between text-[#9090bb]">
+                              <span>サービス料</span><span>{formatYen(p.service_fee)}</span>
+                            </div>
+                          )}
+                          {p.tax > 0 && (
+                            <div className="flex justify-between text-[#9090bb]">
+                              <span>消費税</span><span>{formatYen(p.tax)}</span>
+                            </div>
+                          )}
+                          {p.discount > 0 && (
+                            <div className="flex justify-between text-[#9090bb]">
+                              <span>割引</span><span>-{formatYen(p.discount)}</span>
+                            </div>
+                          )}
+                          <div className="border-t border-[#2e2e50] my-1" />
+                          <div className="flex justify-between text-white font-bold">
+                            <span>合計</span><span className="text-[#d4b870]">{formatYen(p.total)}</span>
+                          </div>
+                        </div>
+                      )}
                     </div>
-                    <div className="text-right">
-                      <span className="text-[#d4b870] font-bold">{formatYen(p.total)}</span>
-                      <span className="text-[#9090bb] text-xs ml-2">{METHOD_LABELS[p.payment_method]}</span>
-                    </div>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
             </div>
           )}
