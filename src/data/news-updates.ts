@@ -56,7 +56,7 @@ export const updateItems: NewsItem[] = [
     category: "開発アップデート",
     project: "Floor",
     content: "キャスト詳細シートのUIを改善しました。\n\n## 変更内容\n・アバター・フォント・ボタンを大型化（タップターゲット拡大）\n・出退勤ボタンのpadding拡大\n・送り先フィールドを編集すると自動で「確定済み」表示が外れ再入力モードに\n・確定済み状態は「変更する」ボタンで明示",
-  }
+  },
   {
     slug: "cast-shift-request",
     date: "2026-04-06",
