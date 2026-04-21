@@ -327,6 +327,19 @@ final class SyncEngine: @unchecked Sendable {
                 vm.payments.append(payment)
             }
 
+            // visits/paymentsマージ後にテーブルstatusを正規化
+            // DBのfloor_tables.statusが古いままのケースを修正する
+            for idx in vm.tables.indices {
+                let tableId = vm.tables[idx].id
+                if let activeVisit = vm.visits.first(where: { $0.tableId == tableId && !$0.isCheckedOut }) {
+                    vm.tables[idx].status = .occupied
+                    vm.tables[idx].visitId = activeVisit.id
+                } else {
+                    vm.tables[idx].status = .empty
+                    vm.tables[idx].visitId = nil
+                }
+            }
+
             logger.info("[SyncEngine] 営業データ同期完了: visits=\(serverVisits.count) payments=\(serverPayments.count)")
         } catch {
             logger.error("[SyncEngine] 営業データ同期失敗: \(error)")
@@ -388,13 +401,15 @@ final class SyncEngine: @unchecked Sendable {
                 markSynced(visit.id)
                 logger.info("[syncVisit] 完了 visit_id=\(visit.id)")
 
-                // visit同期成功後、テーブルのvisit_id/statusもSupabaseに反映
-                try? await supabase.client.from("floor_tables")
-                    .update(["status": visit.isCheckedOut ? "empty" : "occupied",
-                             "visit_id": visit.isCheckedOut ? nil : visit.id] as [String: String?])
-                    .eq("id", value: visit.tableId)
-                    .execute()
-                logger.info("[syncVisit] テーブル状態更新 table_id=\(visit.tableId)")
+                // 会計完了時のみテーブルをemptyに更新（occupied方向の更新はsyncFloorTableが担当）
+                // isCheckedOut=falseのvisit同期でoccupiedを書き込むと、会計後のempty更新を上書きする競合が起きる
+                if visit.isCheckedOut {
+                    try? await supabase.client.from("floor_tables")
+                        .update(["status": "empty", "visit_id": nil] as [String: String?])
+                        .eq("id", value: visit.tableId)
+                        .execute()
+                    logger.info("[syncVisit] テーブルをemptyに更新 table_id=\(visit.tableId)")
+                }
             } catch {
                 logger.error("[syncVisit] 失敗 visit_id=\(visit.id) table_id=\(visit.tableId) error=\(error)")
                 markSyncFailed(visit.id)

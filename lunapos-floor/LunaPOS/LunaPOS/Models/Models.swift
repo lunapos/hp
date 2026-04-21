@@ -40,7 +40,35 @@ struct Cast: Identifiable, Codable, Sendable, Hashable {
     var scheduledClockIn: String?
     var scheduledClockOut: String?
     var dropOffLocation: String?
+    var todayDropOffLocation: String?
+    var todayDropOffDate: String?
+    var dropOffConfirmed: Bool = false
+
+    /// 今日の送り先があればそちらを優先、なければデフォルト
+    var effectiveDropOffLocation: String? {
+        let today = {
+            let f = DateFormatter()
+            f.dateFormat = "yyyy-MM-dd"
+            f.timeZone = TimeZone(identifier: "Asia/Tokyo")
+            return f.string(from: Date())
+        }()
+        if todayDropOffDate == today, let loc = todayDropOffLocation, !loc.isEmpty {
+            return loc
+        }
+        return dropOffLocation
+    }
+
+    var isTodayOverride: Bool {
+        let today = {
+            let f = DateFormatter()
+            f.dateFormat = "yyyy-MM-dd"
+            f.timeZone = TimeZone(identifier: "Asia/Tokyo")
+            return f.string(from: Date())
+        }()
+        return todayDropOffDate == today && todayDropOffLocation != nil && !todayDropOffLocation!.isEmpty
+    }
     var photo: String?
+    var currentShiftId: String?
 }
 
 // MARK: - Customer
@@ -155,6 +183,8 @@ struct Visit: Identifiable, Codable, Sendable {
     var nominationFeeOverrides: [String: Int]
     var douhanFeeOverride: Int?
     var isCheckedOut: Bool
+    var skipServiceFee: Bool
+    var skipTax: Bool
 
     init(
         id: String = UUID().uuidString,
@@ -174,7 +204,9 @@ struct Visit: Identifiable, Codable, Sendable {
         setPriceOverride: Int? = nil,
         nominationFeeOverrides: [String: Int] = [:],
         douhanFeeOverride: Int? = nil,
-        isCheckedOut: Bool = false
+        isCheckedOut: Bool = false,
+        skipServiceFee: Bool = false,
+        skipTax: Bool = false
     ) {
         self.id = id
         self.tableId = tableId
@@ -194,6 +226,8 @@ struct Visit: Identifiable, Codable, Sendable {
         self.nominationFeeOverrides = nominationFeeOverrides
         self.douhanFeeOverride = douhanFeeOverride
         self.isCheckedOut = isCheckedOut
+        self.skipServiceFee = skipServiceFee
+        self.skipTax = skipTax
     }
 
     var totalSetMinutes: Int { setMinutes + extensionMinutes }

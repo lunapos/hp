@@ -57,9 +57,6 @@ enum PriceCalculator {
         let extensionRounds = visit.extensionMinutes / 30
         guard extensionRounds > 0 else { return 0 }
 
-        // 延長料金が設定されている場合はそれを使用
-        let extensionFee = settings?.extensionFeePerPerson ?? 5000
-
         // 延長料金は注文アイテム（ext_xxx）として既に計上されているため、
         // ここでは別途計算しない（重複防止）
         return 0
@@ -129,12 +126,12 @@ enum PriceCalculator {
 
         // サービス料（1.3.6）
         let serviceRate = settings?.serviceRate ?? Fees.serviceRate
-        let serviceFee = Int(floor(Double(discountedSubtotal) * serviceRate))
+        let serviceFee = visit.skipServiceFee ? 0 : Int(floor(Double(discountedSubtotal) * serviceRate))
 
         // 消費税（1.3.6）: (割引後小計 + サービス料) × 税率
         let taxRate = settings?.taxRate ?? Fees.taxRate
         let taxBase = discountedSubtotal + serviceFee
-        let tax = Int(floor(Double(taxBase) * taxRate))
+        let tax = visit.skipTax ? 0 : Int(floor(Double(taxBase) * taxRate))
 
         // オーバーフローチェック（1.3.6）
         let chargedAmount: Int

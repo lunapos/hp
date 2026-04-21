@@ -264,6 +264,8 @@ struct VisitRow: Codable, Sendable {
     let setPriceOverride: Int?
     let douhanFeeOverride: Int?
     let isCheckedOut: Bool
+    let skipServiceFee: Bool
+    let skipTax: Bool
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -281,6 +283,8 @@ struct VisitRow: Codable, Sendable {
         case setPriceOverride = "set_price_override"
         case douhanFeeOverride = "douhan_fee_override"
         case isCheckedOut = "is_checked_out"
+        case skipServiceFee = "skip_service_fee"
+        case skipTax = "skip_tax"
     }
 
     func toModel(nominations: [CastNomination], orderItems: [OrderItem], nominationFeeOverrides: [String: Int]) -> Visit {
@@ -301,7 +305,9 @@ struct VisitRow: Codable, Sendable {
             setPriceOverride: setPriceOverride,
             nominationFeeOverrides: nominationFeeOverrides,
             douhanFeeOverride: douhanFeeOverride,
-            isCheckedOut: isCheckedOut
+            isCheckedOut: isCheckedOut,
+            skipServiceFee: skipServiceFee,
+            skipTax: skipTax
         )
     }
 
@@ -321,7 +327,9 @@ struct VisitRow: Codable, Sendable {
             extensionMinutes: model.extensionMinutes,
             setPriceOverride: model.setPriceOverride,
             douhanFeeOverride: model.douhanFeeOverride,
-            isCheckedOut: model.isCheckedOut
+            isCheckedOut: model.isCheckedOut,
+            skipServiceFee: model.skipServiceFee,
+            skipTax: model.skipTax
         )
     }
 }

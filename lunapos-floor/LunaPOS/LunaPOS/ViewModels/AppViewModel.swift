@@ -249,6 +249,22 @@ final class AppViewModel {
         save()
     }
 
+    func toggleSkipServiceFee(visitId: String) {
+        if let idx = visits.firstIndex(where: { $0.id == visitId }) {
+            visits[idx].skipServiceFee.toggle()
+            syncEngine.syncVisit(visits[idx])
+        }
+        save()
+    }
+
+    func toggleSkipTax(visitId: String) {
+        if let idx = visits.firstIndex(where: { $0.id == visitId }) {
+            visits[idx].skipTax.toggle()
+            syncEngine.syncVisit(visits[idx])
+        }
+        save()
+    }
+
     // MARK: - Extension
 
     func addExtension(visitId: String, minutes: Int, pricePerPerson: Int) {
