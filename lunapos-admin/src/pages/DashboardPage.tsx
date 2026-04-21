@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import {
   TrendingUp, Users, CreditCard, Clock, Star, Download,
-  ChevronLeft, ChevronRight, Calendar, ChevronDown,
+  ChevronLeft, ChevronRight, Calendar, ChevronDown, Pencil, Check, X,
 } from 'lucide-react'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -37,6 +37,9 @@ export default function DashboardPage() {
   const [monthlyData, setMonthlyData] = useState<{ date: string; total: number; count: number }[]>([])
   const [paymentItems, setPaymentItems] = useState<PaymentItemRow[]>([])
   const [expandedPaymentId, setExpandedPaymentId] = useState<string | null>(null)
+  const [editingPayment, setEditingPayment] = useState<PaymentRow | null>(null)
+  const [editMethod, setEditMethod] = useState<string>('')
+  const [editSaving, setEditSaving] = useState(false)
   const [loading, setLoading] = useState(true)
 
   // 日次データ取得
@@ -130,6 +133,21 @@ export default function DashboardPage() {
 
   // 時間帯別来店
   const hourlyData = useMemo((): HourlyData[] => calcHourlyData(visits), [visits])
+
+  async function savePaymentMethod() {
+    if (!editingPayment || !editMethod) return
+    setEditSaving(true)
+    try {
+      const tid = requireTenantId()
+      await supabase.from('payments')
+        .update({ payment_method: editMethod, updated_at: new Date().toISOString() })
+        .eq('id', editingPayment.id)
+        .eq('tenant_id', tid)
+      setPayments(prev => prev.map(p => p.id === editingPayment.id ? { ...p, payment_method: editMethod as PaymentRow['payment_method'] } : p))
+    } catch { /* エラー無視 */ }
+    setEditSaving(false)
+    setEditingPayment(null)
+  }
 
   const today = toDateStr(new Date())
   const todayMonth = today.slice(0, 7)
@@ -343,22 +361,31 @@ export default function DashboardPage() {
                   return (
                     <div key={p.id} className="border-b border-[#2e2e50] last:border-0">
                       {/* ヘッダー行（クリックで開閉） */}
-                      <button
-                        onClick={() => setExpandedPaymentId(isExpanded ? null : p.id)}
-                        className="w-full flex items-center justify-between text-sm py-3 hover:bg-[#1a1a40] rounded-lg px-2 -mx-2 transition-colors"
-                      >
-                        <div className="flex items-center gap-2">
-                          <ChevronDown size={14} className={`text-[#9090bb] transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
-                          <span className="text-white">{p.customer_name || '---'}</span>
-                          <span className="text-[#9090bb] text-xs">
-                            {new Date(p.paid_at).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-[#d4b870] font-bold">{formatYen(p.total)}</span>
-                          <span className="text-[#9090bb] text-xs">{METHOD_LABELS[p.payment_method]}</span>
-                        </div>
-                      </button>
+                      <div className="flex items-center">
+                        <button
+                          onClick={() => setExpandedPaymentId(isExpanded ? null : p.id)}
+                          className="flex-1 flex items-center justify-between text-sm py-3 hover:bg-[#1a1a40] rounded-lg px-2 -mx-2 transition-colors"
+                        >
+                          <div className="flex items-center gap-2">
+                            <ChevronDown size={14} className={`text-[#9090bb] transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                            <span className="text-white">{p.customer_name || '---'}</span>
+                            <span className="text-[#9090bb] text-xs">
+                              {new Date(p.paid_at).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-[#d4b870] font-bold">{formatYen(p.total)}</span>
+                            <span className="text-[#9090bb] text-xs">{METHOD_LABELS[p.payment_method]}</span>
+                          </div>
+                        </button>
+                        <button
+                          onClick={() => { setEditingPayment(p); setEditMethod(p.payment_method) }}
+                          className="ml-2 p-1.5 rounded-lg text-[#3a3a5e] hover:text-[#9090bb] hover:bg-[#1a1a40] transition-colors"
+                          title="支払方法を修正"
+                        >
+                          <Pencil size={13} />
+                        </button>
+                      </div>
 
                       {/* 展開: 内訳 */}
                       {isExpanded && (
@@ -482,6 +509,39 @@ export default function DashboardPage() {
             </div>
           </div>
         </>
+      )}
+      {/* 支払方法修正モーダル */}
+      {editingPayment && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50" onClick={() => setEditingPayment(null)}>
+          <div className="bg-[#141430] border border-[#2e2e50] rounded-xl p-6 w-80" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-white font-semibold">支払方法を修正</h3>
+              <button onClick={() => setEditingPayment(null)} className="text-[#9090bb] hover:text-white"><X size={16} /></button>
+            </div>
+            <p className="text-xs text-[#9090bb] mb-4">{editingPayment.customer_name || '---'} / {formatYen(editingPayment.total)}</p>
+            <div className="grid grid-cols-2 gap-2 mb-6">
+              {(['cash', 'credit', 'electronic', 'tab'] as const).map(m => (
+                <button
+                  key={m}
+                  onClick={() => setEditMethod(m)}
+                  className={`py-3 rounded-xl text-sm font-medium transition-colors ${editMethod === m ? 'bg-[#d4b870] text-black' : 'bg-[#0f0f28] border border-[#2e2e50] text-[#9090bb]'}`}
+                >
+                  {METHOD_LABELS[m]}
+                </button>
+              ))}
+            </div>
+            <div className="flex gap-3">
+              <button onClick={() => setEditingPayment(null)} className="flex-1 py-2.5 rounded-xl text-sm text-[#9090bb] bg-[#0f0f28] border border-[#2e2e50]">キャンセル</button>
+              <button
+                onClick={savePaymentMethod}
+                disabled={editSaving || editMethod === editingPayment.payment_method}
+                className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-[#d4b870] text-black disabled:opacity-40 flex items-center justify-center gap-2"
+              >
+                <Check size={14} />{editSaving ? '保存中...' : '保存'}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )

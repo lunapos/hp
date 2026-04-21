@@ -7,6 +7,7 @@ export type MenuCategory = 'drink' | 'bottle' | 'food' | 'ladies_drink' | 'other
 export type NominationType = 'none' | 'in_store' | 'main'
 export type PaymentMethod = 'cash' | 'credit' | 'electronic' | 'tab'
 export type CustomerRank = 'new' | 'repeat' | 'vip'
+export type RoundingType = 'none' | 'floor' | 'ceil' | 'round'
 
 // --- Supabase Row型 ---
 
@@ -20,6 +21,8 @@ export interface StoreRow {
   nomination_fee_in_store: number
   invoice_registration_number: string | null
   enable_drop_off: boolean
+  rounding_unit: number
+  rounding_type: RoundingType
   created_at: string
   updated_at: string
 }

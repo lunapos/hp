@@ -31,6 +31,8 @@ struct StoreRow: Codable, Sendable {
     let extensionFeePerPerson: Int?
     let invoiceRegistrationNumber: String?
     let minRequiredVersion: String?
+    let roundingUnit: Int?
+    let roundingType: String?
 
     enum CodingKeys: String, CodingKey {
         case id, name
@@ -42,6 +44,8 @@ struct StoreRow: Codable, Sendable {
         case extensionFeePerPerson = "extension_fee_per_person"
         case invoiceRegistrationNumber = "invoice_registration_number"
         case minRequiredVersion = "min_required_version"
+        case roundingUnit = "rounding_unit"
+        case roundingType = "rounding_type"
     }
 }
 

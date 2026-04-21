@@ -114,41 +114,47 @@ struct CheckoutView: View {
     private func checkoutContent(table: FloorTable, visit: Visit) -> some View {
         let breakdown = PriceCalculator.calculate(visit: visit, setPlans: vm.setPlans, settings: vm.storeSettings)
         let discount = max(0, Int(discountInput) ?? 0)
-        let total = max(0, breakdown.chargedAmount - discount) + breakdown.expenseTotal
+        let chargedBeforeRounding = max(0, breakdown.chargedAmount - discount)
+        let chargedRounded = vm.storeSettings.applyRounding(to: chargedBeforeRounding)
+        let total = chargedRounded + breakdown.expenseTotal
 
         let regularItems = visit.orderItems.filter { !$0.isExpense }
         let expenseItems = visit.orderItems.filter { $0.isExpense }
 
-        ScrollView {
-            VStack(spacing: 12) {
-                // Visit info
-                visitInfoSection(visit: visit)
-
-                // Order items
-                orderItemsSection(visit: visit, breakdown: breakdown, regularItems: regularItems, expenseItems: expenseItems)
-
-                // Fee breakdown
-                feeBreakdownSection(breakdown: breakdown, discount: discount, total: total)
-
-                // Payment method
-                paymentMethodSection
-
-                // 現金選択時: 預かり金額入力
-                if paymentMethod == .cash {
-                    cashReceivedSection(total: total)
+        // 左: 注文明細（スクロール）/ 右: 合計・支払い・ボタン（固定）
+        HStack(alignment: .top, spacing: 0) {
+            // 左カラム: 注文明細
+            ScrollView {
+                VStack(spacing: 12) {
+                    visitInfoSection(visit: visit)
+                    orderItemsSection(visit: visit, breakdown: breakdown, regularItems: regularItems, expenseItems: expenseItems)
                 }
-
-                // ツケ警告
-                if showTabWarning {
-                    tabWarningBanner
-                }
+                .padding()
             }
-            .padding()
+            .frame(maxWidth: .infinity)
+
+            Divider()
+
+            // 右カラム: 合計・支払い・ボタン
+            VStack(spacing: 12) {
+                ScrollView {
+                    VStack(spacing: 12) {
+                        feeBreakdownSection(breakdown: breakdown, discount: discount, total: total)
+                        paymentMethodSection
+                        if paymentMethod == .cash {
+                            cashReceivedSection(total: total)
+                        }
+                        if showTabWarning {
+                            tabWarningBanner
+                        }
+                    }
+                    .padding()
+                }
+                checkoutButton(table: table, visit: visit, total: total, discount: discount, breakdown: breakdown)
+            }
+            .frame(width: 360)
         }
         .background(Color.lunaBg)
-        .safeAreaInset(edge: .bottom) {
-            checkoutButton(table: table, visit: visit, total: total, discount: discount, breakdown: breakdown)
-        }
         .toolbar {
             ToolbarItem(placement: .principal) {
                 VStack(spacing: 2) {

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Check, AlertTriangle, Copy } from 'lucide-react'
 import { supabase, requireTenantId } from '../lib/supabase'
-import type { StoreRow } from '../types'
+import type { StoreRow, RoundingType } from '../types'
 
 interface DeviceRow {
   id: string
@@ -27,6 +27,8 @@ export default function SettingsPage() {
     nomination_fee_in_store: '',
     invoice_registration_number: '',
     enable_drop_off: true,
+    rounding_unit: 1,
+    rounding_type: 'none' as RoundingType,
   })
 
   useEffect(() => { fetchStore(); fetchDevices() }, [])
@@ -35,7 +37,7 @@ export default function SettingsPage() {
     setLoading(true)
     const tid = requireTenantId()
     const { data } = await supabase.from('stores')
-      .select('id, name, service_rate, tax_rate, douhan_fee, nomination_fee_main, nomination_fee_in_store, invoice_registration_number, enable_drop_off, created_at, updated_at')
+      .select('id, name, service_rate, tax_rate, douhan_fee, nomination_fee_main, nomination_fee_in_store, invoice_registration_number, enable_drop_off, rounding_unit, rounding_type, created_at, updated_at')
       .eq('id', tid)
       .single()
     if (data) {
@@ -50,6 +52,8 @@ export default function SettingsPage() {
         nomination_fee_in_store: String(s.nomination_fee_in_store),
         invoice_registration_number: s.invoice_registration_number || '',
         enable_drop_off: s.enable_drop_off ?? true,
+        rounding_unit: s.rounding_unit ?? 1,
+        rounding_type: s.rounding_type ?? 'none',
       })
     }
     setLoading(false)
@@ -99,6 +103,8 @@ export default function SettingsPage() {
       nomination_fee_in_store: parseInt(form.nomination_fee_in_store) || 0,
       invoice_registration_number: form.invoice_registration_number || null,
       enable_drop_off: form.enable_drop_off,
+      rounding_unit: form.rounding_unit,
+      rounding_type: form.rounding_type,
       updated_at: new Date().toISOString(),
     }).eq('id', tid)
 
@@ -153,6 +159,53 @@ export default function SettingsPage() {
             <input type="number" value={form.douhan_fee} onChange={e => setForm(f => ({ ...f, douhan_fee: e.target.value }))}
               className="w-full bg-[#0f0f28] border border-[#2e2e50] rounded-xl px-4 py-3 text-white outline-none focus:border-[#d4b870]/50" min="0" />
           </div>
+        </div>
+
+        {/* 端数処理 */}
+        <div>
+          <label className="text-xs text-[#9090bb] tracking-widest uppercase block mb-3">端数処理（合計金額）</label>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="text-xs text-[#9090bb] block mb-2">単位</label>
+              <div className="flex gap-2">
+                {([1, 10, 100] as const).map(unit => (
+                  <button
+                    key={unit}
+                    type="button"
+                    onClick={() => setForm(f => ({ ...f, rounding_unit: unit, rounding_type: unit === 1 ? 'none' : f.rounding_type === 'none' ? 'floor' : f.rounding_type }))}
+                    className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${form.rounding_unit === unit ? 'bg-[#d4b870] text-black' : 'bg-[#0f0f28] border border-[#2e2e50] text-[#9090bb]'}`}
+                  >
+                    {unit === 1 ? 'なし' : `${unit}円`}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <label className="text-xs text-[#9090bb] block mb-2">方式</label>
+              <div className="flex gap-2">
+                {([['floor', '切り捨て'], ['ceil', '切り上げ'], ['round', '四捨五入']] as [RoundingType, string][]).map(([type, label]) => (
+                  <button
+                    key={type}
+                    type="button"
+                    disabled={form.rounding_unit === 1}
+                    onClick={() => setForm(f => ({ ...f, rounding_type: type }))}
+                    className={`flex-1 py-2 rounded-lg text-xs font-medium transition-colors disabled:opacity-30 ${form.rounding_type === type && form.rounding_unit !== 1 ? 'bg-[#d4b870] text-black' : 'bg-[#0f0f28] border border-[#2e2e50] text-[#9090bb]'}`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+          {form.rounding_unit !== 1 && (
+            <p className="text-xs text-[#9090bb] mt-2">
+              例: ¥15,234 → {
+                form.rounding_type === 'floor' ? `¥${(Math.floor(15234 / form.rounding_unit) * form.rounding_unit).toLocaleString()}` :
+                form.rounding_type === 'ceil' ? `¥${(Math.ceil(15234 / form.rounding_unit) * form.rounding_unit).toLocaleString()}` :
+                `¥${(Math.round(15234 / form.rounding_unit) * form.rounding_unit).toLocaleString()}`
+              }（税込）
+            </p>
+          )}
         </div>
 
         {/* インボイス */}
