@@ -753,17 +753,21 @@ struct TableDetailView: View {
                 Text("サービス料 (\(Int(vm.storeSettings.serviceRate * 100))%)")
                     .font(.subheadline).foregroundStyle(.lunaMuted)
                 Spacer()
-                Button {
-                    vm.toggleSkipServiceFee(visitId: visit.id)
-                } label: {
-                    Text(visit.skipServiceFee ? "免除中" : breakdown.serviceFee.yenFormatted)
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundStyle(visit.skipServiceFee ? .white : .lunaGoldDark)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 4)
-                        .background(visit.skipServiceFee ? Color.gray.opacity(0.5) : Color.lunaGoldDark.opacity(0.15))
-                        .clipShape(Capsule())
-                        .overlay(Capsule().stroke(visit.skipServiceFee ? Color.gray : Color.lunaGoldDark.opacity(0.5), lineWidth: 1))
+                Text(breakdown.serviceFee.yenFormatted)
+                    .font(.subheadline)
+                    .foregroundStyle(visit.skipServiceFee ? .lunaMuted : .primary)
+                    .strikethrough(visit.skipServiceFee)
+                Button { vm.toggleSkipServiceFee(visitId: visit.id) } label: {
+                    ZStack(alignment: visit.skipServiceFee ? .leading : .trailing) {
+                        Capsule()
+                            .frame(width: 44, height: 24)
+                            .foregroundStyle(visit.skipServiceFee ? Color.gray.opacity(0.4) : Color.lunaGoldDark)
+                        Circle()
+                            .frame(width: 20, height: 20)
+                            .foregroundStyle(.white)
+                            .shadow(radius: 1)
+                            .padding(2)
+                    }
                 }
                 .buttonStyle(.plain)
             }
@@ -771,17 +775,21 @@ struct TableDetailView: View {
                 Text("消費税 (\(Int(vm.storeSettings.taxRate * 100))%)")
                     .font(.subheadline).foregroundStyle(.lunaMuted)
                 Spacer()
-                Button {
-                    vm.toggleSkipTax(visitId: visit.id)
-                } label: {
-                    Text(visit.skipTax ? "免除中" : breakdown.tax.yenFormatted)
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundStyle(visit.skipTax ? .white : .lunaGoldDark)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 4)
-                        .background(visit.skipTax ? Color.gray.opacity(0.5) : Color.lunaGoldDark.opacity(0.15))
-                        .clipShape(Capsule())
-                        .overlay(Capsule().stroke(visit.skipTax ? Color.gray : Color.lunaGoldDark.opacity(0.5), lineWidth: 1))
+                Text(breakdown.tax.yenFormatted)
+                    .font(.subheadline)
+                    .foregroundStyle(visit.skipTax ? .lunaMuted : .primary)
+                    .strikethrough(visit.skipTax)
+                Button { vm.toggleSkipTax(visitId: visit.id) } label: {
+                    ZStack(alignment: visit.skipTax ? .leading : .trailing) {
+                        Capsule()
+                            .frame(width: 44, height: 24)
+                            .foregroundStyle(visit.skipTax ? Color.gray.opacity(0.4) : Color.lunaGoldDark)
+                        Circle()
+                            .frame(width: 20, height: 20)
+                            .foregroundStyle(.white)
+                            .shadow(radius: 1)
+                            .padding(2)
+                    }
                 }
                 .buttonStyle(.plain)
             }
