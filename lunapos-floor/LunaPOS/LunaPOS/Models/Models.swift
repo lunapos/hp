@@ -94,7 +94,11 @@ struct Customer: Identifiable, Codable, Sendable {
 
 enum MenuCategory: String, Codable, CaseIterable, Sendable {
     case drink
-    case bottle
+    case whisky
+    case shochu
+    case champagne
+    case redWine = "red_wine"
+    case whiteWine = "white_wine"
     case food
     case ladiesDrink = "ladies_drink"
     case other
@@ -102,7 +106,11 @@ enum MenuCategory: String, Codable, CaseIterable, Sendable {
     var label: String {
         switch self {
         case .drink: "ドリンク"
-        case .bottle: "ボトル"
+        case .whisky: "ウイスキー"
+        case .shochu: "焼酎"
+        case .champagne: "シャンパン"
+        case .redWine: "赤ワイン"
+        case .whiteWine: "白ワイン"
         case .food: "フード"
         case .ladiesDrink: "レディース"
         case .other: "その他"
