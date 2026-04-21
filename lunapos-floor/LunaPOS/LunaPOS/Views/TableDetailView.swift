@@ -750,46 +750,40 @@ struct TableDetailView: View {
                 Text(breakdown.subtotal.yenFormatted).font(.subheadline)
             }
             HStack {
+                Text("サービス料 (\(Int(vm.storeSettings.serviceRate * 100))%)")
+                    .font(.subheadline).foregroundStyle(.lunaMuted)
+                Spacer()
                 Button {
                     vm.toggleSkipServiceFee(visitId: visit.id)
                 } label: {
-                    HStack(spacing: 4) {
-                        Image(systemName: visit.skipServiceFee ? "xmark.circle.fill" : "checkmark.circle.fill")
-                            .foregroundStyle(visit.skipServiceFee ? .lunaMuted : .lunaGoldDark)
-                            .font(.system(size: 14))
-                        Text("サービス料 (\(Int(vm.storeSettings.serviceRate * 100))%)")
-                            .font(.subheadline)
-                            .foregroundStyle(visit.skipServiceFee ? .lunaMuted : .secondary)
-                            .strikethrough(visit.skipServiceFee)
-                    }
+                    Text(visit.skipServiceFee ? "免除中" : breakdown.serviceFee.yenFormatted)
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundStyle(visit.skipServiceFee ? .white : .lunaGoldDark)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 4)
+                        .background(visit.skipServiceFee ? Color.gray.opacity(0.5) : Color.lunaGoldDark.opacity(0.15))
+                        .clipShape(Capsule())
+                        .overlay(Capsule().stroke(visit.skipServiceFee ? Color.gray : Color.lunaGoldDark.opacity(0.5), lineWidth: 1))
                 }
                 .buttonStyle(.plain)
-                Spacer()
-                Text(breakdown.serviceFee.yenFormatted)
-                    .font(.subheadline)
-                    .foregroundStyle(visit.skipServiceFee ? .lunaMuted : .primary)
-                    .strikethrough(visit.skipServiceFee)
             }
             HStack {
+                Text("消費税 (\(Int(vm.storeSettings.taxRate * 100))%)")
+                    .font(.subheadline).foregroundStyle(.lunaMuted)
+                Spacer()
                 Button {
                     vm.toggleSkipTax(visitId: visit.id)
                 } label: {
-                    HStack(spacing: 4) {
-                        Image(systemName: visit.skipTax ? "xmark.circle.fill" : "checkmark.circle.fill")
-                            .foregroundStyle(visit.skipTax ? .lunaMuted : .lunaGoldDark)
-                            .font(.system(size: 14))
-                        Text("消費税 (\(Int(vm.storeSettings.taxRate * 100))%)")
-                            .font(.subheadline)
-                            .foregroundStyle(visit.skipTax ? .lunaMuted : .secondary)
-                            .strikethrough(visit.skipTax)
-                    }
+                    Text(visit.skipTax ? "免除中" : breakdown.tax.yenFormatted)
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundStyle(visit.skipTax ? .white : .lunaGoldDark)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 4)
+                        .background(visit.skipTax ? Color.gray.opacity(0.5) : Color.lunaGoldDark.opacity(0.15))
+                        .clipShape(Capsule())
+                        .overlay(Capsule().stroke(visit.skipTax ? Color.gray : Color.lunaGoldDark.opacity(0.5), lineWidth: 1))
                 }
                 .buttonStyle(.plain)
-                Spacer()
-                Text(breakdown.tax.yenFormatted)
-                    .font(.subheadline)
-                    .foregroundStyle(visit.skipTax ? .lunaMuted : .primary)
-                    .strikethrough(visit.skipTax)
             }
             expenseItemRows(visit: visit)
             Divider()
