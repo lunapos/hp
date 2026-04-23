@@ -4,6 +4,15 @@ import type { NewsItem } from "./news-types";
 export const updateItems: NewsItem[] = [
   // --- 2026-04-23 ---
   {
+    slug: "floor-bluetooth-printer",
+    date: "2026-04-23",
+    title: "Floor: Bluetoothプリンター接続・会計完了画面を改善",
+    summary: "CoreBluetoothによるBLEプリンター自動検出機能を追加。会計完了画面もiPad向けカードUIに刷新しました。",
+    category: "開発アップデート",
+    project: "Floor",
+    content: "v1.0.4の主な変更点です。\n\n## Bluetoothプリンター接続\n・CoreBluetoothによるBLEプリンター自動検出\n・Star mC-Print3 / Epson TM-m30 等のBluetooth対応機種を自動判別\n・SDK未導入でもデバイスの検出・接続が可能\n・プリンタ設定画面にBluetooth状態表示を追加\n\n## UI改善\n・会計完了画面をiPad向け大型カードUIに刷新\n・サービス料・消費税のトグル位置を金額の左側に変更\n・トグルON/OFFで位置がずれないよう固定幅化",
+  },
+  {
     slug: "floor-receipt-printing",
     date: "2026-04-23",
     title: "Floor: レシート印刷機能を追加（AirPrint / Star / Epson 対応）",
