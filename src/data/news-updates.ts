@@ -2,6 +2,16 @@
 import type { NewsItem } from "./news-types";
 
 export const updateItems: NewsItem[] = [
+  // --- 2026-04-23 ---
+  {
+    slug: "floor-receipt-printing",
+    date: "2026-04-23",
+    title: "Floor: レシート印刷機能を追加（AirPrint / Star / Epson 対応）",
+    summary: "会計後にレシートを印刷できるようになりました。AirPrint・Star Micronics・Epsonの3種類のプリンタに対応し、設定画面から切り替え可能です。",
+    category: "開発アップデート",
+    project: "Floor",
+    content: "レシート印刷機能を実装しました。\n\n## 対応プリンタ\n・AirPrint（iPad標準・SDK不要）\n・Star Micronics（TSP100IV / mC-Print3 / SM-L200 等）\n・Epson（TM-m30 / TM-T88 等）\n\n## 機能\n・プリンタ設定画面（機種選択・検出・テスト印刷）\n・レシートプレビュー画面に印刷ボタン追加\n・会計時の自動印刷ON/OFF設定\n・印刷キュー＆リトライ（最大3回）\n・80mm幅レシートレイアウト（インボイス対応）",
+  },
   // --- 2026-04-06 ---
   {
     slug: "floor-force-update",
