@@ -753,10 +753,6 @@ struct TableDetailView: View {
                 Text("サービス料 (\(Int(vm.storeSettings.serviceRate * 100))%)")
                     .font(.subheadline).foregroundStyle(.lunaMuted)
                 Spacer()
-                Text(breakdown.serviceFee.yenFormatted)
-                    .font(.subheadline)
-                    .foregroundStyle(visit.skipServiceFee ? .lunaMuted : .primary)
-                    .strikethrough(visit.skipServiceFee)
                 Button { vm.toggleSkipServiceFee(visitId: visit.id) } label: {
                     ZStack(alignment: visit.skipServiceFee ? .leading : .trailing) {
                         Capsule()
@@ -770,15 +766,15 @@ struct TableDetailView: View {
                     }
                 }
                 .buttonStyle(.plain)
+                Text(breakdown.serviceFee.yenFormatted)
+                    .font(.subheadline)
+                    .foregroundStyle(visit.skipServiceFee ? .lunaMuted : .primary)
+                    .strikethrough(visit.skipServiceFee)
             }
             HStack {
                 Text("消費税 (\(Int(vm.storeSettings.taxRate * 100))%)")
                     .font(.subheadline).foregroundStyle(.lunaMuted)
                 Spacer()
-                Text(breakdown.tax.yenFormatted)
-                    .font(.subheadline)
-                    .foregroundStyle(visit.skipTax ? .lunaMuted : .primary)
-                    .strikethrough(visit.skipTax)
                 Button { vm.toggleSkipTax(visitId: visit.id) } label: {
                     ZStack(alignment: visit.skipTax ? .leading : .trailing) {
                         Capsule()
@@ -792,6 +788,10 @@ struct TableDetailView: View {
                     }
                 }
                 .buttonStyle(.plain)
+                Text(breakdown.tax.yenFormatted)
+                    .font(.subheadline)
+                    .foregroundStyle(visit.skipTax ? .lunaMuted : .primary)
+                    .strikethrough(visit.skipTax)
             }
             expenseItemRows(visit: visit)
             Divider()
