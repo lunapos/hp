@@ -39,7 +39,7 @@ struct CheckoutView: View {
     // MARK: - Completed View
 
     private var completedView: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 0) {
             Spacer()
             Image(systemName: "checkmark")
                 .font(.system(size: 36))
@@ -47,10 +47,12 @@ struct CheckoutView: View {
                 .frame(width: 80, height: 80)
                 .background(Color.lunaDark)
                 .clipShape(Circle())
+                .padding(.bottom, 20)
 
             Text("THANK YOU")
                 .font(.title.bold())
                 .tracking(4)
+                .padding(.bottom, 8)
 
             Text(completedTotal.yenFormatted)
                 .font(.title2.bold())
@@ -66,36 +68,42 @@ struct CheckoutView: View {
                         .font(.title3.bold())
                         .foregroundStyle(.white)
                 }
+                .padding(.top, 8)
             }
+
+            Spacer()
 
             // レシート表示ボタン
-            if completedReceipt != nil {
-                Button {
-                    showReceipt = true
-                } label: {
-                    HStack(spacing: 8) {
-                        Image(systemName: "doc.text")
-                        Text("レシートを表示")
-                            .tracking(1)
+            VStack(spacing: 24) {
+                if completedReceipt != nil {
+                    Button {
+                        showReceipt = true
+                    } label: {
+                        HStack(spacing: 8) {
+                            Image(systemName: "doc.text")
+                            Text("レシートを表示")
+                                .tracking(1)
+                        }
+                        .font(.subheadline.bold())
+                        .padding(.horizontal, 32)
+                        .padding(.vertical, 14)
                     }
-                    .font(.subheadline.bold())
-                    .padding(.horizontal, 24)
-                    .padding(.vertical, 12)
+                    .buttonStyle(.borderedProminent)
+                    .tint(.lunaDark)
                 }
-                .buttonStyle(.borderedProminent)
-                .tint(.lunaDark)
-            }
 
-            Button {
-                showCheckout = false
-                selectedTableId = nil
-            } label: {
-                Text("フロアに戻る")
-                    .font(.caption)
-                    .foregroundStyle(.lunaMuted)
-                    .tracking(2)
+                Button {
+                    showCheckout = false
+                    selectedTableId = nil
+                } label: {
+                    Text("フロアに戻る")
+                        .font(.body.bold())
+                        .foregroundStyle(.lunaGoldDark)
+                        .tracking(2)
+                        .frame(minWidth: 200, minHeight: 48)
+                }
             }
-            Spacer()
+            .padding(.bottom, 60)
         }
         .frame(maxWidth: .infinity)
         .background(Color.lunaBg)
