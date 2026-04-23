@@ -770,6 +770,7 @@ struct TableDetailView: View {
                     .font(.subheadline)
                     .foregroundStyle(visit.skipServiceFee ? .lunaMuted : .primary)
                     .strikethrough(visit.skipServiceFee)
+                    .frame(width: 70, alignment: .trailing)
             }
             HStack {
                 Text("消費税 (\(Int(vm.storeSettings.taxRate * 100))%)")
@@ -792,6 +793,7 @@ struct TableDetailView: View {
                     .font(.subheadline)
                     .foregroundStyle(visit.skipTax ? .lunaMuted : .primary)
                     .strikethrough(visit.skipTax)
+                    .frame(width: 70, alignment: .trailing)
             }
             expenseItemRows(visit: visit)
             Divider()
