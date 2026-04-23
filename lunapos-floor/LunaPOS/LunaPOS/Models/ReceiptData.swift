@@ -140,7 +140,7 @@ struct ReceiptData: Codable, Sendable {
     }
 }
 
-/// プリンタ接続状態（2.5.2）
+/// プリンタ接続状態
 enum PrinterConnectionState: String, Sendable {
     case disconnected
     case searching
@@ -149,34 +149,108 @@ enum PrinterConnectionState: String, Sendable {
     case error
 }
 
-/// プリンタマネージャー（2.5.2 — Epson ePOS SDKのスタブ）
-/// 実際のSDK統合は実機テスト時に行う
+/// プリンタマネージャー — AirPrint / Star / Epson をドライバで切替
 @Observable
 final class PrinterManager: @unchecked Sendable {
     static let shared = PrinterManager()
 
     private(set) var connectionState: PrinterConnectionState = .disconnected
     private(set) var lastError: String?
+    private(set) var discoveredPrinters: [DiscoveredPrinter] = []
 
-    /// 選択中のプリンタ名（UserDefaultsで永続化）
-    var selectedPrinter: String? {
-        get { UserDefaults.standard.string(forKey: "luna_selected_printer") }
-        set { UserDefaults.standard.set(newValue, forKey: "luna_selected_printer") }
+    /// 現在のドライバ
+    private var driver: PrinterDriver
+
+    /// 選択中のプリンタ種別（UserDefaultsで永続化）
+    var selectedType: PrinterType {
+        get {
+            guard let raw = UserDefaults.standard.string(forKey: "luna_printer_type"),
+                  let type = PrinterType(rawValue: raw) else { return .airprint }
+            return type
+        }
+        set {
+            UserDefaults.standard.set(newValue.rawValue, forKey: "luna_printer_type")
+            driver = Self.createDriver(for: newValue)
+            connectionState = .disconnected
+        }
     }
 
-    /// 印刷キュー（2.5.3）
+    /// 選択中のプリンタID（UserDefaultsで永続化）
+    var selectedPrinterId: String? {
+        get { UserDefaults.standard.string(forKey: "luna_selected_printer_id") }
+        set { UserDefaults.standard.set(newValue, forKey: "luna_selected_printer_id") }
+    }
+
+    /// 会計完了時の自動印刷（UserDefaultsで永続化）
+    var autoPrintEnabled: Bool {
+        get { UserDefaults.standard.bool(forKey: "luna_auto_print") }
+        set { UserDefaults.standard.set(newValue, forKey: "luna_auto_print") }
+    }
+
+    /// 印刷キュー
     private var printQueue: [ReceiptData] = []
     private var isPrinting = false
 
-    private init() {}
+    private init() {
+        let type: PrinterType
+        if let raw = UserDefaults.standard.string(forKey: "luna_printer_type"),
+           let t = PrinterType(rawValue: raw) {
+            type = t
+        } else {
+            type = .airprint
+        }
+        self.driver = Self.createDriver(for: type)
+    }
 
-    /// レシート印刷（2.5.3）
-    func print(receipt: ReceiptData) async throws {
+    private static func createDriver(for type: PrinterType) -> PrinterDriver {
+        switch type {
+        case .airprint: AirPrintDriver()
+        case .star: StarPrintDriver()
+        case .epson: EpsonPrintDriver()
+        }
+    }
+
+    // MARK: - プリンタ検出
+
+    func discoverPrinters() async {
+        connectionState = .searching
+        lastError = nil
+        do {
+            discoveredPrinters = try await driver.discover()
+            connectionState = .disconnected
+        } catch {
+            lastError = error.localizedDescription
+            connectionState = .error
+            discoveredPrinters = []
+        }
+    }
+
+    // MARK: - 接続
+
+    func connect(to printer: DiscoveredPrinter) async {
+        lastError = nil
+        do {
+            try await driver.connect(to: printer)
+            selectedPrinterId = printer.id
+            connectionState = .connected
+        } catch {
+            lastError = error.localizedDescription
+            connectionState = .error
+        }
+    }
+
+    func disconnect() async {
+        await driver.disconnect()
+        connectionState = .disconnected
+    }
+
+    // MARK: - 印刷
+
+    func printReceipt(_ receipt: ReceiptData) async {
         printQueue.append(receipt)
         await processPrintQueue()
     }
 
-    /// 印刷キューを処理（2.5.3）
     private func processPrintQueue() async {
         guard !isPrinting, !printQueue.isEmpty else { return }
         isPrinting = true
@@ -184,18 +258,38 @@ final class PrinterManager: @unchecked Sendable {
 
         while let receipt = printQueue.first {
             printQueue.removeFirst()
-            // 実際の印刷処理はEpson ePOS SDK統合時に実装
-            // 現時点ではPDF出力のスタブ
             connectionState = .printing
-            try? await Task.sleep(for: .milliseconds(100))
-            connectionState = .connected
+            lastError = nil
+
+            var retries = 0
+            let maxRetries = 3
+            while retries < maxRetries {
+                do {
+                    try await driver.printReceipt(receipt)
+                    connectionState = .connected
+                    break
+                } catch {
+                    retries += 1
+                    if retries >= maxRetries {
+                        lastError = error.localizedDescription
+                        connectionState = .error
+                    } else {
+                        try? await Task.sleep(for: .seconds(1))
+                    }
+                }
+            }
         }
     }
 
-    /// テスト印刷（2.5.2）
     func testPrint() async {
         connectionState = .printing
-        try? await Task.sleep(for: .seconds(1))
-        connectionState = .connected
+        lastError = nil
+        do {
+            try await driver.testPrint()
+            connectionState = .connected
+        } catch {
+            lastError = error.localizedDescription
+            connectionState = .error
+        }
     }
 }

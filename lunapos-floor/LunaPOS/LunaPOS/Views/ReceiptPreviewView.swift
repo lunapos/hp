@@ -6,6 +6,14 @@ struct ReceiptPreviewView: View {
     let receipt: ReceiptData
     let onDismiss: () -> Void
 
+    @State private var isPrinting = false
+    @State private var printResult: PrintResult?
+
+    private enum PrintResult {
+        case success
+        case error(String)
+    }
+
     var body: some View {
         VStack(spacing: 0) {
             // ヘッダーバー
@@ -15,6 +23,16 @@ struct ReceiptPreviewView: View {
                     .foregroundStyle(.lunaGold)
                     .tracking(2)
                 Spacer()
+
+                // プリンタ種別バッジ
+                Text(PrinterManager.shared.selectedType.displayName)
+                    .font(.caption2)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(Color.lunaGold.opacity(0.2))
+                    .foregroundStyle(.lunaGold)
+                    .clipShape(Capsule())
+
                 Button {
                     onDismiss()
                 } label: {
@@ -39,7 +57,25 @@ struct ReceiptPreviewView: View {
             }
             .background(Color.lunaBg)
 
-            // 印刷ボタン（将来用）
+            // 印刷結果バナー
+            if let result = printResult {
+                HStack(spacing: 8) {
+                    switch result {
+                    case .success:
+                        Image(systemName: "checkmark.circle.fill").foregroundStyle(.green)
+                        Text("印刷しました").foregroundStyle(.green)
+                    case .error(let msg):
+                        Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(.orange)
+                        Text(msg).foregroundStyle(.orange).lineLimit(1)
+                    }
+                }
+                .font(.caption)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 8)
+                .background(Color.lunaCard)
+            }
+
+            // ボタン
             HStack(spacing: 16) {
                 Button {
                     onDismiss()
@@ -53,10 +89,43 @@ struct ReceiptPreviewView: View {
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(.lunaDark)
+
+                Button {
+                    Task { await handlePrint() }
+                } label: {
+                    HStack {
+                        if isPrinting {
+                            ProgressView()
+                                .tint(.lunaDark)
+                        } else {
+                            Image(systemName: "printer")
+                        }
+                        Text(isPrinting ? "印刷中..." : "印刷")
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.lunaGold)
+                .disabled(isPrinting)
             }
             .padding()
             .background(Color.lunaCard)
         }
+    }
+
+    private func handlePrint() async {
+        isPrinting = true
+        printResult = nil
+
+        await PrinterManager.shared.printReceipt(receipt)
+
+        if let error = PrinterManager.shared.lastError {
+            printResult = .error(error)
+        } else {
+            printResult = .success
+        }
+        isPrinting = false
     }
 
     // MARK: - レシート本体

@@ -36,6 +36,11 @@
 		E8DBE60F51BC32ABF37F53DE /* SyncEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF3135CA1B1C0736CC81846 /* SyncEngineTests.swift */; };
 		FBF8DC17A87C04005305234F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F9DF5D7016B0EC3494A2FBC /* Constants.swift */; };
 		FFF58FFF04900EFFA1373460 /* RealtimeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7628E1B7E08407B8B6B209B9 /* RealtimeManager.swift */; };
+		A1000001000000000000001A /* PrinterDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001000000000000001B /* PrinterDriver.swift */; };
+		A1000002000000000000002A /* AirPrintDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000002000000000000002B /* AirPrintDriver.swift */; };
+		A1000003000000000000003A /* StarPrintDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000003000000000000003B /* StarPrintDriver.swift */; };
+		A1000004000000000000004A /* EpsonPrintDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000004000000000000004B /* EpsonPrintDriver.swift */; };
+		A1000005000000000000005A /* PrinterSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000005000000000000005B /* PrinterSettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,6 +84,11 @@
 		D59C6A324BB3ED30B7B3E01F /* FloorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorView.swift; sourceTree = "<group>"; };
 		DD4E5F6A7B8C9D0E1F2A3B4C /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 		FC2D9D03138FBB4845858FF1 /* StoreSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreSettings.swift; sourceTree = "<group>"; };
+		A1000001000000000000001B /* PrinterDriver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrinterDriver.swift; sourceTree = "<group>"; };
+		A1000002000000000000002B /* AirPrintDriver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPrintDriver.swift; sourceTree = "<group>"; };
+		A1000003000000000000003B /* StarPrintDriver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarPrintDriver.swift; sourceTree = "<group>"; };
+		A1000004000000000000004B /* EpsonPrintDriver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpsonPrintDriver.swift; sourceTree = "<group>"; };
+		A1000005000000000000005B /* PrinterSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrinterSettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +128,7 @@
 				F1E2D3C4B5A6978869001234 /* ReceiptPreviewView.swift */,
 				BB2C3D4E5F6A7B8C9D0E1F2A /* DeviceAuthView.swift */,
 				D59C6A324BB3ED30B7B3E01F /* FloorView.swift */,
+				A1000005000000000000005B /* PrinterSettingsView.swift */,
 				4B71B64CEE6CA395A0DDE73B /* TableDetailView.swift */,
 				769460F36666822479733CFD /* Components */,
 			);
@@ -127,9 +138,13 @@
 		3B7306709065026B24F3EE94 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				A1000002000000000000002B /* AirPrintDriver.swift */,
+				A1000004000000000000004B /* EpsonPrintDriver.swift */,
 				DD4E5F6A7B8C9D0E1F2A3B4C /* KeychainHelper.swift */,
 				4F4451DD65A7D6F5D6B5E3E1 /* NetworkMonitor.swift */,
+				A1000001000000000000001B /* PrinterDriver.swift */,
 				7628E1B7E08407B8B6B209B9 /* RealtimeManager.swift */,
+				A1000003000000000000003B /* StarPrintDriver.swift */,
 				48E92DF18BD5E475940BE4F6 /* SupabaseService.swift */,
 				A0B4FBD69062C7D494559475 /* SyncEngine.swift */,
 			);
@@ -321,6 +336,11 @@
 				4B7E68E2E2194674E3716DE8 /* SyncEngine.swift in Sources */,
 				ADD2F18395EAF5033160533C /* TableDetailView.swift in Sources */,
 				CF2927CADD6EDF3432B38539 /* Theme.swift in Sources */,
+				A1000001000000000000001A /* PrinterDriver.swift in Sources */,
+				A1000002000000000000002A /* AirPrintDriver.swift in Sources */,
+				A1000003000000000000003A /* StarPrintDriver.swift in Sources */,
+				A1000004000000000000004A /* EpsonPrintDriver.swift in Sources */,
+				A1000005000000000000005A /* PrinterSettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

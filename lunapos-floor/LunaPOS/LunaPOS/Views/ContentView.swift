@@ -3,16 +3,18 @@ import SwiftUI
 enum AppScreen: Hashable {
     case floor
     case cast
-    case admin
 }
 
 struct ContentView: View {
-    @State private var vm = AppViewModel()
+    @Environment(AppViewModel.self) private var vm
     @State private var selectedTableId: String?
     @State private var showCheckout = false
     @State private var path = NavigationPath()
     @AppStorage("lunaDarkMode") private var isDarkMode = true
     @State private var isSyncing = false
+    @State private var showRegister = false
+    @State private var showLogoutConfirm = false
+    @State private var showPrinterSettings = false
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -23,9 +25,6 @@ struct ContentView: View {
                         mainFloorView
                     case .cast:
                         CastView()
-                            .environment(vm)
-                    case .admin:
-                        AdminView()
                             .environment(vm)
                     }
                 }
@@ -52,6 +51,37 @@ struct ContentView: View {
                     .environment(vm)
                 }
             }
+        }
+        .sheet(isPresented: $showRegister) {
+            NavigationStack {
+                ScrollView {
+                    RegisterTabView()
+                }
+                .background(Color.lunaBg)
+                .navigationTitle("レジ締め")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("閉じる") { showRegister = false }
+                    }
+                }
+                .toolbarBackground(Color.lunaDark, for: .navigationBar)
+                .toolbarBackground(.visible, for: .navigationBar)
+                .toolbarColorScheme(.dark, for: .navigationBar)
+            }
+            .environment(vm)
+        }
+        .sheet(isPresented: $showPrinterSettings) {
+            PrinterSettingsView()
+        }
+        .alert("ログアウトしますか？", isPresented: $showLogoutConfirm) {
+            Button("ログアウト", role: .destructive) {
+                SupabaseService.shared.logout()
+                NotificationCenter.default.post(name: .lunaDidLogout, object: nil)
+            }
+            Button("キャンセル", role: .cancel) {}
+        } message: {
+            Text("再度使用するにはデバイストークンの入力が必要です")
         }
     }
 
@@ -100,13 +130,31 @@ struct ContentView: View {
 
             Spacer()
 
+            // デバイス名
+            if let name = SupabaseService.shared.deviceName {
+                HStack(spacing: 6) {
+                    Circle()
+                        .fill(Color.green)
+                        .frame(width: 8, height: 8)
+                    Text(name)
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(.lunaGold)
+                }
+                .padding(.horizontal, 14)
+                .padding(.vertical, 6)
+                .background(Color.lunaGold.opacity(0.08))
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+            }
+
+            Spacer()
+
             // Center: Today's sales
             HStack(spacing: 8) {
                 Text("本日売上")
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(.lunaSubtle)
                 Text(vm.totalSales.yenFormatted)
-                    .font(.system(size: 30, weight: .heavy, design: .rounded))
+                    .font(.system(size: 24, weight: .heavy, design: .rounded))
                     .foregroundStyle(.lunaGold)
             }
             .padding(.horizontal, 20)
@@ -117,47 +165,38 @@ struct ContentView: View {
             Spacer()
 
             // Right: Action buttons
-            HStack(spacing: 20) {
-                Button {
-                    isDarkMode.toggle()
-                } label: {
-                    VStack(spacing: 3) {
-                        Image(systemName: isDarkMode ? "sun.max" : "moon.fill")
-                            .font(.system(size: 22))
-                        Text(isDarkMode ? "ライト" : "ダーク")
-                            .font(.system(size: 12, weight: .semibold))
-                    }
-                    .foregroundStyle(.white)
-                }
-
-                Button {
+            HStack(spacing: 12) {
+                headerButton("キャスト", icon: "person.badge.clock", color: .white) {
                     path.append(AppScreen.cast)
-                } label: {
-                    VStack(spacing: 3) {
-                        Image(systemName: "person.badge.clock")
-                            .font(.system(size: 22))
-                        Text("キャスト")
-                            .font(.system(size: 12, weight: .semibold))
-                    }
-                    .foregroundStyle(.white)
                 }
-
-                Button {
-                    path.append(AppScreen.admin)
-                } label: {
-                    VStack(spacing: 3) {
-                        Image(systemName: "yensign.circle")
-                            .font(.system(size: 22))
-                        Text("レジ")
-                            .font(.system(size: 12, weight: .semibold))
-                    }
-                    .foregroundStyle(.white)
+                headerButton("レジ", icon: "yensign.circle", color: .white) {
+                    showRegister = true
+                }
+                headerButton("プリンタ", icon: "printer", color: .white) {
+                    showPrinterSettings = true
+                }
+                headerButton("ログアウト", icon: "rectangle.portrait.and.arrow.right", color: .red.opacity(0.8)) {
+                    showLogoutConfirm = true
                 }
             }
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
         .background(Color.lunaDark)
+    }
+
+    private func headerButton(_ label: String, icon: String, color: Color, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            VStack(spacing: 2) {
+                Image(systemName: icon)
+                    .font(.system(size: 20))
+                Text(label)
+                    .font(.system(size: 10, weight: .semibold))
+            }
+            .foregroundStyle(color)
+            .frame(minWidth: 52, minHeight: 44)
+            .contentShape(Rectangle())
+        }
     }
 }
 
