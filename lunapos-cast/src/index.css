@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInBottom {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes overlayFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+.animate-slide-in-bottom {
+  animation: slideInBottom 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-overlay {
+  animation: overlayFadeIn 0.2s ease-out;
+}
+
+@media print {
+  .print\:hidden { display: none !important; }
+  .print\:bg-white { background-color: white !important; }
+  .print\:text-black { color: black !important; }
+  .print\:border-gray-300 { border-color: #d1d5db !important; }
+  .print\:text-gray-500 { color: #6b7280 !important; }
+  .print\:text-gray-400 { color: #9ca3af !important; }
+  .print\:max-w-none { max-width: none !important; }
+  body { background: white !important; }
+}

@@ -1,0 +1,160 @@
+name: Test
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'lunapos-admin/**'
+      - 'lunapos-cast/**'
+      - 'supabase/functions/**'
+  pull_request:
+    branches: [main, master]
+    paths:
+      - 'lunapos-admin/**'
+      - 'lunapos-cast/**'
+      - 'supabase/functions/**'
+  workflow_dispatch:
+
+jobs:
+  admin-test:
+    name: Admin テスト & ビルド
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: lunapos-admin
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: lunapos-admin/package-lock.json
+
+      - run: npm ci
+
+      - name: 型チェック
+        run: npx tsc --noEmit
+
+      - name: テスト実行
+        run: npm test
+
+      - name: ビルド確認
+        run: npm run build
+
+  cast-test:
+    name: Cast テスト & ビルド
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: lunapos-cast
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: lunapos-cast/package-lock.json
+
+      - run: npm ci
+
+      - name: 型チェック
+        run: npx tsc --noEmit
+
+      - name: テスト実行
+        run: npm test
+
+      - name: ビルド確認
+        run: npm run build
+
+  deploy-admin:
+    name: Admin → Vercel デプロイ
+    needs: admin-test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: lunapos-admin
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - run: npm install -g vercel@latest
+
+      - name: Vercel環境変数取得 & ビルド & デプロイ
+        run: |
+          vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+          vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+          vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_ADMIN }}
+
+  deploy-cast:
+    name: Cast → Vercel デプロイ
+    needs: cast-test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: lunapos-cast
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - run: npm install -g vercel@latest
+
+      - name: Vercel環境変数取得 & ビルド & デプロイ
+        run: |
+          vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+          vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+          vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_CAST }}
+
+  edge-function-check:
+    name: Edge Function 構文チェック
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: store-signup 構文チェック
+        run: deno check supabase/functions/store-signup/index.ts
+
+      - name: device-auth 構文チェック
+        run: deno check supabase/functions/device-auth/index.ts
+
+  deploy-edge-functions:
+    name: Edge Functions → Supabase デプロイ
+    needs: edge-function-check
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: device-auth デプロイ
+        run: supabase functions deploy device-auth --project-ref ${{ secrets.SUPABASE_PROJECT_REF }} --no-verify-jwt
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}

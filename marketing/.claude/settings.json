@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(*)",
+      "Bash(git mv \"リリース前/reading-sales-breakdown.md\" \"リリース済み/2026-02-28/reading-sales-breakdown.md\")",
+      "Bash(ls /Users/ryuichiueda/works/zh/luna/hp/content/column/*.mdx)",
+      "WebSearch",
+      "WebFetch"
+    ],
+    "additionalDirectories": [
+      "/Users/ryuichiueda/works/zh/luna/.claude"
+    ]
+  }
+}

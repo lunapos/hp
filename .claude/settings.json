@@ -2,9 +2,59 @@
   "permissions": {
     "allow": [
       "Bash(*)",
-      "Bash(curl:*)",
+      "Bash(done)",
+      "Bash(find:*)",
+      "Bash(git init:*)",
+      "Bash(git branch -m main)",
+      "Bash(npx create-next-app@latest app --typescript --tailwind --eslint --app --src-dir --no-import-alias --use-npm)",
+      "Bash(npm create vite@latest lp -- --template react-ts)",
+      "Bash(npx create-next-app@latest hp --typescript --tailwind --eslint --app --src-dir --no-import-alias --use-npm)",
+      "Bash(npx create-next-app@latest app --typescript --tailwind --eslint --app --src-dir --no-import-alias --use-npm --turbopack)",
+      "Bash(npx create-next-app@latest hp --typescript --tailwind --eslint --app --src-dir --no-import-alias --use-npm --turbopack)",
+      "Bash(git status -u)",
+      "Bash(git mv \"リリース前/nightlife-credit-scoring.md\" \"リリース済み/2026-02-26/nightlife-credit-scoring.md\")",
+      "Bash(git rm --cached \"メディア文作成\")",
+      "Bash(wc -l /Users/ryuichiueda/works/luna/lunapos-floor/LunaPOS/LunaPOS/Views/*.swift)",
       "WebSearch",
       "WebFetch"
     ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if echo \"$TOOL_INPUT\" | grep -qE '\\.(env|credentials|secret)'; then echo 'BLOCKED: 秘密情報ファイルへの書き込みをブロックしました' >&2; exit 1; fi"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "FILE=$(echo \"$TOOL_INPUT\" | grep -o '\"file_path\":\"[^\"]*\"' | head -1 | cut -d'\"' -f4); if [ -n \"$FILE\" ] && echo \"$FILE\" | grep -q '\\.swift$'; then echo '⚠ Swiftファイル変更: Xcodeでビルド確認してください'; fi"
+          }
+        ]
+      }
+    ]
+  },
+  "mcpServers": {
+    "supabase": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--project-ref",
+        "luna"
+      ],
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "env(SUPABASE_ACCESS_TOKEN)"
+      }
+    }
   }
 }

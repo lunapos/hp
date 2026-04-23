@@ -1,0 +1,645 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 63;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		19FC3D67A981ECA37C5AA598 /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35C9ADF38A33B6183C8D370 /* MockData.swift */; };
+		1BD129FC73535AB8AEEF44E2 /* SupabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E92DF18BD5E475940BE4F6 /* SupabaseService.swift */; };
+		22BBE7F8B385550A7F862BFB /* PriceCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6EBC683C4AD966F2311D21 /* PriceCalculator.swift */; };
+		2A3CA3F0B1F8CA75CE3C9F97 /* StoreSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC2D9D03138FBB4845858FF1 /* StoreSettings.swift */; };
+		2E93CBA0E00F0FBC657CA386 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4451DD65A7D6F5D6B5E3E1 /* NetworkMonitor.swift */; };
+		3A9133DF0DBAE9405CC59482 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 653CE9A18CB2F2C2C25DBF03 /* Supabase */; };
+		3B8D457B416CC19753F5586B /* PriceCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88037A9F7DE3BA7CC2A4D0FC /* PriceCalculatorTests.swift */; };
+		42AEB1E90125086623C35F04 /* LunaPOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDEE41A0AD2C6F08B9078B3 /* LunaPOSApp.swift */; };
+		4B7E68E2E2194674E3716DE8 /* SyncEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0B4FBD69062C7D494559475 /* SyncEngine.swift */; };
+		76D4B95BC3FB4DB03933C1C2 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396A69E5923C15D88F489236 /* Models.swift */; };
+		7CCFEFCE85FC0EA41D7772B9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C562CE23A872F25EFA0505 /* ContentView.swift */; };
+		9084AAE4110490DE72609DEF /* FloorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59C6A324BB3ED30B7B3E01F /* FloorView.swift */; };
+		947E2636BEA85BC8AF2B3DCB /* ErrorBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB55562F18EA56A696AB7D0D /* ErrorBanner.swift */; };
+		9EFD4C738120D23F9DDE86E4 /* ReceiptData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7251352CBC98DAEA6B227840 /* ReceiptData.swift */; };
+		A694EDE6D85A1C2153DF4674 /* AdminView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16DB6AA729C4459743D1269F /* AdminView.swift */; };
+		AA1B2C3D4E5F6A7B8C9D0E1F /* DeviceAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2C3D4E5F6A7B8C9D0E1F2A /* DeviceAuthView.swift */; };
+		ADD2F18395EAF5033160533C /* TableDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B71B64CEE6CA395A0DDE73B /* TableDetailView.swift */; };
+		B29EA66E0C7712EDF1D336E3 /* CastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD757EC82BD2C42045D48D54 /* CastView.swift */; };
+		C334D6940A367F333DFBB5E9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2B3E7B0690E1D6BB57C16A58 /* Assets.xcassets */; };
+		C8FAC888546B1E414CFA5FAF /* SupabaseServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBC72CA18982E186EFF8826 /* SupabaseServiceTests.swift */; };
+		CC3D4E5F6A7B8C9D0E1F2A3B /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD4E5F6A7B8C9D0E1F2A3B4C /* KeychainHelper.swift */; };
+		CF2927CADD6EDF3432B38539 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480C9A283E767FACA6761FBA /* Theme.swift */; };
+		D3FD52FD3C8304B3471248E9 /* AppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D04493AC941E96B28680899 /* AppViewModel.swift */; };
+		D536E01FCA61964F7BCDFF85 /* DTOs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894AF9F6CB1B8AB24932A558 /* DTOs.swift */; };
+		E5BDAFF079601A26291609B5 /* CheckoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C512060A2178FC4053F857 /* CheckoutView.swift */; };
+		A1B2C3D4E5F6A7B8C9D0E1F2 /* ReceiptPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1E2D3C4B5A6978869001234 /* ReceiptPreviewView.swift */; };
+		E8DBE60F51BC32ABF37F53DE /* SyncEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF3135CA1B1C0736CC81846 /* SyncEngineTests.swift */; };
+		FBF8DC17A87C04005305234F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F9DF5D7016B0EC3494A2FBC /* Constants.swift */; };
+		FFF58FFF04900EFFA1373460 /* RealtimeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7628E1B7E08407B8B6B209B9 /* RealtimeManager.swift */; };
+		A1000001000000000000001A /* PrinterDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001000000000000001B /* PrinterDriver.swift */; };
+		A1000002000000000000002A /* AirPrintDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000002000000000000002B /* AirPrintDriver.swift */; };
+		A1000003000000000000003A /* StarPrintDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000003000000000000003B /* StarPrintDriver.swift */; };
+		A1000004000000000000004A /* EpsonPrintDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000004000000000000004B /* EpsonPrintDriver.swift */; };
+		A1000005000000000000005A /* PrinterSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000005000000000000005B /* PrinterSettingsView.swift */; };
+		A1000006000000000000006A /* BluetoothPrinterScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000006000000000000006B /* BluetoothPrinterScanner.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		62914EF82C379970A9128C40 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 433F1FDEB5034A18A6B17426 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D31FDC7FC40F1BEFA750DFDE;
+			remoteInfo = LunaPOS;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0EBC72CA18982E186EFF8826 /* SupabaseServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseServiceTests.swift; sourceTree = "<group>"; };
+		0F9DF5D7016B0EC3494A2FBC /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		16DB6AA729C4459743D1269F /* AdminView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminView.swift; sourceTree = "<group>"; };
+		1FDEE41A0AD2C6F08B9078B3 /* LunaPOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LunaPOSApp.swift; sourceTree = "<group>"; };
+		24C562CE23A872F25EFA0505 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		25C512060A2178FC4053F857 /* CheckoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutView.swift; sourceTree = "<group>"; };
+		F1E2D3C4B5A6978869001234 /* ReceiptPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptPreviewView.swift; sourceTree = "<group>"; };
+		2B3E7B0690E1D6BB57C16A58 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		37D1C12D0B61E577D1F0E413 /* LunaPOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LunaPOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		396A69E5923C15D88F489236 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		480C9A283E767FACA6761FBA /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		48E92DF18BD5E475940BE4F6 /* SupabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseService.swift; sourceTree = "<group>"; };
+		4B71B64CEE6CA395A0DDE73B /* TableDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableDetailView.swift; sourceTree = "<group>"; };
+		4D04493AC941E96B28680899 /* AppViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppViewModel.swift; sourceTree = "<group>"; };
+		4F4451DD65A7D6F5D6B5E3E1 /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
+		5A541F2FC51A1074BEC24B13 /* LunaPOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LunaPOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7251352CBC98DAEA6B227840 /* ReceiptData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptData.swift; sourceTree = "<group>"; };
+		7628E1B7E08407B8B6B209B9 /* RealtimeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealtimeManager.swift; sourceTree = "<group>"; };
+		88037A9F7DE3BA7CC2A4D0FC /* PriceCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceCalculatorTests.swift; sourceTree = "<group>"; };
+		894AF9F6CB1B8AB24932A558 /* DTOs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTOs.swift; sourceTree = "<group>"; };
+		9AF3135CA1B1C0736CC81846 /* SyncEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncEngineTests.swift; sourceTree = "<group>"; };
+		A0B4FBD69062C7D494559475 /* SyncEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncEngine.swift; sourceTree = "<group>"; };
+		AB55562F18EA56A696AB7D0D /* ErrorBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorBanner.swift; sourceTree = "<group>"; };
+		BB2C3D4E5F6A7B8C9D0E1F2A /* DeviceAuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceAuthView.swift; sourceTree = "<group>"; };
+		BD757EC82BD2C42045D48D54 /* CastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CastView.swift; sourceTree = "<group>"; };
+		CE6EBC683C4AD966F2311D21 /* PriceCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceCalculator.swift; sourceTree = "<group>"; };
+		D35C9ADF38A33B6183C8D370 /* MockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockData.swift; sourceTree = "<group>"; };
+		D59C6A324BB3ED30B7B3E01F /* FloorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorView.swift; sourceTree = "<group>"; };
+		DD4E5F6A7B8C9D0E1F2A3B4C /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
+		FC2D9D03138FBB4845858FF1 /* StoreSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreSettings.swift; sourceTree = "<group>"; };
+		A1000001000000000000001B /* PrinterDriver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrinterDriver.swift; sourceTree = "<group>"; };
+		A1000002000000000000002B /* AirPrintDriver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPrintDriver.swift; sourceTree = "<group>"; };
+		A1000003000000000000003B /* StarPrintDriver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarPrintDriver.swift; sourceTree = "<group>"; };
+		A1000004000000000000004B /* EpsonPrintDriver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpsonPrintDriver.swift; sourceTree = "<group>"; };
+		A1000005000000000000005B /* PrinterSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrinterSettingsView.swift; sourceTree = "<group>"; };
+		A1000006000000000000006B /* BluetoothPrinterScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothPrinterScanner.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A64C6F1F30C2185A0CCEC884 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A9133DF0DBAE9405CC59482 /* Supabase in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0096B69F202EABD1AD10ED39 /* LunaPOS */ = {
+			isa = PBXGroup;
+			children = (
+				2B3E7B0690E1D6BB57C16A58 /* Assets.xcassets */,
+				1FDEE41A0AD2C6F08B9078B3 /* LunaPOSApp.swift */,
+				90FAED86DF761D31FA137F6A /* Data */,
+				8412918E1E5921036208D4F7 /* Models */,
+				3B7306709065026B24F3EE94 /* Services */,
+				E7241C275CC6B67B75E9EC69 /* Utils */,
+				5DC07736DC86DDED05C4F744 /* ViewModels */,
+				1474C29BB1987AD8491CCD82 /* Views */,
+			);
+			path = LunaPOS;
+			sourceTree = "<group>";
+		};
+		1474C29BB1987AD8491CCD82 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				16DB6AA729C4459743D1269F /* AdminView.swift */,
+				BD757EC82BD2C42045D48D54 /* CastView.swift */,
+				25C512060A2178FC4053F857 /* CheckoutView.swift */,
+				24C562CE23A872F25EFA0505 /* ContentView.swift */,
+				F1E2D3C4B5A6978869001234 /* ReceiptPreviewView.swift */,
+				BB2C3D4E5F6A7B8C9D0E1F2A /* DeviceAuthView.swift */,
+				D59C6A324BB3ED30B7B3E01F /* FloorView.swift */,
+				A1000005000000000000005B /* PrinterSettingsView.swift */,
+				4B71B64CEE6CA395A0DDE73B /* TableDetailView.swift */,
+				769460F36666822479733CFD /* Components */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		3B7306709065026B24F3EE94 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				A1000002000000000000002B /* AirPrintDriver.swift */,
+				A1000006000000000000006B /* BluetoothPrinterScanner.swift */,
+				A1000004000000000000004B /* EpsonPrintDriver.swift */,
+				DD4E5F6A7B8C9D0E1F2A3B4C /* KeychainHelper.swift */,
+				4F4451DD65A7D6F5D6B5E3E1 /* NetworkMonitor.swift */,
+				A1000001000000000000001B /* PrinterDriver.swift */,
+				7628E1B7E08407B8B6B209B9 /* RealtimeManager.swift */,
+				A1000003000000000000003B /* StarPrintDriver.swift */,
+				48E92DF18BD5E475940BE4F6 /* SupabaseService.swift */,
+				A0B4FBD69062C7D494559475 /* SyncEngine.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		5DC07736DC86DDED05C4F744 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				4D04493AC941E96B28680899 /* AppViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		769460F36666822479733CFD /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				AB55562F18EA56A696AB7D0D /* ErrorBanner.swift */,
+				480C9A283E767FACA6761FBA /* Theme.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		8412918E1E5921036208D4F7 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				894AF9F6CB1B8AB24932A558 /* DTOs.swift */,
+				396A69E5923C15D88F489236 /* Models.swift */,
+				7251352CBC98DAEA6B227840 /* ReceiptData.swift */,
+				FC2D9D03138FBB4845858FF1 /* StoreSettings.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		90FAED86DF761D31FA137F6A /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				0F9DF5D7016B0EC3494A2FBC /* Constants.swift */,
+				D35C9ADF38A33B6183C8D370 /* MockData.swift */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		A235B6A1FEA52E7DF8AB563A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5A541F2FC51A1074BEC24B13 /* LunaPOS.app */,
+				37D1C12D0B61E577D1F0E413 /* LunaPOSTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CF7F3DA9474EEE70F1EE99CD = {
+			isa = PBXGroup;
+			children = (
+				0096B69F202EABD1AD10ED39 /* LunaPOS */,
+				E9504E6EFA2E9FB7E40A7F8D /* LunaPOSTests */,
+				A235B6A1FEA52E7DF8AB563A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E7241C275CC6B67B75E9EC69 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				CE6EBC683C4AD966F2311D21 /* PriceCalculator.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		E9504E6EFA2E9FB7E40A7F8D /* LunaPOSTests */ = {
+			isa = PBXGroup;
+			children = (
+				88037A9F7DE3BA7CC2A4D0FC /* PriceCalculatorTests.swift */,
+				0EBC72CA18982E186EFF8826 /* SupabaseServiceTests.swift */,
+				9AF3135CA1B1C0736CC81846 /* SyncEngineTests.swift */,
+			);
+			path = LunaPOSTests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		35F781768BAB7EC96F3F0FAA /* LunaPOSTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2CF50FEB9E1B8500BE17E97C /* Build configuration list for PBXNativeTarget "LunaPOSTests" */;
+			buildPhases = (
+				E307590ABF6FCBA40C7DE7B0 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				70F03FD8FC1C31F2C35450E3 /* PBXTargetDependency */,
+			);
+			name = LunaPOSTests;
+			packageProductDependencies = (
+			);
+			productName = LunaPOSTests;
+			productReference = 37D1C12D0B61E577D1F0E413 /* LunaPOSTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		D31FDC7FC40F1BEFA750DFDE /* LunaPOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2BE62B16CA6B07F91B1F8110 /* Build configuration list for PBXNativeTarget "LunaPOS" */;
+			buildPhases = (
+				8F84B14D989CCE68DBC172E6 /* Sources */,
+				1A8443B1633009398BFAE7A5 /* Resources */,
+				A64C6F1F30C2185A0CCEC884 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LunaPOS;
+			packageProductDependencies = (
+				653CE9A18CB2F2C2C25DBF03 /* Supabase */,
+			);
+			productName = LunaPOS;
+			productReference = 5A541F2FC51A1074BEC24B13 /* LunaPOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		433F1FDEB5034A18A6B17426 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 2620;
+			};
+			buildConfigurationList = 2B98B0586BA8CDCD0CBAFCCC /* Build configuration list for PBXProject "LunaPOS" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = CF7F3DA9474EEE70F1EE99CD;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				8AE77740E3750627EA52C67E /* XCRemoteSwiftPackageReference "supabase-swift" */,
+			);
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D31FDC7FC40F1BEFA750DFDE /* LunaPOS */,
+				35F781768BAB7EC96F3F0FAA /* LunaPOSTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1A8443B1633009398BFAE7A5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C334D6940A367F333DFBB5E9 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8F84B14D989CCE68DBC172E6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A694EDE6D85A1C2153DF4674 /* AdminView.swift in Sources */,
+				D3FD52FD3C8304B3471248E9 /* AppViewModel.swift in Sources */,
+				B29EA66E0C7712EDF1D336E3 /* CastView.swift in Sources */,
+				E5BDAFF079601A26291609B5 /* CheckoutView.swift in Sources */,
+				A1B2C3D4E5F6A7B8C9D0E1F2 /* ReceiptPreviewView.swift in Sources */,
+				FBF8DC17A87C04005305234F /* Constants.swift in Sources */,
+				7CCFEFCE85FC0EA41D7772B9 /* ContentView.swift in Sources */,
+				AA1B2C3D4E5F6A7B8C9D0E1F /* DeviceAuthView.swift in Sources */,
+				D536E01FCA61964F7BCDFF85 /* DTOs.swift in Sources */,
+				947E2636BEA85BC8AF2B3DCB /* ErrorBanner.swift in Sources */,
+				9084AAE4110490DE72609DEF /* FloorView.swift in Sources */,
+				CC3D4E5F6A7B8C9D0E1F2A3B /* KeychainHelper.swift in Sources */,
+				42AEB1E90125086623C35F04 /* LunaPOSApp.swift in Sources */,
+				19FC3D67A981ECA37C5AA598 /* MockData.swift in Sources */,
+				76D4B95BC3FB4DB03933C1C2 /* Models.swift in Sources */,
+				2E93CBA0E00F0FBC657CA386 /* NetworkMonitor.swift in Sources */,
+				22BBE7F8B385550A7F862BFB /* PriceCalculator.swift in Sources */,
+				FFF58FFF04900EFFA1373460 /* RealtimeManager.swift in Sources */,
+				9EFD4C738120D23F9DDE86E4 /* ReceiptData.swift in Sources */,
+				2A3CA3F0B1F8CA75CE3C9F97 /* StoreSettings.swift in Sources */,
+				1BD129FC73535AB8AEEF44E2 /* SupabaseService.swift in Sources */,
+				4B7E68E2E2194674E3716DE8 /* SyncEngine.swift in Sources */,
+				ADD2F18395EAF5033160533C /* TableDetailView.swift in Sources */,
+				CF2927CADD6EDF3432B38539 /* Theme.swift in Sources */,
+				A1000001000000000000001A /* PrinterDriver.swift in Sources */,
+				A1000002000000000000002A /* AirPrintDriver.swift in Sources */,
+				A1000003000000000000003A /* StarPrintDriver.swift in Sources */,
+				A1000004000000000000004A /* EpsonPrintDriver.swift in Sources */,
+				A1000005000000000000005A /* PrinterSettingsView.swift in Sources */,
+				A1000006000000000000006A /* BluetoothPrinterScanner.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E307590ABF6FCBA40C7DE7B0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3B8D457B416CC19753F5586B /* PriceCalculatorTests.swift in Sources */,
+				C8FAC888546B1E414CFA5FAF /* SupabaseServiceTests.swift in Sources */,
+				E8DBE60F51BC32ABF37F53DE /* SyncEngineTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		70F03FD8FC1C31F2C35450E3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D31FDC7FC40F1BEFA750DFDE /* LunaPOS */;
+			targetProxy = 62914EF82C379970A9128C40 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		007AF4A6996AC901C30864C8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.luna.pos.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LunaPOS.app/LunaPOS";
+			};
+			name = Debug;
+		};
+		28686484210EC034B078FA4A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Debug;
+		};
+		2886636F91357F4B8BD4AD92 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 5;
+				DEVELOPMENT_TEAM = FB5QCJ7YAF;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = LunaPOS/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Luna POS";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.4;
+				PRODUCT_BUNDLE_IDENTIFIER = com.luna.pos;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Release;
+		};
+		2C49FCB23089A8819D394F29 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Release;
+		};
+		4E1FED16E4733C673DBC9B9B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 5;
+				DEVELOPMENT_TEAM = FB5QCJ7YAF;
+				ENABLE_TESTABILITY = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = LunaPOS/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Luna POS";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.4;
+				PRODUCT_BUNDLE_IDENTIFIER = com.luna.pos;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Debug;
+		};
+		A045A96E8990C12EA7730EB8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.luna.pos.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LunaPOS.app/LunaPOS";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2B98B0586BA8CDCD0CBAFCCC /* Build configuration list for PBXProject "LunaPOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				28686484210EC034B078FA4A /* Debug */,
+				2C49FCB23089A8819D394F29 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		2BE62B16CA6B07F91B1F8110 /* Build configuration list for PBXNativeTarget "LunaPOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4E1FED16E4733C673DBC9B9B /* Debug */,
+				2886636F91357F4B8BD4AD92 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		2CF50FEB9E1B8500BE17E97C /* Build configuration list for PBXNativeTarget "LunaPOSTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				007AF4A6996AC901C30864C8 /* Debug */,
+				A045A96E8990C12EA7730EB8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		8AE77740E3750627EA52C67E /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase/supabase-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		653CE9A18CB2F2C2C25DBF03 /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8AE77740E3750627EA52C67E /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 433F1FDEB5034A18A6B17426 /* Project object */;
+}

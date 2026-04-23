@@ -1,15 +1,10 @@
 {
   "permissions": {
-    "allow": [
-      "Bash(npx create-next-app@latest:*)",
-      "Bash(npx next build:*)",
-      "Bash(gh auth status:*)",
-      "Bash(git status:*)",
-      "Bash(vercel login:*)"
-    ],
     "additionalDirectories": [
-      "/Users/ryuichiueda/works/luna/hp/src/{types,lib,hooks,components/{layout,ui},app/{features,pricing,company,contact,api",
-      "/Users/ryuichiueda/works/luna/hp/src/app"
+      "/Users/ryuichiueda/works/luna/luna-admin-2"
+    ],
+    "allow": [
+      "Bash(npx next build:*)"
     ]
   }
 }

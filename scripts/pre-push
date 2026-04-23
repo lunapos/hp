@@ -1,0 +1,94 @@
+#!/bin/sh
+# pre-push hook: pushする前に変更があるプロジェクトのチェックを実行
+# 失敗したらpushをブロック
+
+FAILED=0
+
+# リモートとの差分を取得
+get_changed_files() {
+  git diff --name-only @{push}..HEAD 2>/dev/null || {
+    REMOTE_REF=$(git rev-parse --abbrev-ref @{upstream} 2>/dev/null || echo "")
+    if [ -n "$REMOTE_REF" ]; then
+      git diff --name-only "$REMOTE_REF"..HEAD 2>/dev/null
+    fi
+  }
+}
+
+CHANGED=$(get_changed_files)
+
+# lunapos-admin: vitest
+if echo "$CHANGED" | grep -q '^lunapos-admin/'; then
+  echo "lunapos-admin に変更あり: テスト実行中..."
+  (cd lunapos-admin && npm test 2>&1)
+  if [ $? -ne 0 ]; then
+    echo "lunapos-admin テスト失敗"
+    FAILED=1
+  else
+    echo "lunapos-admin テスト通過"
+  fi
+fi
+
+# lunapos-cast: vitest
+if echo "$CHANGED" | grep -q '^lunapos-cast/'; then
+  echo "lunapos-cast に変更あり: テスト実行中..."
+  (cd lunapos-cast && npm test 2>&1)
+  if [ $? -ne 0 ]; then
+    echo "lunapos-cast テスト失敗"
+    FAILED=1
+  else
+    echo "lunapos-cast テスト通過"
+  fi
+fi
+
+# lunapos-floor: Swiftビルドチェック（xcodebuildがある場合のみ）
+if echo "$CHANGED" | grep -q '^lunapos-floor/'; then
+  if command -v xcodebuild >/dev/null 2>&1; then
+    echo "lunapos-floor に変更あり: ビルドチェック中..."
+    (cd lunapos-floor/LunaPOS && xcodebuild build -scheme LunaPOS -destination 'platform=iOS Simulator,name=iPad Pro 13-inch (M4)' -quiet 2>&1)
+    if [ $? -ne 0 ]; then
+      echo "lunapos-floor ビルド失敗"
+      FAILED=1
+    else
+      echo "lunapos-floor ビルド通過"
+    fi
+  fi
+fi
+
+# supabase/functions: Deno構文チェック（denoがある場合のみ）
+if echo "$CHANGED" | grep -q '^supabase/functions/'; then
+  if command -v deno >/dev/null 2>&1; then
+    echo "supabase/functions に変更あり: 構文チェック中..."
+    for fn in supabase/functions/*/index.ts; do
+      if [ -f "$fn" ]; then
+        deno check "$fn" 2>&1
+        if [ $? -ne 0 ]; then
+          echo "$fn 構文チェック失敗"
+          FAILED=1
+        fi
+      fi
+    done
+    if [ $FAILED -eq 0 ]; then
+      echo "Edge Function 構文チェック通過"
+    fi
+  fi
+fi
+
+# hp: Next.jsビルドチェック
+if echo "$CHANGED" | grep -q '^hp/'; then
+  echo "hp に変更あり: ビルドチェック中..."
+  (cd hp && npm run build 2>&1)
+  if [ $? -ne 0 ]; then
+    echo "hp ビルド失敗"
+    FAILED=1
+  else
+    echo "hp ビルド通過"
+  fi
+fi
+
+if [ $FAILED -ne 0 ]; then
+  echo ""
+  echo "チェック失敗: pushをブロックしました"
+  exit 1
+fi
+
+exit 0
