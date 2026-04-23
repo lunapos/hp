@@ -2,6 +2,16 @@
 import type { NewsItem } from "./news-types";
 
 export const updateItems: NewsItem[] = [
+  // --- 2026-04-24 ---
+  {
+    slug: "admin-table-sort-order",
+    date: "2026-04-24",
+    title: "Admin: テーブル並び順をドラッグ&ドロップで管理可能に",
+    summary: "管理画面でテーブルの表示順をドラッグ&ドロップで変更できるようになりました。設定した並び順はPOSフロア画面にそのまま反映されます。",
+    category: "開発アップデート",
+    project: "Admin",
+    content: "テーブルの並び順管理機能を追加しました。\n\n## 管理画面\n・ドラッグ&ドロップでテーブルの表示順を直感的に変更\n・ルームごとに独立した並び順を管理\n・変更は即座にDBに保存\n\n## POS連携\n・POSフロア画面は管理画面で設定した並び順で表示\n・卓立て・会計後もテーブル位置が固定（並び替えの揺れを解消）",
+  },
   // --- 2026-04-23 ---
   {
     slug: "floor-bluetooth-printer",
