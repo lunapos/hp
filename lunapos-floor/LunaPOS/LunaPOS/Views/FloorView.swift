@@ -437,10 +437,8 @@ struct FloorView: View {
         let maxX = roomTables.map(\.position.x).max() ?? 1
         let cols = roomTables.count >= 4 ? max(maxX, 4) : maxX
         let rows = max(roomTables.map(\.position.y).max() ?? 1, Int(ceil(Double(roomTables.count) / Double(cols))))
-        let sorted = roomTables.sorted { a, b in
-            if a.position.y != b.position.y { return a.position.y < b.position.y }
-            if a.position.x != b.position.x { return a.position.x < b.position.x }
-            return a.id < b.id
+        let sorted = roomTables.sorted {
+            $0.name.localizedStandardCompare($1.name) == .orderedAscending
         }
 
         return GeometryReader { geo in

@@ -227,11 +227,9 @@ final class SyncEngine: @unchecked Sendable {
 
             let (r, t, c, aShifts, m, s, cu) = try await (rooms, tables, casts, activeShifts, menuItems, setPlans, customers)
 
-            vm.rooms = r.map { $0.toModel() }.sorted { $0.id < $1.id }
+            vm.rooms = r.map { $0.toModel() }
             vm.tables = t.map { $0.toModel() }.sorted {
-                if $0.position.y != $1.position.y { return $0.position.y < $1.position.y }
-                if $0.position.x != $1.position.x { return $0.position.x < $1.position.x }
-                return $0.id < $1.id
+                $0.name.localizedStandardCompare($1.name) == .orderedAscending
             }
 
             // キャストの isWorking / clockInTime / currentShiftId をDBの勤務中シフトから復元
