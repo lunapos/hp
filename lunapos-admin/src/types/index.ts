@@ -3,7 +3,7 @@
 // ========================================
 
 export type TableStatus = 'empty' | 'occupied' | 'waiting_checkout'
-export type MenuCategory = 'drink' | 'bottle' | 'food' | 'ladies_drink' | 'other'
+export type MenuCategory = 'drink' | 'whisky' | 'shochu' | 'champagne' | 'red_wine' | 'white_wine' | 'food' | 'ladies_drink' | 'other'
 export type NominationType = 'none' | 'in_store' | 'main'
 export type PaymentMethod = 'cash' | 'credit' | 'electronic' | 'tab'
 export type CustomerRank = 'new' | 'repeat' | 'vip'

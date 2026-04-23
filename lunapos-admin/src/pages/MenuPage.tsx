@@ -5,7 +5,11 @@ import type { MenuItemRow, MenuCategory } from '../types'
 
 const CATEGORIES: { id: MenuCategory; label: string }[] = [
   { id: 'drink', label: 'ドリンク' },
-  { id: 'bottle', label: 'ボトル' },
+  { id: 'whisky', label: 'ウイスキー' },
+  { id: 'shochu', label: '焼酎' },
+  { id: 'champagne', label: 'シャンパン' },
+  { id: 'red_wine', label: '赤ワイン' },
+  { id: 'white_wine', label: '白ワイン' },
   { id: 'food', label: 'フード' },
   { id: 'ladies_drink', label: 'レディース' },
   { id: 'other', label: 'その他' },
