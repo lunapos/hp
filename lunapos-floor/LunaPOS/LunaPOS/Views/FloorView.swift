@@ -245,7 +245,7 @@ struct TableCard: View {
             // Header: table name + status
             HStack {
                 Text(table.name)
-                    .font(.system(size: 24 * scale, weight: .heavy))
+                    .font(.system(size: 28 * scale, weight: .heavy))
                     .lineLimit(1)
                 Spacer()
                 Circle().fill(statusColor).frame(width: 10 * scale, height: 10 * scale)
@@ -388,9 +388,9 @@ struct FloorView: View {
             withAnimation { currentRoomIndex = i }
         } label: {
             Text(vm.rooms[i].name)
-                .font(.system(size: 16, weight: .bold))
-                .padding(.horizontal, 20)
-                .padding(.vertical, 12)
+                .font(.system(size: 18, weight: .bold))
+                .padding(.horizontal, 24)
+                .padding(.vertical, 14)
                 .background(isSelected ? Color.lunaGold.opacity(0.2) : Color.lunaDarkBorder)
                 .foregroundStyle(isSelected ? Color.lunaGold : Color.lunaSubtle)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -438,7 +438,9 @@ struct FloorView: View {
         let cols = roomTables.count >= 4 ? max(maxX, 4) : maxX
         let rows = max(roomTables.map(\.position.y).max() ?? 1, Int(ceil(Double(roomTables.count) / Double(cols))))
         let sorted = roomTables.sorted { a, b in
-            a.position.y != b.position.y ? a.position.y < b.position.y : a.position.x < b.position.x
+            if a.position.y != b.position.y { return a.position.y < b.position.y }
+            if a.position.x != b.position.x { return a.position.x < b.position.x }
+            return a.id < b.id
         }
 
         return GeometryReader { geo in

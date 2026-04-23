@@ -122,7 +122,7 @@ struct ContentView: View {
                             .tint(.lunaGold)
                     }
                     Text("☽ Luna POS")
-                        .font(.system(size: 20, weight: .bold))
+                        .font(.system(size: 22, weight: .bold))
                         .tracking(1)
                         .foregroundStyle(.lunaGold)
                 }
@@ -133,23 +133,23 @@ struct ContentView: View {
             Spacer()
 
             // Center: Today's sales
-            HStack(spacing: 10) {
+            HStack(spacing: 12) {
                 Text("本日売上")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.system(size: 18, weight: .semibold))
                     .foregroundStyle(.lunaSubtle)
                 Text(vm.totalSales.yenFormatted)
-                    .font(.system(size: 28, weight: .heavy, design: .rounded))
+                    .font(.system(size: 32, weight: .heavy, design: .rounded))
                     .foregroundStyle(.lunaGold)
             }
-            .padding(.horizontal, 24)
-            .padding(.vertical, 10)
+            .padding(.horizontal, 28)
+            .padding(.vertical, 12)
             .background(Color.lunaGold.opacity(0.08))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(RoundedRectangle(cornerRadius: 14))
 
             Spacer()
 
             // Right: Action buttons
-            HStack(spacing: 16) {
+            HStack(spacing: 20) {
                 headerButton("キャスト", icon: "person.badge.clock", color: .white) {
                     path.append(AppScreen.cast)
                 }
@@ -171,14 +171,14 @@ struct ContentView: View {
 
     private func headerButton(_ label: String, icon: String, color: Color, action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            VStack(spacing: 4) {
+            VStack(spacing: 6) {
                 Image(systemName: icon)
-                    .font(.system(size: 26))
+                    .font(.system(size: 30))
                 Text(label)
-                    .font(.system(size: 12, weight: .semibold))
+                    .font(.system(size: 13, weight: .semibold))
             }
             .foregroundStyle(color)
-            .frame(minWidth: 64, minHeight: 56)
+            .frame(minWidth: 72, minHeight: 64)
             .contentShape(Rectangle())
         }
     }

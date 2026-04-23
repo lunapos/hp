@@ -25,8 +25,12 @@ final class AppViewModel {
         // マスタデータ（rooms/tables/casts/menuItems/setPlans/customers）は
         // 常にMockDataで初期化 → Supabase同期時に上書きされる
         let master = MockData.defaultState
-        rooms = master.rooms
-        tables = master.tables
+        rooms = master.rooms.sorted { $0.id < $1.id }
+        tables = master.tables.sorted {
+            if $0.position.y != $1.position.y { return $0.position.y < $1.position.y }
+            if $0.position.x != $1.position.x { return $0.position.x < $1.position.x }
+            return $0.id < $1.id
+        }
         casts = master.casts
         customers = master.customers
         menuItems = master.menuItems
