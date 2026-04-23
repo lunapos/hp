@@ -42,68 +42,80 @@ struct CheckoutView: View {
         VStack(spacing: 0) {
             Spacer()
             Image(systemName: "checkmark")
-                .font(.system(size: 36))
+                .font(.system(size: 44))
                 .foregroundStyle(.lunaGold)
-                .frame(width: 80, height: 80)
+                .frame(width: 100, height: 100)
                 .background(Color.lunaDark)
                 .clipShape(Circle())
-                .padding(.bottom, 20)
+                .padding(.bottom, 24)
 
             Text("THANK YOU")
-                .font(.title.bold())
-                .tracking(4)
-                .padding(.bottom, 8)
+                .font(.largeTitle.bold())
+                .tracking(6)
+                .padding(.bottom, 12)
 
             Text(completedTotal.yenFormatted)
-                .font(.title2.bold())
+                .font(.system(size: 36, weight: .bold))
                 .foregroundStyle(.lunaGoldDark)
 
-            // 現金の場合はお釣りを表示
             if completedChange > 0 {
                 VStack(spacing: 4) {
                     Text("お釣り")
-                        .font(.caption)
+                        .font(.subheadline)
                         .foregroundStyle(.lunaMuted)
                     Text(completedChange.yenFormatted)
-                        .font(.title3.bold())
+                        .font(.title2.bold())
                         .foregroundStyle(.white)
                 }
-                .padding(.top, 8)
+                .padding(.top, 12)
             }
 
             Spacer()
 
-            // レシート表示ボタン
-            VStack(spacing: 24) {
+            HStack(spacing: 20) {
                 if completedReceipt != nil {
                     Button {
                         showReceipt = true
                     } label: {
-                        HStack(spacing: 8) {
+                        VStack(spacing: 12) {
                             Image(systemName: "doc.text")
+                                .font(.system(size: 28))
                             Text("レシートを表示")
+                                .font(.body.bold())
                                 .tracking(1)
                         }
-                        .font(.subheadline.bold())
-                        .padding(.horizontal, 32)
-                        .padding(.vertical, 14)
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity, minHeight: 100)
+                        .background(Color.lunaDark)
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16)
+                                .stroke(Color.lunaGold.opacity(0.3), lineWidth: 1)
+                        )
                     }
-                    .buttonStyle(.borderedProminent)
-                    .tint(.lunaDark)
+                    .buttonStyle(.plain)
                 }
 
                 Button {
                     showCheckout = false
                     selectedTableId = nil
                 } label: {
-                    Text("フロアに戻る")
-                        .font(.body.bold())
-                        .foregroundStyle(.lunaGoldDark)
-                        .tracking(2)
-                        .frame(minWidth: 200, minHeight: 48)
+                    VStack(spacing: 12) {
+                        Image(systemName: "square.grid.2x2")
+                            .font(.system(size: 28))
+                        Text("フロアに戻る")
+                            .font(.body.bold())
+                            .tracking(1)
+                    }
+                    .foregroundStyle(.lunaDark)
+                    .frame(maxWidth: .infinity, minHeight: 100)
+                    .background(Color.lunaGoldDark)
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
                 }
+                .buttonStyle(.plain)
             }
-            .padding(.bottom, 60)
+            .padding(.horizontal, 40)
+            .padding(.bottom, 50)
         }
         .frame(maxWidth: .infinity)
         .background(Color.lunaBg)
