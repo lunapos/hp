@@ -41,6 +41,7 @@
 		A1000003000000000000003A /* StarPrintDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000003000000000000003B /* StarPrintDriver.swift */; };
 		A1000004000000000000004A /* EpsonPrintDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000004000000000000004B /* EpsonPrintDriver.swift */; };
 		A1000005000000000000005A /* PrinterSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000005000000000000005B /* PrinterSettingsView.swift */; };
+		A1000006000000000000006A /* BluetoothPrinterScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000006000000000000006B /* BluetoothPrinterScanner.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,6 +90,7 @@
 		A1000003000000000000003B /* StarPrintDriver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarPrintDriver.swift; sourceTree = "<group>"; };
 		A1000004000000000000004B /* EpsonPrintDriver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpsonPrintDriver.swift; sourceTree = "<group>"; };
 		A1000005000000000000005B /* PrinterSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrinterSettingsView.swift; sourceTree = "<group>"; };
+		A1000006000000000000006B /* BluetoothPrinterScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothPrinterScanner.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,6 +141,7 @@
 			isa = PBXGroup;
 			children = (
 				A1000002000000000000002B /* AirPrintDriver.swift */,
+				A1000006000000000000006B /* BluetoothPrinterScanner.swift */,
 				A1000004000000000000004B /* EpsonPrintDriver.swift */,
 				DD4E5F6A7B8C9D0E1F2A3B4C /* KeychainHelper.swift */,
 				4F4451DD65A7D6F5D6B5E3E1 /* NetworkMonitor.swift */,
@@ -341,6 +344,7 @@
 				A1000003000000000000003A /* StarPrintDriver.swift in Sources */,
 				A1000004000000000000004A /* EpsonPrintDriver.swift in Sources */,
 				A1000005000000000000005A /* PrinterSettingsView.swift in Sources */,
+				A1000006000000000000006A /* BluetoothPrinterScanner.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

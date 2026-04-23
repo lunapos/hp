@@ -215,13 +215,38 @@ final class PrinterManager: @unchecked Sendable {
     func discoverPrinters() async {
         connectionState = .searching
         lastError = nil
+
+        var results: [DiscoveredPrinter] = []
+
+        // SDK経由の検出を試行
         do {
-            discoveredPrinters = try await driver.discover()
-            connectionState = .disconnected
+            results = try await driver.discover()
         } catch {
-            lastError = error.localizedDescription
-            connectionState = .error
-            discoveredPrinters = []
+            // SDK未導入の場合は無視してBLEフォールバックへ
+        }
+
+        // Star/Epson選択時はBLEスキャンも並行実行
+        if selectedType != .airprint {
+            let scanner = BluetoothPrinterScanner.shared
+            if scanner.isBluetoothAvailable {
+                do {
+                    let bleResults = try await scanner.scan(timeout: 6)
+                    let existingIds = Set(results.map { $0.id })
+                    for printer in bleResults where !existingIds.contains(printer.id) {
+                        results.append(printer)
+                    }
+                } catch {
+                    if results.isEmpty {
+                        lastError = error.localizedDescription
+                    }
+                }
+            }
+        }
+
+        discoveredPrinters = results
+        connectionState = results.isEmpty ? .disconnected : .disconnected
+        if results.isEmpty && lastError == nil {
+            lastError = "プリンターが見つかりません"
         }
     }
 

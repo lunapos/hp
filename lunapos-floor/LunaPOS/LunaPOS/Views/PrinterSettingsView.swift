@@ -3,6 +3,7 @@ import SwiftUI
 /// プリンタ設定画面 — 機種選択・検出・テスト印刷
 struct PrinterSettingsView: View {
     @State private var printerManager = PrinterManager.shared
+    @State private var bleScanner = BluetoothPrinterScanner.shared
     @State private var isDiscovering = false
     @State private var isTesting = false
     @State private var showTestResult = false
@@ -164,11 +165,23 @@ struct PrinterSettingsView: View {
         GroupBox {
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
-                    Label("検出されたプリンタ", systemImage: "wifi")
+                    Label("プリンタを検出", systemImage: "antenna.radiowaves.left.and.right")
                         .font(.subheadline.bold())
                         .foregroundStyle(.lunaMuted)
                         .tracking(1)
                     Spacer()
+
+                    // Bluetooth状態インジケーター
+                    HStack(spacing: 4) {
+                        Circle()
+                            .fill(bleScanner.isBluetoothAvailable ? .green : .red)
+                            .frame(width: 8, height: 8)
+                        Text(bleScanner.isBluetoothAvailable ? "BT ON" : "BT OFF")
+                            .font(.caption2)
+                            .foregroundStyle(.lunaMuted)
+                    }
+                    .padding(.trailing, 8)
+
                     Button {
                         Task {
                             isDiscovering = true
@@ -179,45 +192,83 @@ struct PrinterSettingsView: View {
                         HStack(spacing: 4) {
                             if isDiscovering {
                                 ProgressView().controlSize(.mini)
+                            } else {
+                                Image(systemName: "magnifyingglass")
                             }
-                            Text("検出")
+                            Text(isDiscovering ? "検出中..." : "検出開始")
                         }
-                        .font(.caption)
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 6)
+                        .font(.caption.bold())
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 8)
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(.lunaDark)
+                    .tint(.lunaGold)
                     .disabled(isDiscovering)
                 }
 
-                if printerManager.discoveredPrinters.isEmpty {
-                    HStack {
-                        Image(systemName: "info.circle")
-                        Text("プリンタが見つかりません。電源とBluetooth/Wi-Fi接続を確認してください。")
+                if !bleScanner.isBluetoothAvailable && printerManager.selectedType != .airprint {
+                    HStack(spacing: 8) {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .foregroundStyle(.orange)
+                        Text("Bluetoothがオフです。iPadの設定からオンにしてください。")
                     }
                     .font(.caption)
-                    .foregroundStyle(.lunaMuted)
                     .padding(.vertical, 8)
+                }
+
+                if printerManager.discoveredPrinters.isEmpty {
+                    if !isDiscovering {
+                        HStack(spacing: 8) {
+                            Image(systemName: "info.circle")
+                            Text("「検出開始」をタップしてプリンタを検索してください")
+                        }
+                        .font(.caption)
+                        .foregroundStyle(.lunaMuted)
+                        .padding(.vertical, 8)
+                    }
                 } else {
                     ForEach(printerManager.discoveredPrinters) { printer in
                         Button {
                             Task { await printerManager.connect(to: printer) }
                         } label: {
                             HStack(spacing: 12) {
-                                Image(systemName: printer.connectionType == .bluetooth ? "wave.3.right" : "wifi")
+                                Image(systemName: printer.connectionType == .bluetooth ? "antenna.radiowaves.left.and.right" : "wifi")
+                                    .font(.title3)
+                                    .foregroundStyle(printerManager.selectedPrinterId == printer.id ? .lunaGold : .lunaMuted)
+                                    .frame(width: 32)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(printer.name).font(.subheadline.bold())
+                                    HStack(spacing: 4) {
+                                        Text(printer.connectionType == .bluetooth ? "Bluetooth" : "Wi-Fi")
+                                        Text("·")
+                                        Text(printer.type.displayName)
+                                    }
+                                    .font(.caption2)
                                     .foregroundStyle(.lunaMuted)
-                                VStack(alignment: .leading) {
-                                    Text(printer.name).font(.subheadline)
-                                    Text(printer.id).font(.caption2).foregroundStyle(.lunaMuted)
                                 }
                                 Spacer()
                                 if printerManager.selectedPrinterId == printer.id {
-                                    Image(systemName: "checkmark.circle.fill")
-                                        .foregroundStyle(.green)
+                                    HStack(spacing: 4) {
+                                        Image(systemName: "checkmark.circle.fill")
+                                            .foregroundStyle(.green)
+                                        Text("接続済み")
+                                            .font(.caption2)
+                                            .foregroundStyle(.green)
+                                    }
+                                } else {
+                                    Text("接続")
+                                        .font(.caption.bold())
+                                        .foregroundStyle(.lunaGold)
+                                        .padding(.horizontal, 12)
+                                        .padding(.vertical, 6)
+                                        .background(Color.lunaGold.opacity(0.15))
+                                        .clipShape(RoundedRectangle(cornerRadius: 6))
                                 }
                             }
-                            .padding(.vertical, 6)
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 8)
+                            .background(printerManager.selectedPrinterId == printer.id ? Color.lunaGold.opacity(0.08) : Color.clear)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
                         }
                         .buttonStyle(.plain)
                     }
