@@ -115,57 +115,41 @@ struct ContentView: View {
                     isSyncing = false
                 }
             } label: {
-                HStack(spacing: 6) {
+                HStack(spacing: 8) {
                     if isSyncing {
                         ProgressView()
-                            .controlSize(.small)
+                            .controlSize(.regular)
                             .tint(.lunaGold)
                     }
                     Text("☽ Luna POS")
-                        .font(.system(size: 16, weight: .bold))
+                        .font(.system(size: 20, weight: .bold))
                         .tracking(1)
                         .foregroundStyle(.lunaGold)
                 }
-            }
-
-            Spacer()
-
-            // デバイス名
-            if let name = SupabaseService.shared.deviceName {
-                HStack(spacing: 6) {
-                    Circle()
-                        .fill(Color.green)
-                        .frame(width: 8, height: 8)
-                    Text(name)
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(.lunaGold)
-                }
-                .padding(.horizontal, 14)
-                .padding(.vertical, 6)
-                .background(Color.lunaGold.opacity(0.08))
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .frame(minHeight: 48)
+                .contentShape(Rectangle())
             }
 
             Spacer()
 
             // Center: Today's sales
-            HStack(spacing: 8) {
+            HStack(spacing: 10) {
                 Text("本日売上")
-                    .font(.system(size: 14, weight: .semibold))
+                    .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(.lunaSubtle)
                 Text(vm.totalSales.yenFormatted)
-                    .font(.system(size: 24, weight: .heavy, design: .rounded))
+                    .font(.system(size: 28, weight: .heavy, design: .rounded))
                     .foregroundStyle(.lunaGold)
             }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 6)
+            .padding(.horizontal, 24)
+            .padding(.vertical, 10)
             .background(Color.lunaGold.opacity(0.08))
-            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
 
             Spacer()
 
             // Right: Action buttons
-            HStack(spacing: 12) {
+            HStack(spacing: 16) {
                 headerButton("キャスト", icon: "person.badge.clock", color: .white) {
                     path.append(AppScreen.cast)
                 }
@@ -180,21 +164,21 @@ struct ContentView: View {
                 }
             }
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 10)
+        .padding(.horizontal, 20)
+        .padding(.vertical, 12)
         .background(Color.lunaDark)
     }
 
     private func headerButton(_ label: String, icon: String, color: Color, action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            VStack(spacing: 2) {
+            VStack(spacing: 4) {
                 Image(systemName: icon)
-                    .font(.system(size: 20))
+                    .font(.system(size: 26))
                 Text(label)
-                    .font(.system(size: 10, weight: .semibold))
+                    .font(.system(size: 12, weight: .semibold))
             }
             .foregroundStyle(color)
-            .frame(minWidth: 52, minHeight: 44)
+            .frame(minWidth: 64, minHeight: 56)
             .contentShape(Rectangle())
         }
     }

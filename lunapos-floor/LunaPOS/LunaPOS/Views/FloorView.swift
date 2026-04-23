@@ -388,9 +388,9 @@ struct FloorView: View {
             withAnimation { currentRoomIndex = i }
         } label: {
             Text(vm.rooms[i].name)
-                .font(.system(size: 14, weight: .semibold))
-                .padding(.horizontal, 16)
-                .padding(.vertical, 10)
+                .font(.system(size: 16, weight: .bold))
+                .padding(.horizontal, 20)
+                .padding(.vertical, 12)
                 .background(isSelected ? Color.lunaGold.opacity(0.2) : Color.lunaDarkBorder)
                 .foregroundStyle(isSelected ? Color.lunaGold : Color.lunaSubtle)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -433,8 +433,10 @@ struct FloorView: View {
     }
 
     private func populatedRoomView(tables roomTables: [FloorTable]) -> some View {
-        let cols = roomTables.map(\.position.x).max() ?? 1
-        let rows = roomTables.map(\.position.y).max() ?? 1
+        // テーブル数が4以上なら4列、それ以外はDB側のposition.xの最大値を使う
+        let maxX = roomTables.map(\.position.x).max() ?? 1
+        let cols = roomTables.count >= 4 ? max(maxX, 4) : maxX
+        let rows = max(roomTables.map(\.position.y).max() ?? 1, Int(ceil(Double(roomTables.count) / Double(cols))))
         let sorted = roomTables.sorted { a, b in
             a.position.y != b.position.y ? a.position.y < b.position.y : a.position.x < b.position.x
         }
