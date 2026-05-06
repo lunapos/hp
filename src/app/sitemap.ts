@@ -3,6 +3,8 @@ import { getAllArticles, getAllSlugs } from "@/lib/media";
 import { newsItems } from "@/data/news";
 import { routing } from "@/i18n/routing";
 
+export const revalidate = 3600;
+
 const baseUrl = "https://lunapos.jp";
 const locales = routing.locales; // ['ja', 'en', 'zh']
 const defaultLocale = routing.defaultLocale; // 'ja'

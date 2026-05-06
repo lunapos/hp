@@ -10,6 +10,8 @@ import { ArticleJsonLd, BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 import Comments from "@/components/Comments";
 import { BarChartMDX, LineChartMDX, PieChartMDX } from "@/components/charts";
 
+export const revalidate = 3600;
+
 const mdxComponents = { BarChart: BarChartMDX, LineChart: LineChartMDX, PieChart: PieChartMDX };
 
 export async function generateStaticParams() {

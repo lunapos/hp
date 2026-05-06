@@ -7,6 +7,8 @@ import { TagSelect } from "@/components/ui/TagSelect";
 import { Pagination } from "@/components/ui/Pagination";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
+export const revalidate = 3600;
+
 const ARTICLES_PER_PAGE = 6;
 
 export async function generateStaticParams() {

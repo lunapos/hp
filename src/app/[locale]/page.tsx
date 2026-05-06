@@ -7,6 +7,8 @@ import ColumnSection from "@/components/sections/ColumnSection";
 import { WebSiteJsonLd, FaqJsonLd } from "@/components/seo/JsonLd";
 import { FAQ_COUNT } from "@/lib/constants";
 
+export const revalidate = 3600;
+
 const ProblemSection = dynamic(() => import("@/components/sections/ProblemSection"));
 const FeatureHighlights = dynamic(() => import("@/components/sections/FeatureHighlights"));
 const PricingSection = dynamic(() => import("@/components/sections/PricingSection"));

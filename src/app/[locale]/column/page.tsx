@@ -8,6 +8,8 @@ import ContentCard from "@/components/ui/ContentCard";
 import { TagSelect } from "@/components/ui/TagSelect";
 import { Pagination } from "@/components/ui/Pagination";
 
+export const revalidate = 3600;
+
 const ARTICLES_PER_PAGE = 6;
 
 export async function generateMetadata({
