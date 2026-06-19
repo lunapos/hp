@@ -11,7 +11,7 @@ export default function PricingSection() {
   const tAll = useTranslations("allFeatures");
 
   return (
-    <Section className="bg-luna-surface/50">
+    <Section id="pricing" className="bg-luna-surface/50">
       <SectionHeading
         subtitle={t("subtitle")}
         title={t("title")}
