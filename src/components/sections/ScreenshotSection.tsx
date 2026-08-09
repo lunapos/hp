@@ -54,7 +54,10 @@ export default async function ScreenshotSection() {
 
       {/* スクリーンショットを見た直後が一番「触ってみたい」タイミングなので、
           ここにApp Store導線とデモ用トークンを置く */}
-      <div className="mt-14 rounded-2xl border border-luna-gold/25 bg-luna-surface/60 px-6 py-10 text-center">
+      <div
+        id="demo"
+        className="scroll-mt-24 mt-14 rounded-2xl border border-luna-gold/25 bg-luna-surface/60 px-6 py-10 text-center"
+      >
         <span className="inline-block rounded-full border border-luna-gold/30 bg-luna-gold/10 px-3 py-1 text-xs font-medium tracking-wider text-luna-gold">
           {tDemo("badge")}
         </span>

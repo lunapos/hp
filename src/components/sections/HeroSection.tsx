@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Tablet, WifiOff, Crown } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import AppStoreButton from "@/components/ui/AppStoreButton";
+import DemoLinkButton from "@/components/ui/DemoLinkButton";
 
 export default async function HeroSection() {
   const t = await getTranslations("hero");
@@ -47,7 +47,7 @@ export default async function HeroSection() {
             </p>
 
             <div className="animate-slide-up animation-delay-200 flex flex-col items-center lg:items-start gap-3">
-              <AppStoreButton label={tDemo("buttonLong")} location="hero" />
+              <DemoLinkButton label={tDemo("ctaLong")} location="hero" />
               <span className="text-luna-text-muted text-xs">
                 {tDemo("note")}
               </span>

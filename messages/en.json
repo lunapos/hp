@@ -334,12 +334,30 @@
         "title": "POS System Specialized for Nightlife",
         "description": "A POS system optimized for hostess clubs, girls bars, lounges, snack bars, and host clubs. Runs on iPad, integrating floor management, billing, and cast management. Offline support ensures zero downtime during business hours.",
         "details": {
-          "0": { "title": "Floor Management", "description": "Multi-room table management with real-time vacancy status" },
-          "1": { "title": "Billing & Checkout", "description": "Automatic calculation of set charges, nomination fees, and service rates" },
-          "2": { "title": "Cast Attendance", "description": "One-tap clock-in/out via a photo grid of cast members" },
-          "3": { "title": "Sales Reports", "description": "Automatic aggregation of daily sales and individual cast performance" },
-          "4": { "title": "Register & Cash Management", "description": "Register closing and cash in/out logged by purpose, with CSV export" },
-          "5": { "title": "Audit Logs", "description": "Checkouts, discounts, price changes, and attendance recorded and reviewable in the admin panel" }
+          "0": {
+            "title": "Floor Management",
+            "description": "Multi-room table management with real-time vacancy status"
+          },
+          "1": {
+            "title": "Billing & Checkout",
+            "description": "Automatic calculation of set charges, nomination fees, and service rates"
+          },
+          "2": {
+            "title": "Cast Attendance",
+            "description": "One-tap clock-in/out via a photo grid of cast members"
+          },
+          "3": {
+            "title": "Sales Reports",
+            "description": "Automatic aggregation of daily sales and individual cast performance"
+          },
+          "4": {
+            "title": "Register & Cash Management",
+            "description": "Register closing and cash in/out logged by purpose, with CSV export"
+          },
+          "5": {
+            "title": "Audit Logs",
+            "description": "Checkouts, discounts, price changes, and attendance recorded and reviewable in the admin panel"
+          }
         }
       },
       "1": {
@@ -367,9 +385,18 @@
     "title": "For Those Considering Investment",
     "description": "We're looking for partners to drive the digital transformation of the nightlife industry together.",
     "cards": {
-      "0": { "title": "A Growing Market", "description": "The DX of the nightlife industry is still in its early days. There's a significant opportunity to enter the market as a first mover." },
-      "1": { "title": "Real-World Track Record", "description": "We're improving and scaling the product based on actual implementation and operational results at live venues." },
-      "2": { "title": "A Scalable Vision", "description": "A clear roadmap for expanding our business domain step by step: POS → Luna Career → Luna Fund → Luna World." }
+      "0": {
+        "title": "A Growing Market",
+        "description": "The DX of the nightlife industry is still in its early days. There's a significant opportunity to enter the market as a first mover."
+      },
+      "1": {
+        "title": "Real-World Track Record",
+        "description": "We're improving and scaling the product based on actual implementation and operational results at live venues."
+      },
+      "2": {
+        "title": "A Scalable Vision",
+        "description": "A clear roadmap for expanding our business domain step by step: POS → Luna Career → Luna Fund → Luna World."
+      }
     },
     "ctaTitle": "For Those Considering Investing in LunaPos",
     "ctaSubtitle": "We'll send you our business plan and financial projections",
@@ -383,26 +410,56 @@
     "cast": {
       "label": "For Cast Members",
       "items": {
-        "0": { "title": "Prove your performance with real numbers", "description": "Nomination count, sales contribution, repeat customer rate, and more" },
-        "1": { "title": "Stronger position in transfer negotiations", "description": "Data to back up hourly rate and compensation discussions" },
-        "2": { "title": "A visible career track record", "description": "The longer you work, the richer your portfolio becomes" },
-        "3": { "title": "Incentive to work at LunaPos venues", "description": "Track record doesn't accumulate at non-LunaPos venues" }
+        "0": {
+          "title": "Prove your performance with real numbers",
+          "description": "Nomination count, sales contribution, repeat customer rate, and more"
+        },
+        "1": {
+          "title": "Stronger position in transfer negotiations",
+          "description": "Data to back up hourly rate and compensation discussions"
+        },
+        "2": {
+          "title": "A visible career track record",
+          "description": "The longer you work, the richer your portfolio becomes"
+        },
+        "3": {
+          "title": "Incentive to work at LunaPos venues",
+          "description": "Track record doesn't accumulate at non-LunaPos venues"
+        }
       }
     },
     "sender": {
       "label": "For Sending Venues (Current Venue)",
       "items": {
-        "0": { "title": "Encourage amicable departures", "description": "Portfolio issuance can be built into the offboarding process" },
-        "1": { "title": "Systematize referral income", "description": "Data-backed referrals → referral success fees" },
-        "2": { "title": "Improve cast retention", "description": "Motivation from knowing that experience here translates to future opportunities" }
+        "0": {
+          "title": "Encourage amicable departures",
+          "description": "Portfolio issuance can be built into the offboarding process"
+        },
+        "1": {
+          "title": "Systematize referral income",
+          "description": "Data-backed referrals → referral success fees"
+        },
+        "2": {
+          "title": "Improve cast retention",
+          "description": "Motivation from knowing that experience here translates to future opportunities"
+        }
       }
     },
     "receiver": {
       "label": "For Receiving Venues (Transfer Destination)",
       "items": {
-        "0": { "title": "Reduce hiring risk", "description": "Review sales track record before making a hiring decision" },
-        "1": { "title": "Set appropriate compensation", "description": "Data-backed basis for offering hourly rates and commission percentages" },
-        "2": { "title": "Weed out trial-shift hoppers", "description": "Prioritize hiring cast members with a proven track record" }
+        "0": {
+          "title": "Reduce hiring risk",
+          "description": "Review sales track record before making a hiring decision"
+        },
+        "1": {
+          "title": "Set appropriate compensation",
+          "description": "Data-backed basis for offering hourly rates and commission percentages"
+        },
+        "2": {
+          "title": "Weed out trial-shift hoppers",
+          "description": "Prioritize hiring cast members with a proven track record"
+        }
       }
     }
   },
@@ -411,8 +468,16 @@
     "title": "Screens in Development",
     "description": "Actual screens from the LunaPos Floor app currently in development",
     "items": {
-      "0": { "caption": "Floor Map", "description": "Real-time overview of table status, time remaining, and sales at a glance", "alt": "LunaPos Floor - Floor Map Screen" },
-      "1": { "caption": "Cast Management", "description": "Intuitively track attendance status and working hours via a photo grid", "alt": "LunaPos Floor - Cast Management Screen" }
+      "0": {
+        "caption": "Floor Map",
+        "description": "Real-time overview of table status, time remaining, and sales at a glance",
+        "alt": "LunaPos Floor - Floor Map Screen"
+      },
+      "1": {
+        "caption": "Cast Management",
+        "description": "Intuitively track attendance status and working hours via a photo grid",
+        "alt": "LunaPos Floor - Cast Management Screen"
+      }
     }
   },
   "footer": {
@@ -516,19 +581,54 @@
     "whyDescription": "In traditional recruitment, venues self-report their own conditions, and cast members have no way to know what the real environment is like until they show up. By grounding everything in the \"facts\" of POS operational data, LunaPos brings transparency and credibility to the hiring process.",
     "whatTitle": "What It Can Do",
     "features": {
-      "0": { "title": "Data-Backed Venue Ratings", "description": "Visualize a venue's operational health using POS sales data and attendance records. Assess whether a venue is actually worth working at — with data." },
-      "1": { "title": "Cast Performance Portfolios", "description": "Accumulate nomination counts, sales contributions, and work history as each cast member's personal portfolio. A tangible asset for transfer negotiations." },
-      "2": { "title": "Demand-Driven Hiring Recommendations", "description": "Suggest \"now is the right time to hire\" based on sales trends and peak period data." },
-      "3": { "title": "End-to-End from Scheduling to Payroll", "description": "Post-hire attendance management and payroll calculation, seamlessly handled within LunaPos." }
+      "0": {
+        "title": "Data-Backed Venue Ratings",
+        "description": "Visualize a venue's operational health using POS sales data and attendance records. Assess whether a venue is actually worth working at — with data."
+      },
+      "1": {
+        "title": "Cast Performance Portfolios",
+        "description": "Accumulate nomination counts, sales contributions, and work history as each cast member's personal portfolio. A tangible asset for transfer negotiations."
+      },
+      "2": {
+        "title": "Demand-Driven Hiring Recommendations",
+        "description": "Suggest \"now is the right time to hire\" based on sales trends and peak period data."
+      },
+      "3": {
+        "title": "End-to-End from Scheduling to Payroll",
+        "description": "Post-hire attendance management and payroll calculation, seamlessly handled within LunaPos."
+      }
     },
     "comparisonTitle": "How It Differs from Existing Job Platforms",
-    "comparisonHeaders": { "existing": "Existing Job Sites", "luna": "Luna Career" },
+    "comparisonHeaders": {
+      "existing": "Existing Job Sites",
+      "luna": "Luna Career"
+    },
     "comparison": {
-      "0": { "label": "Reliability of venue info", "existing": "Self-reported", "luna": "POS data-backed" },
-      "1": { "label": "Income information", "existing": "\"Earn up to X/month\" (no basis)", "luna": "Average income based on actual data" },
-      "2": { "label": "Post-hire management", "existing": "None (separate system)", "luna": "Seamless POS integration" },
-      "3": { "label": "Hiring timing", "existing": "Based on gut feeling", "luna": "Data-driven recommendations" },
-      "4": { "label": "Cast evaluation", "existing": "Interview and trial shift only", "luna": "Portfolio of past performance" }
+      "0": {
+        "label": "Reliability of venue info",
+        "existing": "Self-reported",
+        "luna": "POS data-backed"
+      },
+      "1": {
+        "label": "Income information",
+        "existing": "\"Earn up to X/month\" (no basis)",
+        "luna": "Average income based on actual data"
+      },
+      "2": {
+        "label": "Post-hire management",
+        "existing": "None (separate system)",
+        "luna": "Seamless POS integration"
+      },
+      "3": {
+        "label": "Hiring timing",
+        "existing": "Based on gut feeling",
+        "luna": "Data-driven recommendations"
+      },
+      "4": {
+        "label": "Cast evaluation",
+        "existing": "Interview and trial shift only",
+        "luna": "Portfolio of past performance"
+      }
     },
     "stepsTitle": "Rollout Steps",
     "stepsDescription": "Luna Career is planned to expand its features gradually as more venues adopt LunaPos. Spreading the POS itself is our top priority for now.",
@@ -540,9 +640,18 @@
     "badge": "Coming Soon - Pre-registration Open",
     "description": "We're developing a program that enables investment and financing for promising venues based on operational data from LunaPos.",
     "features": {
-      "0": { "title": "Data-Driven Investment Decisions", "description": "Visualize sales trends, average spend per customer, and occupancy rates from POS data to support well-founded investment decisions." },
-      "1": { "title": "Risk Visibility", "description": "Gain a data-backed view of investment risk indicators such as revenue stability, seasonal fluctuation, and cast retention rates." },
-      "2": { "title": "Growth Potential Assessment", "description": "Analyze historical trends to gauge future growth potential. Makes it easier to identify venues with room to grow." }
+      "0": {
+        "title": "Data-Driven Investment Decisions",
+        "description": "Visualize sales trends, average spend per customer, and occupancy rates from POS data to support well-founded investment decisions."
+      },
+      "1": {
+        "title": "Risk Visibility",
+        "description": "Gain a data-backed view of investment risk indicators such as revenue stability, seasonal fluctuation, and cast retention rates."
+      },
+      "2": {
+        "title": "Growth Potential Assessment",
+        "description": "Analyze historical trends to gauge future growth potential. Makes it easier to identify venues with room to grow."
+      }
     },
     "investmentTypes": {
       "store": "Interested in investing in a venue",
@@ -568,18 +677,46 @@
     "visionDescription": "Japan's nightlife entertainment industry is a uniquely fascinating market, with its own pricing structures and hospitality culture. We plan to take the industry-specific expertise built with LunaPos and localize it for nightclubs, lounges, and bars in countries around the world.",
     "roadmapTitle": "Expansion Roadmap",
     "regions": {
-      "0": { "name": "Singapore", "description": "Southeast Asia's business hub, home to many Japanese-style clubs — the ideal location for our first overseas foothold.", "status": "First Target" },
-      "1": { "name": "Southeast Asia", "description": "Thailand, the Philippines, Malaysia, and other regions with thriving nightlife industries.", "status": "Phase 2" },
-      "2": { "name": "East Asia", "description": "Markets with similar hospitality cultures, including South Korea, Taiwan, and Hong Kong.", "status": "Phase 3" },
-      "3": { "name": "Western Markets", "description": "Expanding into North America and Europe, where the nightclub and bar market is massive.", "status": "Future Vision" }
+      "0": {
+        "name": "Singapore",
+        "description": "Southeast Asia's business hub, home to many Japanese-style clubs — the ideal location for our first overseas foothold.",
+        "status": "First Target"
+      },
+      "1": {
+        "name": "Southeast Asia",
+        "description": "Thailand, the Philippines, Malaysia, and other regions with thriving nightlife industries.",
+        "status": "Phase 2"
+      },
+      "2": {
+        "name": "East Asia",
+        "description": "Markets with similar hospitality cultures, including South Korea, Taiwan, and Hong Kong.",
+        "status": "Phase 3"
+      },
+      "3": {
+        "name": "Western Markets",
+        "description": "Expanding into North America and Europe, where the nightclub and bar market is massive.",
+        "status": "Future Vision"
+      }
     },
     "challengesTitle": "Our Approach to Going Global",
     "challengesDescription": "We're actively working on the following challenges in preparation for international expansion.",
     "challenges": {
-      "0": { "title": "Multilingual Support", "description": "UI supporting English, Chinese, and the languages of each target country." },
-      "1": { "title": "Multi-Currency & Payment Support", "description": "Billing in local currencies and support for payment methods in each country." },
-      "2": { "title": "Regulatory Compliance", "description": "Adherence to nightlife-related laws and regulations in each country." },
-      "3": { "title": "Localization", "description": "Customization to fit the hospitality culture and pricing structures of each country." }
+      "0": {
+        "title": "Multilingual Support",
+        "description": "UI supporting English, Chinese, and the languages of each target country."
+      },
+      "1": {
+        "title": "Multi-Currency & Payment Support",
+        "description": "Billing in local currencies and support for payment methods in each country."
+      },
+      "2": {
+        "title": "Regulatory Compliance",
+        "description": "Adherence to nightlife-related laws and regulations in each country."
+      },
+      "3": {
+        "title": "Localization",
+        "description": "Customization to fit the hospitality culture and pricing structures of each country."
+      }
     }
   },
   "partner": {
@@ -587,14 +724,29 @@
     "title": "Affiliate Partner Program",
     "description": "Use your nightlife industry connections to introduce LunaPos to venues and earn referral rewards.",
     "benefits": {
-      "0": { "title": "10% Referral Reward", "description": "Earn 10% of the monthly subscription fee from each referred venue, for as long as they remain a customer." },
-      "1": { "title": "Just Share Your Link", "description": "Simply share your referral link. Venues can sign up and get started on their own." }
+      "0": {
+        "title": "10% Referral Reward",
+        "description": "Earn 10% of the monthly subscription fee from each referred venue, for as long as they remain a customer."
+      },
+      "1": {
+        "title": "Just Share Your Link",
+        "description": "Simply share your referral link. Venues can sign up and get started on their own."
+      }
     },
     "stepsTitle": "How Partnering Works",
     "steps": {
-      "0": { "title": "Register as a Partner", "description": "Sign up via the form below" },
-      "1": { "title": "Refer a Venue", "description": "Introduce LunaPos to venues using your unique referral link" },
-      "2": { "title": "Receive Your Reward", "description": "Earn 10% of the monthly fee from each referred venue" }
+      "0": {
+        "title": "Register as a Partner",
+        "description": "Sign up via the form below"
+      },
+      "1": {
+        "title": "Refer a Venue",
+        "description": "Introduce LunaPos to venues using your unique referral link"
+      },
+      "2": {
+        "title": "Receive Your Reward",
+        "description": "Earn 10% of the monthly fee from each referred venue"
+      }
     },
     "formTitle": "Partner Registration",
     "formDescription": "We'll send you your unique referral link once setup is complete",
@@ -660,10 +812,19 @@
     "chartConversions": "Conversion Trends",
     "conversionsTitle": "Conversion History",
     "conversionsEmpty": "No conversions yet. Share your referral link to start introducing venues.",
-    "conversionsHeaders": { "date": "Date", "store": "Venue", "status": "Status" },
+    "conversionsHeaders": {
+      "date": "Date",
+      "store": "Venue",
+      "status": "Status"
+    },
     "rewardsTitle": "Reward History",
     "rewardsEmpty": "No reward records yet.",
-    "rewardsHeaders": { "date": "Date", "amount": "Amount", "status": "Status", "note": "Note" },
+    "rewardsHeaders": {
+      "date": "Date",
+      "amount": "Amount",
+      "status": "Status",
+      "note": "Note"
+    },
     "statusLabels": {
       "pending": "Under Review",
       "confirmed": "Confirmed",
@@ -751,6 +912,8 @@
   },
   "demo": {
     "badge": "iPad app",
+    "cta": "Try the free demo",
+    "ctaLong": "Try the demo store for free",
     "button": "Get it on the App Store",
     "buttonLong": "Get the app on the App Store",
     "heading": "We set up a demo store. Try it for free",

@@ -7,7 +7,7 @@ import { X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { NAV_ITEMS } from "@/lib/constants";
 import ThemeToggle from "@/components/ui/ThemeToggle";
-import AppStoreButton from "@/components/ui/AppStoreButton";
+import DemoLinkButton from "@/components/ui/DemoLinkButton";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -50,8 +50,8 @@ export default function Header() {
               </Link>
             ))}
             <ThemeToggle />
-            <AppStoreButton
-              label={tDemo("button")}
+            <DemoLinkButton
+              label={tDemo("cta")}
               location="header"
               size="md"
             />
@@ -126,8 +126,8 @@ export default function Header() {
               {t(item.key)}
             </Link>
           ))}
-          <AppStoreButton
-            label={tDemo("button")}
+          <DemoLinkButton
+            label={tDemo("cta")}
             location="header_mobile"
             className="mt-2"
           />
