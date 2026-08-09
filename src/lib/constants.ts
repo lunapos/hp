@@ -61,9 +61,13 @@ export const TESTIMONIALS: Testimonial[] = [];
 
 export const FAQ_COUNT = 6;
 
+/** App Store の LunaPos（iPad アプリ）ページ */
+export const APP_STORE_URL = "https://apps.apple.com/jp/app/luna-pos/id6760809276";
+
 /**
- * 体験デモ（LunaPos Floor）のURL。
- * 登録不要で営業中の店舗を再現した状態から触れる。
- * TODO: demo.lunapos.jp のDNS(CNAME → cname.vercel-dns.com)設定後に差し替える
+ * デモ店舗の端末トークン。
+ * アプリ初回起動時の端末認証画面にこれを入力すると、
+ * デモ店舗（メニュー・キャスト・卓が入った状態）に接続される。
+ * seed_demo.sql で「公開OK」として管理されている値。
  */
-export const DEMO_URL = "https://lunapos-demo.vercel.app/";
+export const DEMO_DEVICE_TOKEN = "luna-demo";

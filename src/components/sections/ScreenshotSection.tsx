@@ -2,7 +2,8 @@ import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import Section from "@/components/layout/Section";
 import SectionHeading from "@/components/ui/SectionHeading";
-import DemoButton from "@/components/ui/DemoButton";
+import AppStoreButton from "@/components/ui/AppStoreButton";
+import DemoCredentials from "@/components/ui/DemoCredentials";
 
 const SCREENSHOT_SRCS = [
   "/screenshots/floor-map.webp",
@@ -49,7 +50,7 @@ export default async function ScreenshotSection() {
       </div>
 
       {/* スクリーンショットを見た直後が一番「触ってみたい」タイミングなので、
-          ここにデモ導線を置く */}
+          ここにApp Store導線とデモ用トークンを置く */}
       <div className="mt-14 rounded-2xl border border-luna-gold/25 bg-luna-surface/60 px-6 py-10 text-center">
         <span className="inline-block rounded-full border border-luna-gold/30 bg-luna-gold/10 px-3 py-1 text-xs font-medium tracking-wider text-luna-gold">
           {tDemo("badge")}
@@ -60,8 +61,9 @@ export default async function ScreenshotSection() {
         <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-luna-text-secondary">
           {tDemo("desc")}
         </p>
-        <div className="mt-7 flex flex-col items-center gap-3">
-          <DemoButton label={tDemo("button")} location="screenshot" />
+        <div className="mt-7 flex flex-col items-center gap-5">
+          <AppStoreButton label={tDemo("button")} location="screenshot" />
+          <DemoCredentials label={tDemo("tokenLabel")} />
           <span className="text-xs text-luna-text-muted">{tDemo("note")}</span>
         </div>
       </div>

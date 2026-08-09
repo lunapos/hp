@@ -750,11 +750,12 @@
     }
   },
   "demo": {
-    "badge": "No sign-up",
-    "button": "Try the demo",
-    "buttonLong": "Try the demo — no sign-up",
-    "heading": "Try the actual screens yourself",
-    "desc": "A demo that recreates a store mid-service. Open a table, take orders, and run a checkout from start to finish. No sign-up or setup required, and nothing you do affects a real store.",
-    "note": "Designed for iPad and tablets. You can also try it on a computer."
+    "badge": "iPad app",
+    "button": "Get it on the App Store",
+    "buttonLong": "Get the app on the App Store",
+    "heading": "Try it on a real device",
+    "desc": "Download LunaPos from the App Store, then enter the demo token below on the device authentication screen at launch. You'll be connected to a demo store preloaded with menus, casts, and tables, so you can open a table, take orders, and run a checkout on an actual device.",
+    "tokenLabel": "Demo device token",
+    "note": "iPad only. Anything you do in the demo store has no effect on real store data."
   }
 }
