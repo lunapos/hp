@@ -432,10 +432,6 @@
     "privacy": "隐私政策",
     "tokushoho": "特定商业交易法"
   },
-  "floatingLine": {
-    "title": "添加LINE好友",
-    "description": "欢迎在此咨询"
-  },
   "common": {
     "darkMode": "切换至深色模式",
     "lightMode": "切换至浅色模式",

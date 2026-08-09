@@ -3,7 +3,6 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import FloatingLineButton from "@/components/ui/FloatingLineButton";
 import { routing } from "@/i18n/routing";
 
 const baseUrl = "https://lunapos.jp";
@@ -52,7 +51,6 @@ export default async function LocaleLayout({
       <Header />
       <main className="pt-16">{children}</main>
       <Footer />
-      <FloatingLineButton />
     </NextIntlClientProvider>
   );
 }
