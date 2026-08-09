@@ -588,15 +588,13 @@
     "description": "利用您在夜间行业的人脉，只需介绍LunaPos即可获得报酬。",
     "benefits": {
       "0": { "title": "介绍报酬", "description": "每成功促成一家门店导入LunaPos，即可获得介绍报酬。" },
-      "1": { "title": "只需介绍即可", "description": "导入支持及技术对应由LunaPos团队负责。" },
-      "2": { "title": "合作伙伴专属支持", "description": "通过专属控制台查看成果。支持团队全程提供后援。" }
+      "1": { "title": "只需介绍即可", "description": "导入支持及技术对应由LunaPos团队负责。" }
     },
     "stepsTitle": "合作伙伴流程",
     "steps": {
       "0": { "title": "合作伙伴登记", "description": "通过下方表单登记" },
       "1": { "title": "介绍门店", "description": "通过专属链接向门店介绍LunaPos" },
-      "2": { "title": "导入支持", "description": "导入对应交由LunaPos团队处理" },
-      "3": { "title": "获取报酬", "description": "导入确定后支付介绍报酬" }
+      "2": { "title": "导入支持", "description": "导入对应交由LunaPos团队处理" }
     },
     "formTitle": "合作伙伴登记",
     "formDescription": "实装完成后将发送专属链接给您",
