@@ -1,9 +1,11 @@
 import Image from "next/image";
 import { Tablet, WifiOff, Crown } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import DemoButton from "@/components/ui/DemoButton";
 
 export default async function HeroSection() {
   const t = await getTranslations("hero");
+  const tDemo = await getTranslations("demo");
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
@@ -44,7 +46,12 @@ export default async function HeroSection() {
               {t("description2")}
             </p>
 
-            <div className="animate-slide-up animation-delay-200" />
+            <div className="animate-slide-up animation-delay-200 flex flex-col items-center lg:items-start gap-3">
+              <DemoButton label={tDemo("buttonLong")} location="hero" />
+              <span className="text-luna-text-muted text-xs">
+                {tDemo("note")}
+              </span>
+            </div>
           </div>
 
           {/* Actual app screenshot */}

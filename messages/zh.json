@@ -334,12 +334,30 @@
         "title": "夜间行业专属POS",
         "description": "专为夜总会、女仆酒吧、酒廊、小酒馆、男模俱乐部优化的POS系统。在iPad上运行，整合楼层管理、结账、接待人员管理。离线支持实现营业期间零停机时间。",
         "details": {
-          "0": { "title": "楼层管理", "description": "支持多包间的桌台管理，实时空位状态显示" },
-          "1": { "title": "结账・结算", "description": "套餐费用・点名费・服务费自动计算" },
-          "2": { "title": "接待人员考勤", "description": "带照片的接待人员列表一键打卡" },
-          "3": { "title": "销售报表", "description": "自动汇总每日销售额及接待人员个人业绩" },
-          "4": { "title": "收银・现金进出管理", "description": "收银结算、找零的入账与出账按用途记录，支持CSV导出" },
-          "5": { "title": "操作日志", "description": "结账・折扣・价格变更・考勤均有记录，可在管理后台查看" }
+          "0": {
+            "title": "楼层管理",
+            "description": "支持多包间的桌台管理，实时空位状态显示"
+          },
+          "1": {
+            "title": "结账・结算",
+            "description": "套餐费用・点名费・服务费自动计算"
+          },
+          "2": {
+            "title": "接待人员考勤",
+            "description": "带照片的接待人员列表一键打卡"
+          },
+          "3": {
+            "title": "销售报表",
+            "description": "自动汇总每日销售额及接待人员个人业绩"
+          },
+          "4": {
+            "title": "收银・现金进出管理",
+            "description": "收银结算、找零的入账与出账按用途记录，支持CSV导出"
+          },
+          "5": {
+            "title": "操作日志",
+            "description": "结账・折扣・价格变更・考勤均有记录，可在管理后台查看"
+          }
         }
       },
       "1": {
@@ -367,9 +385,18 @@
     "title": "欢迎投资者了解详情",
     "description": "我们正在寻找共同推进夜间行业数字化转型的合作伙伴。",
     "cards": {
-      "0": { "title": "成长型市场", "description": "夜间行业的数字化转型尚处于起步阶段，作为先行者开拓市场，机遇巨大。" },
-      "1": { "title": "导入实绩", "description": "基于实际门店的导入与运营经验，持续推进产品改善与规模扩大。" },
-      "2": { "title": "可扩展的愿景", "description": "从POS → Luna Career → Luna Fund → Luna World，逐步扩展业务领域的清晰路线图。" }
+      "0": {
+        "title": "成长型市场",
+        "description": "夜间行业的数字化转型尚处于起步阶段，作为先行者开拓市场，机遇巨大。"
+      },
+      "1": {
+        "title": "导入实绩",
+        "description": "基于实际门店的导入与运营经验，持续推进产品改善与规模扩大。"
+      },
+      "2": {
+        "title": "可扩展的愿景",
+        "description": "从POS → Luna Career → Luna Fund → Luna World，逐步扩展业务领域的清晰路线图。"
+      }
     },
     "ctaTitle": "有意向出资LunaPos的投资者",
     "ctaSubtitle": "我们将发送商业计划书及财务预测等资料",
@@ -383,26 +410,56 @@
     "cast": {
       "label": "接待人员",
       "items": {
-        "0": { "title": "用数字证明实力", "description": "点名次数、销售贡献额、回头率等" },
-        "1": { "title": "在转籍谈判中占据优势", "description": "可作为时薪及待遇谈判的依据" },
-        "2": { "title": "职业积累可视化", "description": "越努力，作品集越丰富" },
-        "3": { "title": "在LunaPos导入门店工作的激励", "description": "未导入门店无法积累实绩" }
+        "0": {
+          "title": "用数字证明实力",
+          "description": "点名次数、销售贡献额、回头率等"
+        },
+        "1": {
+          "title": "在转籍谈判中占据优势",
+          "description": "可作为时薪及待遇谈判的依据"
+        },
+        "2": {
+          "title": "职业积累可视化",
+          "description": "越努力，作品集越丰富"
+        },
+        "3": {
+          "title": "在LunaPos导入门店工作的激励",
+          "description": "未导入门店无法积累实绩"
+        }
       }
     },
     "sender": {
       "label": "输出门店（现门店）",
       "items": {
-        "0": { "title": "促进顺利离职", "description": "可将作品集发放纳入离职流程" },
-        "1": { "title": "系统化介绍费收入", "description": "附数据介绍 → 介绍成功报酬" },
-        "2": { "title": "提升接待人员留存率", "description": "「在这里积累实绩，对未来有帮助」的动力" }
+        "0": {
+          "title": "促进顺利离职",
+          "description": "可将作品集发放纳入离职流程"
+        },
+        "1": {
+          "title": "系统化介绍费收入",
+          "description": "附数据介绍 → 介绍成功报酬"
+        },
+        "2": {
+          "title": "提升接待人员留存率",
+          "description": "「在这里积累实绩，对未来有帮助」的动力"
+        }
       }
     },
     "receiver": {
       "label": "接收门店（转籍目的地）",
       "items": {
-        "0": { "title": "降低招聘风险", "description": "提前确认销售实绩后再做招聘决定" },
-        "1": { "title": "设定合理待遇", "description": "基于数据提出时薪及提成比例" },
-        "2": { "title": "避免体验入职滥用", "description": "优先录用有实绩的接待人员" }
+        "0": {
+          "title": "降低招聘风险",
+          "description": "提前确认销售实绩后再做招聘决定"
+        },
+        "1": {
+          "title": "设定合理待遇",
+          "description": "基于数据提出时薪及提成比例"
+        },
+        "2": {
+          "title": "避免体验入职滥用",
+          "description": "优先录用有实绩的接待人员"
+        }
       }
     }
   },
@@ -411,8 +468,16 @@
     "title": "开发中的界面",
     "description": "这是目前正在开发中的LunaPos Floor应用实际界面",
     "items": {
-      "0": { "caption": "楼层地图", "description": "实时显示桌台状态、剩余时间及销售额", "alt": "LunaPos Floor - 楼层地图界面" },
-      "1": { "caption": "接待人员管理", "description": "通过照片网格直观掌握考勤状态及工作时长", "alt": "LunaPos Floor - 接待人员管理界面" }
+      "0": {
+        "caption": "楼层地图",
+        "description": "实时显示桌台状态、剩余时间及销售额",
+        "alt": "LunaPos Floor - 楼层地图界面"
+      },
+      "1": {
+        "caption": "接待人员管理",
+        "description": "通过照片网格直观掌握考勤状态及工作时长",
+        "alt": "LunaPos Floor - 接待人员管理界面"
+      }
     }
   },
   "footer": {
@@ -520,19 +585,54 @@
     "whyDescription": "传统招聘是门店自行申报条件发布，接待人员往往进店之后才知道真实情况。LunaPos以POS运营数据这一「事实」为基础，为招聘带来透明度与可信度。",
     "whatTitle": "具体可以实现什么",
     "features": {
-      "0": { "title": "基于实绩的门店评估", "description": "基于POS销售数据及考勤实绩，可视化门店经营状态。用数据判断是否是「能赚钱的门店」。" },
-      "1": { "title": "接待人员实绩作品集", "description": "将点名次数、销售贡献、工作实绩作为接待人员自身的作品集积累。成为转籍谈判的有力依据。" },
-      "2": { "title": "基于需求预测的招聘建议", "description": "根据销售趋势及旺季数据，提出「现在正是该招人的时机」的建议。" },
-      "3": { "title": "从班次到薪资一体化管理", "description": "入职后的考勤管理・薪资计算也可通过LunaPos无缝完成。" }
+      "0": {
+        "title": "基于实绩的门店评估",
+        "description": "基于POS销售数据及考勤实绩，可视化门店经营状态。用数据判断是否是「能赚钱的门店」。"
+      },
+      "1": {
+        "title": "接待人员实绩作品集",
+        "description": "将点名次数、销售贡献、工作实绩作为接待人员自身的作品集积累。成为转籍谈判的有力依据。"
+      },
+      "2": {
+        "title": "基于需求预测的招聘建议",
+        "description": "根据销售趋势及旺季数据，提出「现在正是该招人的时机」的建议。"
+      },
+      "3": {
+        "title": "从班次到薪资一体化管理",
+        "description": "入职后的考勤管理・薪资计算也可通过LunaPos无缝完成。"
+      }
     },
     "comparisonTitle": "与现有招聘媒体的区别",
-    "comparisonHeaders": { "existing": "现有招聘网站", "luna": "Luna Career" },
+    "comparisonHeaders": {
+      "existing": "现有招聘网站",
+      "luna": "Luna Career"
+    },
     "comparison": {
-      "0": { "label": "门店信息可信度", "existing": "自我申报", "luna": "基于POS实绩" },
-      "1": { "label": "收入信息", "existing": "「月收○万円可能」（无依据）", "luna": "基于实绩数据的平均收入" },
-      "2": { "label": "入职后管理", "existing": "无（需另外使用其他系统）", "luna": "POS联动，一体化管理" },
-      "3": { "label": "招聘时机", "existing": "凭感觉", "luna": "基于数据预测的建议" },
-      "4": { "label": "接待人员评估", "existing": "仅面试・体验入职", "luna": "过去实绩作品集" }
+      "0": {
+        "label": "门店信息可信度",
+        "existing": "自我申报",
+        "luna": "基于POS实绩"
+      },
+      "1": {
+        "label": "收入信息",
+        "existing": "「月收○万円可能」（无依据）",
+        "luna": "基于实绩数据的平均收入"
+      },
+      "2": {
+        "label": "入职后管理",
+        "existing": "无（需另外使用其他系统）",
+        "luna": "POS联动，一体化管理"
+      },
+      "3": {
+        "label": "招聘时机",
+        "existing": "凭感觉",
+        "luna": "基于数据预测的建议"
+      },
+      "4": {
+        "label": "接待人员评估",
+        "existing": "仅面试・体验入职",
+        "luna": "过去实绩作品集"
+      }
     },
     "stepsTitle": "推进步骤",
     "stepsDescription": "Luna Career计划随着LunaPos（POS）导入门店的增加，分阶段扩展功能。目前以推广POS普及为最优先事项。",
@@ -544,9 +644,18 @@
     "badge": "准备中 - 接受预先登记",
     "description": "正在筹备基于LunaPos导入门店经营数据，向优质门店提供出资及融资的计划。",
     "features": {
-      "0": { "title": "基于数据的投资判断", "description": "通过POS运营数据可视化销售趋势、客单价、运营效率等，辅助做出有依据的投资决策。" },
-      "1": { "title": "风险可视化", "description": "通过数据掌握与投资风险相关的指标，如销售稳定性、季节波动、接待人员留存率等。" },
-      "2": { "title": "成长潜力评估", "description": "基于历史趋势分析未来成长可能性，更容易发现有潜力的门店。" }
+      "0": {
+        "title": "基于数据的投资判断",
+        "description": "通过POS运营数据可视化销售趋势、客单价、运营效率等，辅助做出有依据的投资决策。"
+      },
+      "1": {
+        "title": "风险可视化",
+        "description": "通过数据掌握与投资风险相关的指标，如销售稳定性、季节波动、接待人员留存率等。"
+      },
+      "2": {
+        "title": "成长潜力评估",
+        "description": "基于历史趋势分析未来成长可能性，更容易发现有潜力的门店。"
+      }
     },
     "investmentTypes": {
       "store": "对门店投资感兴趣",
@@ -572,18 +681,46 @@
     "visionDescription": "日本夜间娱乐行业拥有独特的计费体系与接客文化，是全球独一无二的市场。我们将把LunaPos积累的行业专属经验，本地化后推广至各国夜总会、酒廊及酒吧。",
     "roadmapTitle": "拓展路线图",
     "regions": {
-      "0": { "name": "新加坡", "description": "东南亚商业中心。日系俱乐部众多，是首个海外据点的最佳选择。", "status": "首个目标" },
-      "1": { "name": "东南亚", "description": "泰国、菲律宾、马来西亚等夜生活产业繁荣的地区。", "status": "第二阶段" },
-      "2": { "name": "东亚", "description": "韩国、台湾、香港等拥有相似接客文化的市场。", "status": "第三阶段" },
-      "3": { "name": "欧美", "description": "进军夜总会及酒吧市场规模庞大的北美与欧洲。", "status": "未来构想" }
+      "0": {
+        "name": "新加坡",
+        "description": "东南亚商业中心。日系俱乐部众多，是首个海外据点的最佳选择。",
+        "status": "首个目标"
+      },
+      "1": {
+        "name": "东南亚",
+        "description": "泰国、菲律宾、马来西亚等夜生活产业繁荣的地区。",
+        "status": "第二阶段"
+      },
+      "2": {
+        "name": "东亚",
+        "description": "韩国、台湾、香港等拥有相似接客文化的市场。",
+        "status": "第三阶段"
+      },
+      "3": {
+        "name": "欧美",
+        "description": "进军夜总会及酒吧市场规模庞大的北美与欧洲。",
+        "status": "未来构想"
+      }
     },
     "challengesTitle": "全球化应对举措",
     "challengesDescription": "我们正在针对以下课题推进海外拓展的相关工作。",
     "challenges": {
-      "0": { "title": "多语言支持", "description": "提供支持英语、中文等各国语言的界面。" },
-      "1": { "title": "多币种・多支付方式支持", "description": "支持以当地货币结账及各国支付手段。" },
-      "2": { "title": "法规遵从", "description": "遵守各国夜间娱乐相关法规。" },
-      "3": { "title": "本地化", "description": "根据各国接客文化及计费体系进行定制化调整。" }
+      "0": {
+        "title": "多语言支持",
+        "description": "提供支持英语、中文等各国语言的界面。"
+      },
+      "1": {
+        "title": "多币种・多支付方式支持",
+        "description": "支持以当地货币结账及各国支付手段。"
+      },
+      "2": {
+        "title": "法规遵从",
+        "description": "遵守各国夜间娱乐相关法规。"
+      },
+      "3": {
+        "title": "本地化",
+        "description": "根据各国接客文化及计费体系进行定制化调整。"
+      }
     }
   },
   "partner": {
@@ -591,16 +728,37 @@
     "title": "推广合作伙伴招募",
     "description": "利用您在夜间行业的人脉，只需介绍LunaPos即可获得报酬。",
     "benefits": {
-      "0": { "title": "介绍报酬", "description": "每成功促成一家门店导入LunaPos，即可获得介绍报酬。" },
-      "1": { "title": "只需介绍即可", "description": "导入支持及技术对应由LunaPos团队负责。" },
-      "2": { "title": "合作伙伴专属支持", "description": "通过专属控制台查看成果。支持团队全程提供后援。" }
+      "0": {
+        "title": "介绍报酬",
+        "description": "每成功促成一家门店导入LunaPos，即可获得介绍报酬。"
+      },
+      "1": {
+        "title": "只需介绍即可",
+        "description": "导入支持及技术对应由LunaPos团队负责。"
+      },
+      "2": {
+        "title": "合作伙伴专属支持",
+        "description": "通过专属控制台查看成果。支持团队全程提供后援。"
+      }
     },
     "stepsTitle": "合作伙伴流程",
     "steps": {
-      "0": { "title": "合作伙伴登记", "description": "通过下方表单登记" },
-      "1": { "title": "介绍门店", "description": "通过专属链接向门店介绍LunaPos" },
-      "2": { "title": "导入支持", "description": "导入对应交由LunaPos团队处理" },
-      "3": { "title": "获取报酬", "description": "导入确定后支付介绍报酬" }
+      "0": {
+        "title": "合作伙伴登记",
+        "description": "通过下方表单登记"
+      },
+      "1": {
+        "title": "介绍门店",
+        "description": "通过专属链接向门店介绍LunaPos"
+      },
+      "2": {
+        "title": "导入支持",
+        "description": "导入对应交由LunaPos团队处理"
+      },
+      "3": {
+        "title": "获取报酬",
+        "description": "导入确定后支付介绍报酬"
+      }
     },
     "formTitle": "合作伙伴登记",
     "formDescription": "实装完成后将发送专属链接给您",
@@ -666,10 +824,19 @@
     "chartConversions": "成约趋势",
     "conversionsTitle": "成约列表",
     "conversionsEmpty": "暂无成约记录。请分享推广链接，向门店介绍LunaPos吧。",
-    "conversionsHeaders": { "date": "日期", "store": "门店名称", "status": "状态" },
+    "conversionsHeaders": {
+      "date": "日期",
+      "store": "门店名称",
+      "status": "状态"
+    },
     "rewardsTitle": "报酬历史",
     "rewardsEmpty": "暂无报酬记录。",
-    "rewardsHeaders": { "date": "日期", "amount": "金额", "status": "状态", "note": "备注" },
+    "rewardsHeaders": {
+      "date": "日期",
+      "amount": "金额",
+      "status": "状态",
+      "note": "备注"
+    },
     "statusLabels": {
       "pending": "审核中",
       "confirmed": "已确定",
@@ -754,5 +921,13 @@
       "subtitle": "LEGAL",
       "title": "特定商业交易法相关说明"
     }
+  },
+  "demo": {
+    "badge": "无需注册",
+    "button": "试用演示",
+    "buttonLong": "无需注册，立即试用",
+    "heading": "直接体验真实操作界面",
+    "desc": "还原营业中门店的演示环境。可以开台、点单，并完整体验结账流程。无需注册和录入，操作内容不会影响任何真实门店。",
+    "note": "界面针对iPad和平板设计，也可在电脑上体验。"
   }
 }

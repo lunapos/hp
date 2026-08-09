@@ -7,11 +7,13 @@ import { X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { NAV_ITEMS } from "@/lib/constants";
 import ThemeToggle from "@/components/ui/ThemeToggle";
+import DemoButton from "@/components/ui/DemoButton";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
   const t = useTranslations("nav");
+  const tDemo = useTranslations("demo");
 
   useEffect(() => {
     document.body.style.overflow = isMenuOpen ? "hidden" : "";
@@ -48,6 +50,11 @@ export default function Header() {
               </Link>
             ))}
             <ThemeToggle />
+            <DemoButton
+              label={tDemo("button")}
+              location="header"
+              size="md"
+            />
           </nav>
 
           <div className="md:hidden flex items-center gap-2">
@@ -119,6 +126,11 @@ export default function Header() {
               {t(item.key)}
             </Link>
           ))}
+          <DemoButton
+            label={tDemo("button")}
+            location="header_mobile"
+            className="mt-2"
+          />
         </nav>
       </div>
     </>

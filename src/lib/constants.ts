@@ -60,3 +60,10 @@ export const PRICING_PLAN = {
 export const TESTIMONIALS: Testimonial[] = [];
 
 export const FAQ_COUNT = 6;
+
+/**
+ * 体験デモ（LunaPos Floor）のURL。
+ * 登録不要で営業中の店舗を再現した状態から触れる。
+ * TODO: demo.lunapos.jp のDNS(CNAME → cname.vercel-dns.com)設定後に差し替える
+ */
+export const DEMO_URL = "https://lunapos-demo.vercel.app/";

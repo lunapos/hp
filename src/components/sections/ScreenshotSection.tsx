@@ -2,6 +2,7 @@ import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import Section from "@/components/layout/Section";
 import SectionHeading from "@/components/ui/SectionHeading";
+import DemoButton from "@/components/ui/DemoButton";
 
 const SCREENSHOT_SRCS = [
   "/screenshots/floor-map.webp",
@@ -10,6 +11,7 @@ const SCREENSHOT_SRCS = [
 
 export default async function ScreenshotSection() {
   const t = await getTranslations("screenshot");
+  const tDemo = await getTranslations("demo");
 
   return (
     <Section>
@@ -44,6 +46,24 @@ export default async function ScreenshotSection() {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* スクリーンショットを見た直後が一番「触ってみたい」タイミングなので、
+          ここにデモ導線を置く */}
+      <div className="mt-14 rounded-2xl border border-luna-gold/25 bg-luna-surface/60 px-6 py-10 text-center">
+        <span className="inline-block rounded-full border border-luna-gold/30 bg-luna-gold/10 px-3 py-1 text-xs font-medium tracking-wider text-luna-gold">
+          {tDemo("badge")}
+        </span>
+        <h3 className="mt-4 text-2xl font-bold text-luna-text-primary">
+          {tDemo("heading")}
+        </h3>
+        <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-luna-text-secondary">
+          {tDemo("desc")}
+        </p>
+        <div className="mt-7 flex flex-col items-center gap-3">
+          <DemoButton label={tDemo("button")} location="screenshot" />
+          <span className="text-xs text-luna-text-muted">{tDemo("note")}</span>
+        </div>
       </div>
     </Section>
   );
