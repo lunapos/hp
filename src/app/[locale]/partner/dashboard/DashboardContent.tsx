@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import Card from "@/components/ui/Card";
@@ -73,8 +73,19 @@ export default function DashboardContent({
   const [period, setPeriod] = useState<Period>("30d");
   const [dailyData, setDailyData] = useState<DailyStats[]>([]);
   const [loadingStats, setLoadingStats] = useState(false);
-  const [showNotification, setShowNotification] = useState(false);
-  const [newItemCount, setNewItemCount] = useState(0);
+  // 前回訪問以降に増えた件数は初回レンダー時に一度だけ算出する。
+  // useEffect + setState で行うと、算出のたびに再レンダリングが走るうえ、
+  // conversions / commissions が更新されるたびに最終訪問日時が上書きされてしまう。
+  const [newItemCount] = useState(() => {
+    if (typeof window === "undefined") return 0;
+    const lastVisit = localStorage.getItem("luna-partner-last-visit");
+    if (!lastVisit) return 0;
+    const lastDate = new Date(lastVisit);
+    const countSince = (items: { created_at: string }[]) =>
+      items.filter((c) => new Date(c.created_at) > lastDate).length;
+    return countSince(conversions) + countSince(commissions);
+  });
+  const [showNotification, setShowNotification] = useState(() => newItemCount > 0);
 
   const referralUrl = `https://lunapos.jp?ref=${partner.referral_code}`;
 
@@ -144,48 +155,38 @@ export default function DashboardContent({
     },
   ];
 
-  // Notification: check for new items since last visit
+  // 最終訪問日時の記録。件数の算出は上の useState で済んでいるため、
+  // ここではマウント時に一度だけ書き込む。
   useEffect(() => {
-    const lastVisit = localStorage.getItem("luna-partner-last-visit");
-    if (lastVisit) {
-      const lastDate = new Date(lastVisit);
-      const newConversions = conversions.filter(
-        (c) => new Date(c.created_at) > lastDate
-      ).length;
-      const newCommissions = commissions.filter(
-        (c) => new Date(c.created_at) > lastDate
-      ).length;
-      const total = newConversions + newCommissions;
-      if (total > 0) {
-        setNewItemCount(total);
-        setShowNotification(true);
-      }
-    }
-    localStorage.setItem(
-      "luna-partner-last-visit",
-      new Date().toISOString()
-    );
-  }, [conversions, commissions]);
+    localStorage.setItem("luna-partner-last-visit", new Date().toISOString());
+  }, []);
 
-  // Fetch daily stats when period changes
-  const fetchStats = useCallback(async () => {
-    setLoadingStats(true);
-    try {
-      const res = await fetch(`/api/partner/stats?period=${period}`);
-      if (res.ok) {
-        const data = await res.json();
-        setDailyData(data.daily || []);
-      }
-    } catch {
-      // Silently fail
-    } finally {
-      setLoadingStats(false);
-    }
-  }, [period]);
-
+  // 期間切替のたびに日次統計を取得する。
+  // ローディング表示の開始も含めて非同期処理内で行い、effect 内での同期的な
+  // setState を避ける。期間を素早く切り替えたときは古いレスポンスを破棄する。
   useEffect(() => {
+    let cancelled = false;
+
+    const fetchStats = async () => {
+      setLoadingStats(true);
+      try {
+        const res = await fetch(`/api/partner/stats?period=${period}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (!cancelled) setDailyData(data.daily || []);
+        }
+      } catch {
+        // Silently fail
+      } finally {
+        if (!cancelled) setLoadingStats(false);
+      }
+    };
+
     fetchStats();
-  }, [fetchStats]);
+    return () => {
+      cancelled = true;
+    };
+  }, [period]);
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(referralUrl);

@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import Section from "@/components/layout/Section";
 import Button from "@/components/ui/Button";
 
@@ -26,12 +27,12 @@ export default function CtaSection() {
             <Button href="/contact" size="lg">
               {t("button")}
             </Button>
-            <a
+            <Link
               href="/contact"
               className="text-luna-text-secondary text-sm hover:text-luna-text-primary transition-colors"
             >
               {t("emailLink")}
-            </a>
+            </Link>
           </div>
         </div>
       </div>

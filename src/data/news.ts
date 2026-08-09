@@ -13,7 +13,7 @@ export const newsItems: NewsItem[] = [
 
 type NewsTranslation = { title: string; summary: string; category: string; content?: string };
 
-let translationsCache: Record<string, Record<string, NewsTranslation>> = {};
+const translationsCache: Record<string, Record<string, NewsTranslation>> = {};
 
 async function getTranslations(locale: string): Promise<Record<string, NewsTranslation>> {
   if (locale === "ja") return {};

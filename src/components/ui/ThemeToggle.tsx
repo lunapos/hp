@@ -1,20 +1,40 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useSyncExternalStore } from "react";
 import { Sun, Moon } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-export default function ThemeToggle() {
-  const [isLight, setIsLight] = useState(false);
-  const t = useTranslations("common");
+// テーマの実体は <html> の light クラス（layout.tsx のインラインスクリプトが
+// ハイドレーション前に付与する）。それを唯一の情報源として購読する。
+// useEffect + setState で読むとハイドレーション後に再レンダリングが走るため使わない。
+const themeStore = {
+  subscribe(onChange: () => void) {
+    const observer = new MutationObserver(onChange);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    return () => observer.disconnect();
+  },
+  getSnapshot() {
+    return document.documentElement.classList.contains("light");
+  },
+  // サーバー側ではダーク（デフォルト）として描画する
+  getServerSnapshot() {
+    return false;
+  },
+};
 
-  useEffect(() => {
-    setIsLight(document.documentElement.classList.contains("light"));
-  }, []);
+export default function ThemeToggle() {
+  const isLight = useSyncExternalStore(
+    themeStore.subscribe,
+    themeStore.getSnapshot,
+    themeStore.getServerSnapshot
+  );
+  const t = useTranslations("common");
 
   const toggle = () => {
     const next = !isLight;
-    setIsLight(next);
     if (next) {
       document.documentElement.classList.add("light");
       localStorage.setItem("luna-theme", "light");

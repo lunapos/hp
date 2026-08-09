@@ -10,8 +10,6 @@ const PER_PAGE = 6;
 
 type TabKey = "announcements" | "updates";
 
-type FilterKey = "all" | Project;
-
 function filterByTab(items: NewsItem[], tab: TabKey): NewsItem[] {
   if (tab === "announcements") {
     return items.filter(

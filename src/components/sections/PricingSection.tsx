@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import Section from "@/components/layout/Section";
 import SectionHeading from "@/components/ui/SectionHeading";
-import { PRICING_PLAN, ALL_FEATURE_ICONS } from "@/lib/constants";
+import { PRICING_PLAN } from "@/lib/constants";
 import { Check, Sparkles, Gift } from "lucide-react";
 
 export default function PricingSection() {

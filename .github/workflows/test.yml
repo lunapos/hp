@@ -59,11 +59,8 @@ jobs:
       - name: 型チェック
         run: npx tsc --noEmit
 
-      # 既存のlint違反9件（うちerror 7件）が未解消のため、当面は警告扱いにする。
-      # 解消後に `continue-on-error` を外してブロッキングにする。
       - name: Lint
         run: npm run lint
-        continue-on-error: true
 
       - name: ビルド確認
         run: npm run build
