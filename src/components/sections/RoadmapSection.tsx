@@ -101,7 +101,7 @@ function PhaseCard({
       {hasDetails && !hasLink && (
         <div
           className={`overflow-hidden transition-all duration-300 ease-in-out ${
-            isOpen ? "max-h-[500px] opacity-100 mt-4" : "max-h-0 opacity-0"
+            isOpen ? "max-h-[800px] opacity-100 mt-4" : "max-h-0 opacity-0"
           }`}
         >
           <div

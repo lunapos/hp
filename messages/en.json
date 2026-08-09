@@ -337,7 +337,9 @@
           "0": { "title": "Floor Management", "description": "Multi-room table management with real-time vacancy status" },
           "1": { "title": "Billing & Checkout", "description": "Automatic calculation of set charges, nomination fees, and service rates" },
           "2": { "title": "Cast Attendance", "description": "One-tap clock-in/out via a photo grid of cast members" },
-          "3": { "title": "Sales Reports", "description": "Automatic aggregation of daily sales and individual cast performance" }
+          "3": { "title": "Sales Reports", "description": "Automatic aggregation of daily sales and individual cast performance" },
+          "4": { "title": "Register & Cash Management", "description": "Register closing and cash in/out logged by purpose, with CSV export" },
+          "5": { "title": "Audit Logs", "description": "Checkouts, discounts, price changes, and attendance recorded and reviewable in the admin panel" }
         }
       },
       "1": {
