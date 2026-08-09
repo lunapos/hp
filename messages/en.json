@@ -752,5 +752,13 @@
       "subtitle": "LEGAL",
       "title": "Specified Commercial Transaction Act Disclosure"
     }
+  },
+  "demo": {
+    "badge": "No sign-up",
+    "button": "Try the demo",
+    "buttonLong": "Try the demo — no sign-up",
+    "heading": "Try the actual screens yourself",
+    "desc": "A demo that recreates a store mid-service. Open a table, take orders, and run a checkout from start to finish. No sign-up or setup required, and nothing you do affects a real store.",
+    "note": "Designed for iPad and tablets. You can also try it on a computer."
   }
 }
