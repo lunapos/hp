@@ -753,9 +753,24 @@
     "badge": "iPad app",
     "button": "Get it on the App Store",
     "buttonLong": "Get the app on the App Store",
-    "heading": "Try it on a real device",
-    "desc": "Download LunaPos from the App Store, then enter the demo token below on the device authentication screen at launch. You'll be connected to a demo store preloaded with menus, casts, and tables, so you can open a table, take orders, and run a checkout on an actual device.",
+    "heading": "We set up a demo store. Try it for free",
+    "desc": "No inquiry, no sign-up. Our demo store comes preloaded with menus, casts, and tables — just enter the token below and you can run the whole flow on a real iPad, from opening a table to taking orders to closing the check.",
+    "stepsLabel": "Three steps to get started",
+    "steps": {
+      "1": {
+        "title": "Get the app",
+        "desc": "Download \"LunaPos\" to your iPad from the App Store."
+      },
+      "2": {
+        "title": "Enter the token",
+        "desc": "Launch the app and you'll see the device authentication screen. Copy the token below, paste it in, and authenticate."
+      },
+      "3": {
+        "title": "Start tapping around",
+        "desc": "You're connected to the demo store. Try the flow: tap a table to open it, order a drink, then close the check."
+      }
+    },
     "tokenLabel": "Demo device token",
-    "note": "iPad only. Anything you do in the demo store has no effect on real store data."
+    "note": "iPad only. Anything you do in the demo store has no effect on real store data. The data is reset periodically, so you may find traces of what other people tried."
   }
 }

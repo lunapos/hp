@@ -10,6 +10,9 @@ const SCREENSHOT_SRCS = [
   "/screenshots/cast-management.webp",
 ];
 
+/** デモを試すまでの手順。messages の demo.steps.* に対応する */
+const DEMO_STEPS = ["1", "2", "3"] as const;
+
 export default async function ScreenshotSection() {
   const t = await getTranslations("screenshot");
   const tDemo = await getTranslations("demo");
@@ -61,10 +64,33 @@ export default async function ScreenshotSection() {
         <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-luna-text-secondary">
           {tDemo("desc")}
         </p>
+        {/* 「無料で触れる」と言われても手順が分からないと止まるので、
+            App Store入手 → トークン入力 → 操作 の3ステップを明示する */}
+        <ol className="mx-auto mt-8 grid max-w-3xl gap-4 text-left sm:grid-cols-3">
+          {DEMO_STEPS.map((step, i) => (
+            <li
+              key={step}
+              className="rounded-xl border border-luna-border bg-luna-bg/40 p-4"
+            >
+              <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-luna-gold/15 text-xs font-bold text-luna-gold">
+                {i + 1}
+              </span>
+              <h4 className="mt-2 text-sm font-semibold text-luna-text-primary">
+                {tDemo(`steps.${step}.title`)}
+              </h4>
+              <p className="mt-1 text-xs leading-relaxed text-luna-text-secondary">
+                {tDemo(`steps.${step}.desc`)}
+              </p>
+            </li>
+          ))}
+        </ol>
+
         <div className="mt-7 flex flex-col items-center gap-5">
           <AppStoreButton label={tDemo("button")} location="screenshot" />
           <DemoCredentials label={tDemo("tokenLabel")} />
-          <span className="text-xs text-luna-text-muted">{tDemo("note")}</span>
+          <span className="mx-auto max-w-2xl text-xs leading-relaxed text-luna-text-muted">
+            {tDemo("note")}
+          </span>
         </div>
       </div>
     </Section>
