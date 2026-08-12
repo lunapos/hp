@@ -4,6 +4,16 @@ import type { NewsItem } from "./news-types";
 export const updateItems: NewsItem[] = [
   // --- 2026-08-12 ---
   {
+    slug: "epson-printer-support",
+    date: "2026-08-12",
+    title: "Epson製レシートプリンターに対応しました",
+    summary: "TM-m30シリーズなどEpson製のレシートプリンターで直接印刷できるようになりました。先日対応したStar製とあわせて、主要なレシートプリンターが使えます。",
+    category: "開発アップデート",
+    project: "Floor",
+    content: "先日のStar製に続き、Epson製のレシートプリンターに対応しました。これで店舗にあるプリンターをそのまま使えるケースが大きく増えます。\n\n## 対応した機種\n・TM-m30 / TM-m30II / TM-m30III\n・TM-T88VI / TM-T88VII\n・その他TMシリーズ\n\n接続はLAN・Bluetooth・USBに対応しています。\n\n## 使い方\nプリンター設定から「Epson」を選び、「プリンターを検索」を押すと接続可能なプリンターが表示されます。選んで接続すれば、レシートと領収書がそのまま印刷できます。\n\nテスト印刷で紙が出るところまで確認してから営業に入ってください。\n\n## 対応状況まとめ\n・AirPrint対応プリンター\n・Star Micronics製（TSP100IV / mC-Print など）\n・Epson製（TM-m30 など）\n\n## Bluetooth接続をお使いの場合\nBluetoothまたはUSBで接続する場合、Appleの認証手続き（MFi）が別途必要になります。LAN接続であれば手続きは不要です。導入の際はご相談ください。",
+  },
+  // --- 2026-08-12 ---
+  {
     slug: "star-printer-support",
     date: "2026-08-12",
     title: "Star製レシートプリンターに対応しました",
