@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 type Variant = "primary" | "outline";
 type Size = "md" | "lg";
 
@@ -56,13 +58,13 @@ export default function DemoLinkButton({
   };
 
   return (
-    <a
+    <Link
       href="/#demo"
       onClick={handleClick}
       className={`${base} ${sizes[size]} ${variants[variant]} ${className}`}
     >
       <AppleIcon className="w-[18px] h-[18px]" />
       {label}
-    </a>
+    </Link>
   );
 }
